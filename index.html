@@ -3,147 +3,202 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Ziyad Property PA</title>
+<title>SURIA — Ziyad Property AI</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:sans-serif;background:#f0f4f3;min-height:100vh;}
-.header{background:#0F6E56;color:white;padding:16px;}
-.header p{font-size:11px;opacity:0.7;letter-spacing:0.5px;}
-.header h1{font-size:20px;font-weight:500;margin-top:4px;color:#E1F5EE;}
-.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#ddd;}
-.tab{background:white;padding:10px 4px;text-align:center;cursor:pointer;border-bottom:2px solid transparent;}
-.tab.active{background:#E1F5EE;border-bottom:2px solid #1D9E75;}
-.tab span{display:block;font-size:16px;margin-bottom:2px;}
-.tab p{font-size:10px;color:#0F6E56;font-weight:500;}
-.panel{display:none;padding:16px;background:white;}
-.panel.active{display:block;}
-.field{margin-bottom:12px;}
-label{font-size:12px;color:#666;display:block;margin-bottom:4px;}
-input,textarea,select{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:14px;font-family:sans-serif;}
-textarea{resize:vertical;min-height:80px;}
+body{font-family:sans-serif;background:#f0f0f0;min-height:100vh;}
+.header{background:#1a1a1a;padding:20px 16px 16px;}
+.header-top{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.avatar{width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid #a3e635;}
+.header-title p{margin:0;font-size:11px;color:#a3e635;letter-spacing:0.8px;}
+.header-title h1{margin:2px 0 0;font-size:22px;font-weight:500;color:white;letter-spacing:1px;}
+.header-sub{font-size:11px;color:#888;margin-top:2px;}
+.feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:6px;}
+.feature-grid2{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.feat{background:#2a2a2a;border-radius:10px;padding:10px 6px;text-align:center;cursor:pointer;border:1.5px solid transparent;transition:all 0.2s;}
+.feat.active{border:1.5px solid #a3e635;background:#333;}
+.feat span{display:block;font-size:18px;margin-bottom:3px;}
+.feat p{font-size:10px;color:#a3e635;font-weight:500;margin:0;}
+.content{padding:16px;}
+.card{background:white;border-radius:14px;border:0.5px solid #e0e0e0;overflow:hidden;margin-bottom:12px;}
+.card-header{background:#f8f8f8;padding:12px 16px;border-bottom:0.5px solid #e8e8e8;display:flex;align-items:center;gap:8px;}
+.card-header span{font-size:16px;}
+.card-header p{margin:0;font-size:13px;font-weight:500;color:#1a1a1a;}
+.card-body{padding:14px;display:flex;flex-direction:column;gap:10px;}
+label{font-size:10px;color:#888;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.6px;}
+input,textarea,select{width:100%;padding:11px;border:1px solid #e0e0e0;border-radius:8px;font-size:14px;font-family:sans-serif;background:#fafafa;color:#1a1a1a;}
+input:focus,textarea:focus,select:focus{outline:none;border-color:#a3e635;background:white;}
+textarea{resize:vertical;min-height:90px;}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.btn{width:100%;padding:13px;background:#1D9E75;color:white;border:none;border-radius:8px;font-size:15px;font-weight:500;margin-top:8px;cursor:pointer;}
-.btn:disabled{background:#aaa;}
-.result{margin:16px;background:white;border-radius:12px;border:1px solid #ddd;padding:16px;display:none;}
-.result h3{font-size:12px;color:#888;margin-bottom:10px;}
-.content{font-size:14px;line-height:1.7;color:#333;white-space:pre-wrap;}
-.loading{text-align:center;padding:20px;color:#888;display:none;background:white;margin:0 16px;border-radius:12px;}
-.copy-btn{margin-top:8px;padding:7px 14px;width:auto;font-size:12px;background:#f0f4f3;color:#1D9E75;border:1px solid #1D9E75;border-radius:6px;cursor:pointer;}
+.btn{width:100%;padding:14px;background:#a3e635;color:#1a1a1a;border:none;border-radius:10px;font-size:15px;font-weight:500;margin-top:4px;cursor:pointer;letter-spacing:0.3px;}
+.btn:disabled{background:#ccc;color:#888;}
+.btn:active{opacity:0.9;}
+.panel{display:none;}
+.panel.active{display:block;}
+.result-card{background:white;border-radius:14px;border:0.5px solid #e0e0e0;padding:16px;margin-bottom:12px;display:none;}
+.result-label{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:10px;}
+.result-content{font-size:14px;line-height:1.8;color:#1a1a1a;white-space:pre-wrap;}
+.copy-btn{margin-top:12px;padding:8px 18px;background:#f0f0f0;color:#1a1a1a;border:1px solid #ccc;border-radius:8px;font-size:12px;cursor:pointer;font-weight:500;}
+.copy-btn:active{background:#e0e0e0;}
+.loading{text-align:center;padding:24px;color:#888;display:none;background:white;border-radius:14px;margin-bottom:12px;font-size:14px;}
+.loading-dot{display:inline-block;animation:pulse 1.2s infinite;}
+@keyframes pulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
+.divider{height:1px;background:#f0f0f0;margin:4px 0;}
 </style>
 </head>
 <body>
 
 <div class="header">
-  <p>ZIYAD PROPERTY CONSULTANTS</p>
-  <h1>Sr Khairul's PA</h1>
-</div>
-
-<div class="tabs">
-  <div class="tab active" onclick="switchTab('message')"><span>✉️</span><p>Message</p></div>
-  <div class="tab" onclick="switchTab('report')"><span>🏠</span><p>Report</p></div>
-  <div class="tab" onclick="switchTab('followup')"><span>👤</span><p>Follow-up</p></div>
-  <div class="tab" onclick="switchTab('ask')"><span>❓</span><p>Ask</p></div>
-  <div class="tab" onclick="switchTab('tasks')"><span>📋</span><p>Tasks</p></div>
-  <div class="tab" onclick="switchTab('summarize')"><span>📄</span><p>Summarize</p></div>
-  <div class="tab" onclick="switchTab('greeting')"><span>🌅</span><p>Greeting</p></div>
-</div>
-
-<!-- Message -->
-<div class="panel active" id="panel-message">
-  <div class="field"><label>Recipient name</label><input id="m-recipient" placeholder="e.g. Encik Ahmad"/></div>
-  <div class="field"><label>Message type</label>
-    <select id="m-type">
-      <option>WhatsApp</option>
-      <option>Email</option>
-      <option>Both</option>
-    </select>
+  <div class="header-top">
+    <img src="/suria.png" class="avatar" alt="SURIA"/>
+    <div class="header-title">
+      <p>ZIYAD PROPERTY CONSULTANTS</p>
+      <h1>SURIA</h1>
+      <p class="header-sub">Sr Khairul's AI Personal Assistant</p>
+    </div>
   </div>
-  <div class="field"><label>Purpose</label><input id="m-purpose" placeholder="e.g. Follow up viewing appointment"/></div>
-  <div class="field"><label>Tone</label>
-    <select id="m-tone">
-      <option>Friendly & professional</option>
-      <option>Formal</option>
-      <option>Urgent</option>
-      <option>Casual</option>
-    </select>
+  <div class="feature-grid">
+    <div class="feat active" onclick="switchTab('message',this)"><span>✉️</span><p>Message</p></div>
+    <div class="feat" onclick="switchTab('report',this)"><span>🏠</span><p>Report</p></div>
+    <div class="feat" onclick="switchTab('followup',this)"><span>👤</span><p>Follow-up</p></div>
+    <div class="feat" onclick="switchTab('ask',this)"><span>❓</span><p>Ask</p></div>
   </div>
-  <button class="btn" onclick="generate('message')">Draft Message</button>
-</div>
-
-<!-- Report -->
-<div class="panel" id="panel-report">
-  <div class="field"><label>Property address</label><input id="r-address" placeholder="e.g. No 12, Jalan Bahagia, JB"/></div>
-  <div class="row">
-    <div class="field"><label>Property type</label><input id="r-proptype" placeholder="e.g. Terrace house"/></div>
-    <div class="field"><label>Land area (sqft)</label><input id="r-area" placeholder="e.g. 1500"/></div>
+  <div class="feature-grid2">
+    <div class="feat" onclick="switchTab('tasks',this)"><span>📋</span><p>Tasks</p></div>
+    <div class="feat" onclick="switchTab('summarize',this)"><span>📄</span><p>Summarize</p></div>
+    <div class="feat" onclick="switchTab('greeting',this)"><span>🌅</span><p>Greeting</p></div>
   </div>
-  <div class="field"><label>Purpose</label>
-    <select id="r-purpose">
-      <option>Sale listing</option>
-      <option>Rental listing</option>
-      <option>Valuation report</option>
-      <option>Investment analysis</option>
-    </select>
+</div>
+
+<div class="content">
+
+  <!-- Message -->
+  <div class="panel active" id="panel-message">
+    <div class="card">
+      <div class="card-header"><span>✉️</span><p>Draft Message</p></div>
+      <div class="card-body">
+        <div><label>Recipient name</label><input id="m-recipient" placeholder="e.g. Encik Ahmad"/></div>
+        <div class="row">
+          <div><label>Message type</label>
+            <select id="m-type"><option>WhatsApp</option><option>Email</option><option>Both</option></select>
+          </div>
+          <div><label>Tone</label>
+            <select id="m-tone"><option>Friendly & professional</option><option>Formal</option><option>Urgent</option><option>Casual</option></select>
+          </div>
+        </div>
+        <div><label>Purpose</label><input id="m-purpose" placeholder="e.g. Follow up viewing appointment"/></div>
+        <button class="btn" onclick="generate('message')">Generate with SURIA</button>
+      </div>
+    </div>
   </div>
-  <div class="field"><label>Additional notes</label><textarea id="r-notes" placeholder="e.g. Renovated kitchen, 3 bedrooms, near school..."></textarea></div>
-  <button class="btn" onclick="generate('report')">Generate Report</button>
-</div>
 
-<!-- Follow-up -->
-<div class="panel" id="panel-followup">
-  <div class="field"><label>Lead name</label><input id="f-name" placeholder="e.g. Ahmad"/></div>
-  <div class="field"><label>Looking for</label><input id="f-interest" placeholder="e.g. 3-bed apartment in JB"/></div>
-  <div class="row">
-    <div class="field"><label>Budget (RM)</label><input id="f-budget" placeholder="e.g. 500,000"/></div>
-    <div class="field"><label>Last contact</label><input id="f-last_contact" placeholder="e.g. 3 days ago"/></div>
+  <!-- Report -->
+  <div class="panel" id="panel-report">
+    <div class="card">
+      <div class="card-header"><span>🏠</span><p>Property Report</p></div>
+      <div class="card-body">
+        <div><label>Property address</label><input id="r-address" placeholder="e.g. No 12, Jalan Bahagia, JB"/></div>
+        <div class="row">
+          <div><label>Property type</label><input id="r-proptype" placeholder="e.g. Terrace house"/></div>
+          <div><label>Land area (sqft)</label><input id="r-area" placeholder="e.g. 1500"/></div>
+        </div>
+        <div><label>Purpose</label>
+          <select id="r-purpose"><option>Sale listing</option><option>Rental listing</option><option>Valuation report</option><option>Investment analysis</option></select>
+        </div>
+        <div><label>Additional notes</label><textarea id="r-notes" placeholder="e.g. Renovated kitchen, 3 bedrooms, near school..."></textarea></div>
+        <button class="btn" onclick="generate('report')">Generate with SURIA</button>
+      </div>
+    </div>
   </div>
-  <div class="field"><label>Current status</label><input id="f-status" placeholder="e.g. Viewed 1 unit, not decided"/></div>
-  <button class="btn" onclick="generate('followup')">Generate Follow-Up</button>
-</div>
 
-<!-- Ask -->
-<div class="panel" id="panel-ask">
-  <div class="field"><label>Your question</label><textarea id="a-question" placeholder="e.g. What is the stamp duty for a RM600k property? What documents needed for sub-sale?" style="min-height:120px;"></textarea></div>
-  <button class="btn" onclick="generate('ask')">Get Answer</button>
-</div>
+  <!-- Follow-up -->
+  <div class="panel" id="panel-followup">
+    <div class="card">
+      <div class="card-header"><span>👤</span><p>Lead Follow-Up</p></div>
+      <div class="card-body">
+        <div><label>Lead name</label><input id="f-name" placeholder="e.g. Ahmad"/></div>
+        <div><label>Looking for</label><input id="f-interest" placeholder="e.g. 3-bed apartment in JB"/></div>
+        <div class="row">
+          <div><label>Budget (RM)</label><input id="f-budget" placeholder="e.g. 500,000"/></div>
+          <div><label>Last contact</label><input id="f-last_contact" placeholder="e.g. 3 days ago"/></div>
+        </div>
+        <div><label>Current status</label><input id="f-status" placeholder="e.g. Viewed 1 unit, not decided"/></div>
+        <button class="btn" onclick="generate('followup')">Generate with SURIA</button>
+      </div>
+    </div>
+  </div>
 
-<!-- Tasks -->
-<div class="panel" id="panel-tasks">
-  <div class="field"><label>Enter your tasks for today</label><textarea id="t-tasks" placeholder="e.g.&#10;- Call Ahmad re: JB apartment&#10;- Submit valuation report&#10;- Site visit at 2pm&#10;- Reply emails" style="min-height:150px;"></textarea></div>
-  <button class="btn" onclick="generate('tasks')">Organise My Day</button>
-</div>
+  <!-- Ask -->
+  <div class="panel" id="panel-ask">
+    <div class="card">
+      <div class="card-header"><span>❓</span><p>Ask SURIA</p></div>
+      <div class="card-body">
+        <div><label>Your question</label><textarea id="a-question" placeholder="e.g. What is the stamp duty for a RM600k property?" style="min-height:120px;"></textarea></div>
+        <button class="btn" onclick="generate('ask')">Ask SURIA</button>
+      </div>
+    </div>
+  </div>
 
-<!-- Summarize -->
-<div class="panel" id="panel-summarize">
-  <div class="field"><label>Paste document or text to summarize</label><textarea id="s-content" placeholder="Paste any text, email, agreement, article or document here..." style="min-height:180px;"></textarea></div>
-  <button class="btn" onclick="generate('summarize')">Summarize</button>
-</div>
+  <!-- Tasks -->
+  <div class="panel" id="panel-tasks">
+    <div class="card">
+      <div class="card-header"><span>📋</span><p>My Tasks</p></div>
+      <div class="card-body">
+        <div><label>Enter today's tasks</label><textarea id="t-tasks" placeholder="e.g.&#10;- Call Ahmad re: JB apartment&#10;- Submit valuation report&#10;- Site visit at 2pm&#10;- Reply emails" style="min-height:150px;"></textarea></div>
+        <button class="btn" onclick="generate('tasks')">Organise My Day</button>
+      </div>
+    </div>
+  </div>
 
-<!-- Greeting -->
-<div class="panel" id="panel-greeting">
-  <div class="field"><label>Today's focus / theme</label><input id="g-focus" placeholder="e.g. Follow up all leads, closing targets"/></div>
-  <div class="field"><label>Number of agents</label><input id="g-agents" placeholder="e.g. 8"/></div>
-  <button class="btn" onclick="generate('greeting')">Generate Greeting</button>
-</div>
+  <!-- Summarize -->
+  <div class="panel" id="panel-summarize">
+    <div class="card">
+      <div class="card-header"><span>📄</span><p>Summarize Document</p></div>
+      <div class="card-body">
+        <div><label>Paste text to summarize</label><textarea id="s-content" placeholder="Paste any text, email, agreement or document here..." style="min-height:180px;"></textarea></div>
+        <button class="btn" onclick="generate('summarize')">Summarize with SURIA</button>
+      </div>
+    </div>
+  </div>
 
-<div class="loading" id="loading">Generating... please wait ⏳</div>
+  <!-- Greeting -->
+  <div class="panel" id="panel-greeting">
+    <div class="card">
+      <div class="card-header"><span>🌅</span><p>Agent Morning Greeting</p></div>
+      <div class="card-body">
+        <div><label>Today's focus / theme</label><input id="g-focus" placeholder="e.g. Follow up all leads, closing targets"/></div>
+        <div><label>Number of agents</label><input id="g-agents" placeholder="e.g. 8"/></div>
+        <button class="btn" onclick="generate('greeting')">Generate Greeting</button>
+      </div>
+    </div>
+  </div>
 
-<div class="result" id="result">
-  <h3>Result</h3>
-  <div class="content" id="output"></div>
-  <button class="copy-btn" onclick="copy()">Copy</button>
+  <!-- Loading -->
+  <div class="loading" id="loading">
+    <span class="loading-dot">●</span> SURIA is thinking...
+  </div>
+
+  <!-- Result -->
+  <div class="result-card" id="result">
+    <p class="result-label">Result</p>
+    <div class="divider"></div>
+    <div class="result-content" id="output"></div>
+    <button class="copy-btn" onclick="copy()">Copy to clipboard</button>
+  </div>
+
 </div>
 
 <script>
-function switchTab(name){
-  document.querySelectorAll('.tab').forEach((t,i)=>{t.classList.remove('active')});
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  event.currentTarget.classList.add('active');
-  document.getElementById('panel-'+name).classList.add('active');
+function switchTab(name, el) {
+  document.querySelectorAll('.feat').forEach(f => f.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
   document.getElementById('result').style.display='none';
+  document.getElementById('loading').style.display='none';
 }
 
-async function generate(feature){
+async function generate(feature) {
   const btn = document.querySelector('.panel.active .btn');
   const data = {feature};
 
@@ -175,7 +230,7 @@ async function generate(feature){
     if(!data.tasks){alert('Please enter your tasks.');return;}
   } else if(feature==='summarize'){
     data.content=document.getElementById('s-content').value;
-    if(!data.content){alert('Please paste some text to summarize.');return;}
+    if(!data.content){alert('Please paste some text.');return;}
   } else if(feature==='greeting'){
     data.focus=document.getElementById('g-focus').value;
     data.agents=document.getElementById('g-agents').value;
@@ -186,18 +241,22 @@ async function generate(feature){
   document.getElementById('loading').style.display='block';
   document.getElementById('result').style.display='none';
 
-  const res = await fetch('/pa',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-  const json = await res.json();
-
-  document.getElementById('output').textContent=json.result;
-  document.getElementById('loading').style.display='none';
-  document.getElementById('result').style.display='block';
+  try {
+    const res = await fetch('/pa',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    const json = await res.json();
+    document.getElementById('output').textContent=json.result;
+    document.getElementById('loading').style.display='none';
+    document.getElementById('result').style.display='block';
+  } catch(e) {
+    alert('Something went wrong. Please try again.');
+    document.getElementById('loading').style.display='none';
+  }
   btn.disabled=false;
 }
 
 function copy(){
   navigator.clipboard.writeText(document.getElementById('output').textContent);
-  alert('Copied!');
+  alert('Copied to clipboard!');
 }
 </script>
 </body>

@@ -75,6 +75,10 @@ End with the signature of Sr Mohd Khairul."""
 def home():
     return send_from_directory(".", "index.html")
 
+@app.route("/suria.png")
+def avatar():
+    return send_from_directory(".", "suria.png")
+
 @app.route("/pa", methods=["POST"])
 def pa():
     data = request.json
@@ -88,5 +92,5 @@ def pa():
     return jsonify({"result": response.content[0].text})
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 8080))
     app.run(debug=False, host="0.0.0.0", port=port)

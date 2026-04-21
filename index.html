@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ziyad Property PA</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:sans-serif;background:#f0f4f3;min-height:100vh;}
+.header{background:#0F6E56;color:white;padding:16px;}
+.header p{font-size:11px;opacity:0.7;letter-spacing:0.5px;}
+.header h1{font-size:20px;font-weight:500;margin-top:4px;color:#E1F5EE;}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#ddd;}
+.tab{background:white;padding:10px 4px;text-align:center;cursor:pointer;border-bottom:2px solid transparent;}
+.tab.active{background:#E1F5EE;border-bottom:2px solid #1D9E75;}
+.tab span{display:block;font-size:16px;margin-bottom:2px;}
+.tab p{font-size:10px;color:#0F6E56;font-weight:500;}
+.panel{display:none;padding:16px;background:white;}
+.panel.active{display:block;}
+.field{margin-bottom:12px;}
+label{font-size:12px;color:#666;display:block;margin-bottom:4px;}
+input,textarea,select{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:14px;font-family:sans-serif;}
+textarea{resize:vertical;min-height:80px;}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.btn{width:100%;padding:13px;background:#1D9E75;color:white;border:none;border-radius:8px;font-size:15px;font-weight:500;margin-top:8px;cursor:pointer;}
+.btn:disabled{background:#aaa;}
+.result{margin:16px;background:white;border-radius:12px;border:1px solid #ddd;padding:16px;display:none;}
+.result h3{font-size:12px;color:#888;margin-bottom:10px;}
+.content{font-size:14px;line-height:1.7;color:#333;white-space:pre-wrap;}
+.loading{text-align:center;padding:20px;color:#888;display:none;background:white;margin:0 16px;border-radius:12px;}
+.copy-btn{margin-top:8px;padding:7px 14px;width:auto;font-size:12px;background:#f0f4f3;color:#1D9E75;border:1px solid #1D9E75;border-radius:6px;cursor:pointer;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <p>ZIYAD PROPERTY CONSULTANTS</p>
+  <h1>Sr Khairul's PA</h1>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('message')"><span>✉️</span><p>Message</p></div>
+  <div class="tab" onclick="switchTab('report')"><span>🏠</span><p>Report</p></div>
+  <div class="tab" onclick="switchTab('followup')"><span>👤</span><p>Follow-up</p></div>
+  <div class="tab" onclick="switchTab('ask')"><span>❓</span><p>Ask</p></div>
+  <div class="tab" onclick="switchTab('tasks')"><span>📋</span><p>Tasks</p></div>
+  <div class="tab" onclick="switchTab('summarize')"><span>📄</span><p>Summarize</p></div>
+  <div class="tab" onclick="switchTab('greeting')"><span>🌅</span><p>Greeting</p></div>
+</div>
+
+<!-- Message -->
+<div class="panel active" id="panel-message">
+  <div class="field"><label>Recipient name</label><input id="m-recipient" placeholder="e.g. Encik Ahmad"/></div>
+  <div class="field"><label>Message type</label>
+    <select id="m-type">
+      <option>WhatsApp</option>
+      <option>Email</option>
+      <option>Both</option>
+    </select>
+  </div>
+  <div class="field"><label>Purpose</label><input id="m-purpose" placeholder="e.g. Follow up viewing appointment"/></div>
+  <div class="field"><label>Tone</label>
+    <select id="m-tone">
+      <option>Friendly & professional</option>
+      <option>Formal</option>
+      <option>Urgent</option>
+      <option>Casual</option>
+    </select>
+  </div>
+  <button class="btn" onclick="generate('message')">Draft Message</button>
+</div>
+
+<!-- Report -->
+<div class="panel" id="panel-report">
+  <div class="field"><label>Property address</label><input id="r-address" placeholder="e.g. No 12, Jalan Bahagia, JB"/></div>
+  <div class="row">
+    <div class="field"><label>Property type</label><input id="r-proptype" placeholder="e.g. Terrace house"/></div>
+    <div class="field"><label>Land area (sqft)</label><input id="r-area" placeholder="e.g. 1500"/></div>
+  </div>
+  <div class="field"><label>Purpose</label>
+    <select id="r-purpose">
+      <option>Sale listing</option>
+      <option>Rental listing</option>
+      <option>Valuation report</option>
+      <option>Investment analysis</option>
+    </select>
+  </div>
+  <div class="field"><label>Additional notes</label><textarea id="r-notes" placeholder="e.g. Renovated kitchen, 3 bedrooms, near school..."></textarea></div>
+  <button class="btn" onclick="generate('report')">Generate Report</button>
+</div>
+
+<!-- Follow-up -->
+<div class="panel" id="panel-followup">
+  <div class="field"><label>Lead name</label><input id="f-name" placeholder="e.g. Ahmad"/></div>
+  <div class="field"><label>Looking for</label><input id="f-interest" placeholder="e.g. 3-bed apartment in JB"/></div>
+  <div class="row">
+    <div class="field"><label>Budget (RM)</label><input id="f-budget" placeholder="e.g. 500,000"/></div>
+    <div class="field"><label>Last contact</label><input id="f-last_contact" placeholder="e.g. 3 days ago"/></div>
+  </div>
+  <div class="field"><label>Current status</label><input id="f-status" placeholder="e.g. Viewed 1 unit, not decided"/></div>
+  <button class="btn" onclick="generate('followup')">Generate Follow-Up</button>
+</div>
+
+<!-- Ask -->
+<div class="panel" id="panel-ask">
+  <div class="field"><label>Your question</label><textarea id="a-question" placeholder="e.g. What is the stamp duty for a RM600k property? What documents needed for sub-sale?" style="min-height:120px;"></textarea></div>
+  <button class="btn" onclick="generate('ask')">Get Answer</button>
+</div>
+
+<!-- Tasks -->
+<div class="panel" id="panel-tasks">
+  <div class="field"><label>Enter your tasks for today</label><textarea id="t-tasks" placeholder="e.g.&#10;- Call Ahmad re: JB apartment&#10;- Submit valuation report&#10;- Site visit at 2pm&#10;- Reply emails" style="min-height:150px;"></textarea></div>
+  <button class="btn" onclick="generate('tasks')">Organise My Day</button>
+</div>
+
+<!-- Summarize -->
+<div class="panel" id="panel-summarize">
+  <div class="field"><label>Paste document or text to summarize</label><textarea id="s-content" placeholder="Paste any text, email, agreement, article or document here..." style="min-height:180px;"></textarea></div>
+  <button class="btn" onclick="generate('summarize')">Summarize</button>
+</div>
+
+<!-- Greeting -->
+<div class="panel" id="panel-greeting">
+  <div class="field"><label>Today's focus / theme</label><input id="g-focus" placeholder="e.g. Follow up all leads, closing targets"/></div>
+  <div class="field"><label>Number of agents</label><input id="g-agents" placeholder="e.g. 8"/></div>
+  <button class="btn" onclick="generate('greeting')">Generate Greeting</button>
+</div>
+
+<div class="loading" id="loading">Generating... please wait ⏳</div>
+
+<div class="result" id="result">
+  <h3>Result</h3>
+  <div class="content" id="output"></div>
+  <button class="copy-btn" onclick="copy()">Copy</button>
+</div>
+
+<script>
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach((t,i)=>{t.classList.remove('active')});
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('panel-'+name).classList.add('active');
+  document.getElementById('result').style.display='none';
+}
+
+async function generate(feature){
+  const btn = document.querySelector('.panel.active .btn');
+  const data = {feature};
+
+  if(feature==='message'){
+    data.recipient=document.getElementById('m-recipient').value;
+    data.type=document.getElementById('m-type').value;
+    data.purpose=document.getElementById('m-purpose').value;
+    data.tone=document.getElementById('m-tone').value;
+    if(!data.recipient||!data.purpose){alert('Please fill in recipient and purpose.');return;}
+  } else if(feature==='report'){
+    data.address=document.getElementById('r-address').value;
+    data.proptype=document.getElementById('r-proptype').value;
+    data.area=document.getElementById('r-area').value;
+    data.purpose=document.getElementById('r-purpose').value;
+    data.notes=document.getElementById('r-notes').value;
+    if(!data.address||!data.proptype){alert('Please fill in address and property type.');return;}
+  } else if(feature==='followup'){
+    data.name=document.getElementById('f-name').value;
+    data.interest=document.getElementById('f-interest').value;
+    data.budget=document.getElementById('f-budget').value;
+    data.last_contact=document.getElementById('f-last_contact').value;
+    data.status=document.getElementById('f-status').value;
+    if(!data.name||!data.interest){alert('Please fill in name and interest.');return;}
+  } else if(feature==='ask'){
+    data.question=document.getElementById('a-question').value;
+    if(!data.question){alert('Please enter your question.');return;}
+  } else if(feature==='tasks'){
+    data.tasks=document.getElementById('t-tasks').value;
+    if(!data.tasks){alert('Please enter your tasks.');return;}
+  } else if(feature==='summarize'){
+    data.content=document.getElementById('s-content').value;
+    if(!data.content){alert('Please paste some text to summarize.');return;}
+  } else if(feature==='greeting'){
+    data.focus=document.getElementById('g-focus').value;
+    data.agents=document.getElementById('g-agents').value;
+    if(!data.focus){alert('Please enter today\'s focus.');return;}
+  }
+
+  btn.disabled=true;
+  document.getElementById('loading').style.display='block';
+  document.getElementById('result').style.display='none';
+
+  const res = await fetch('/pa',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  const json = await res.json();
+
+  document.getElementById('output').textContent=json.result;
+  document.getElementById('loading').style.display='none';
+  document.getElementById('result').style.display='block';
+  btn.disabled=false;
+}
+
+function copy(){
+  navigator.clipboard.writeText(document.getElementById('output').textContent);
+  alert('Copied!');
+}
+</script>
+</body>
+</html>

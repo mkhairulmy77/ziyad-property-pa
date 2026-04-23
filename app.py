@@ -148,7 +148,8 @@ def home():
 
 @app.route("/listings")
 def listings_page():
-    return send_from_directory(".", "listings.html")
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    return send_from_directory(base_dir, "listings.html")
 
 @app.route("/suria.png")
 def avatar():

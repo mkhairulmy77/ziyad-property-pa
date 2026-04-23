@@ -3,77 +3,83 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>SURIA — Ziyad Property AI</title>
+<title>SURIA — Listing Hub</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:sans-serif;background:#f0f0f0;min-height:100vh;}
-.header{background:#1a1a1a;padding:20px 16px 16px;}
-.header-top{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
-.avatar{width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid #a3e635;}
-.header-title p{margin:0;font-size:11px;color:#a3e635;letter-spacing:0.8px;}
-.header-title h1{margin:2px 0 0;font-size:22px;font-weight:500;color:white;letter-spacing:1px;}
-.header-sub{font-size:11px;color:#888;margin-top:2px;}
-.feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:6px;}
-.feature-grid2{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
-.feat{background:#2a2a2a;border-radius:10px;padding:10px 6px;text-align:center;cursor:pointer;border:1.5px solid transparent;transition:all 0.2s;}
-.feat.active{border:1.5px solid #a3e635;background:#333;}
-.feat span{display:block;font-size:18px;margin-bottom:3px;}
-.feat p{font-size:10px;color:#a3e635;font-weight:500;margin:0;}
-.content{padding:16px;}
-.card{background:white;border-radius:14px;border:0.5px solid #e0e0e0;overflow:hidden;margin-bottom:12px;}
-.card-header{background:#f8f8f8;padding:12px 16px;border-bottom:0.5px solid #e8e8e8;display:flex;align-items:center;gap:8px;}
-.card-header span{font-size:16px;}
-.card-header p{margin:0;font-size:13px;font-weight:500;color:#1a1a1a;}
-.card-body{padding:14px;display:flex;flex-direction:column;gap:10px;}
-label{font-size:10px;color:#888;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.6px;}
-.opt-label{font-size:10px;color:#bbb;font-style:italic;margin-left:3px;}
-.input-wrap{position:relative;display:flex;align-items:center;gap:6px;}
-.input-wrap input,.input-wrap textarea{flex:1;}
-input,textarea,select{width:100%;padding:11px;border:1px solid #e0e0e0;border-radius:8px;font-size:14px;font-family:sans-serif;background:#fafafa;color:#1a1a1a;}
-input:focus,textarea:focus,select:focus{outline:none;border-color:#a3e635;background:white;}
-textarea{resize:vertical;min-height:90px;}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
-.mic-btn{width:36px;height:36px;min-width:36px;background:#2a2a2a;border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all 0.2s;flex-shrink:0;}
-.mic-btn.listening{background:#a3e635;animation:pulse-mic 1s infinite;}
-@keyframes pulse-mic{0%,100%{transform:scale(1);}50%{transform:scale(1.1);}}
-.btn{width:100%;padding:14px;background:#a3e635;color:#1a1a1a;border:none;border-radius:10px;font-size:15px;font-weight:500;margin-top:4px;cursor:pointer;letter-spacing:0.3px;}
-.btn:disabled{background:#ccc;color:#888;}
-.btn:active{opacity:0.9;}
-.panel{display:none;}
-.panel.active{display:block;}
-.result-card{background:white;border-radius:14px;border:0.5px solid #e0e0e0;padding:16px;margin-bottom:12px;display:none;}
-.result-label{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:10px;}
-.result-content{font-size:14px;line-height:1.8;color:#1a1a1a;white-space:pre-wrap;}
-.result-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
-.copy-btn{padding:8px 18px;background:#f0f0f0;color:#1a1a1a;border:1px solid #ccc;border-radius:8px;font-size:12px;cursor:pointer;font-weight:500;}
-.speak-btn{padding:8px 18px;background:#2a2a2a;color:#a3e635;border:1px solid #2a2a2a;border-radius:8px;font-size:12px;cursor:pointer;font-weight:500;}
-.stop-btn{padding:8px 18px;background:#ff4444;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;font-weight:500;display:none;}
-.loading{text-align:center;padding:24px;color:#888;display:none;background:white;border-radius:14px;margin-bottom:12px;font-size:14px;}
-.loading-dot{display:inline-block;animation:pulse 1.2s infinite;}
+.header{background:#1a1a1a;padding:16px;}
+.header-top{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #a3e635;}
+.header-title p{margin:0;font-size:10px;color:#a3e635;letter-spacing:0.8px;}
+.header-title h1{margin:2px 0 0;font-size:18px;font-weight:500;color:white;}
+.header-sub{font-size:10px;color:#888;}
+.nav-tabs{display:flex;gap:6px;margin-top:4px;}
+.nav-tab{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid #333;color:#888;}
+.nav-tab.active{background:#a3e635;color:#1a1a1a;border-color:#a3e635;}
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px 14px;background:#222;}
+.stat{text-align:center;}
+.stat-val{font-size:20px;font-weight:500;color:#a3e635;}
+.stat-label{font-size:10px;color:#888;margin-top:2px;}
+.content{padding:14px;}
+.section-title{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:10px;}
+.listing-card{background:white;border-radius:14px;border:0.5px solid #e0e0e0;overflow:hidden;margin-bottom:12px;}
+.listing-img{width:100%;height:160px;object-fit:cover;background:#f0f0f0;}
+.listing-img-placeholder{width:100%;height:160px;background:#2a2a2a;display:flex;align-items:center;justify-content:center;font-size:32px;}
+.listing-body{padding:14px;}
+.listing-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+.listing-title{font-size:14px;font-weight:500;color:#1a1a1a;flex:1;margin-right:8px;}
+.status-badge{font-size:10px;font-weight:500;padding:3px 10px;border-radius:20px;white-space:nowrap;}
+.status-active{background:#dcfce7;color:#16a34a;}
+.status-sold{background:#fee2e2;color:#dc2626;}
+.status-rent{background:#dbeafe;color:#2563eb;}
+.listing-price{font-size:18px;font-weight:500;color:#1a1a1a;margin-bottom:6px;}
+.listing-address{font-size:12px;color:#888;margin-bottom:10px;}
+.listing-meta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px;}
+.meta-item{font-size:11px;color:#666;display:flex;align-items:center;gap:4px;}
+.days-bar{background:#f0f0f0;border-radius:6px;padding:8px 10px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
+.days-label{font-size:11px;color:#888;}
+.days-val{font-size:12px;font-weight:500;}
+.days-ok{color:#16a34a;}
+.days-warn{color:#d97706;}
+.days-alert{color:#dc2626;}
+.listing-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.action-btn{padding:9px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:none;text-align:center;}
+.btn-green{background:#a3e635;color:#1a1a1a;}
+.btn-dark{background:#1a1a1a;color:#a3e635;}
+.btn-outline{background:transparent;color:#1a1a1a;border:1px solid #ddd;}
+.btn-full{grid-column:1/-1;}
+.marketing-section{margin-top:10px;border-top:0.5px solid #f0f0f0;padding-top:10px;}
+.marketing-title{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+.add-log-btn{font-size:11px;color:#a3e635;cursor:pointer;background:none;border:none;font-weight:500;}
+.log-item{background:#f8f8f8;border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:12px;}
+.log-header{display:flex;justify-content:space-between;margin-bottom:3px;}
+.log-platform{font-weight:500;color:#1a1a1a;}
+.log-date{color:#888;}
+.log-action{color:#555;}
+.log-result{color:#888;font-size:11px;margin-top:2px;}
+.log-delete{color:#dc2626;cursor:pointer;font-size:10px;background:none;border:none;float:right;}
+.no-logs{font-size:12px;color:#bbb;text-align:center;padding:8px;}
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:100;align-items:flex-end;justify-content:center;}
+.modal-overlay.active{display:flex;}
+.modal{background:white;border-radius:20px 20px 0 0;padding:20px;width:100%;max-height:85vh;overflow-y:auto;}
+.modal-title{font-size:15px;font-weight:500;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
+.modal-close{font-size:20px;cursor:pointer;color:#888;background:none;border:none;}
+.form-field{margin-bottom:12px;}
+.form-label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;}
+.form-input{width:100%;padding:10px;border:1px solid #e0e0e0;border-radius:8px;font-size:14px;font-family:sans-serif;}
+.form-input:focus{outline:none;border-color:#a3e635;}
+.copy-result{background:#f8f8f8;border-radius:10px;padding:14px;margin-top:12px;font-size:13px;line-height:1.7;white-space:pre-wrap;display:none;}
+.loading-msg{text-align:center;padding:20px;color:#888;display:none;}
+.loading-dot{animation:pulse 1.2s infinite;}
 @keyframes pulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
-.divider{height:1px;background:#f0f0f0;margin:4px 0;}
-.voice-bar{background:#1a1a1a;padding:10px 16px;display:none;align-items:center;gap:10px;}
-.voice-bar.active{display:flex;}
-.voice-bar p{color:#a3e635;font-size:12px;margin:0;flex:1;}
-.voice-indicator{display:flex;gap:3px;align-items:center;}
-.voice-indicator span{display:block;width:3px;background:#a3e635;border-radius:2px;animation:wave 1s ease-in-out infinite;}
-.voice-indicator span:nth-child(1){height:8px;animation-delay:0s;}
-.voice-indicator span:nth-child(2){height:14px;animation-delay:0.1s;}
-.voice-indicator span:nth-child(3){height:20px;animation-delay:0.2s;}
-.voice-indicator span:nth-child(4){height:14px;animation-delay:0.3s;}
-.voice-indicator span:nth-child(5){height:8px;animation-delay:0.4s;}
-@keyframes wave{0%,100%{transform:scaleY(0.5);}50%{transform:scaleY(1.2);}}
-.calc-result{background:#f8f8f8;border-radius:10px;padding:14px;margin-top:8px;display:none;}
-.calc-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid #e8e8e8;}
-.calc-row:last-child{border-bottom:none;}
-.calc-label{font-size:13px;color:#666;}
-.calc-value{font-size:14px;font-weight:500;color:#1a1a1a;}
-.calc-total{display:flex;justify-content:space-between;align-items:center;padding:12px;background:#1a1a1a;border-radius:8px;margin-top:8px;}
-.calc-total-label{font-size:13px;color:#a3e635;font-weight:500;}
-.calc-total-value{font-size:16px;font-weight:500;color:#a3e635;}
-.calc-section{margin-bottom:16px;}
-.calc-section-title{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;padding-bottom:6px;border-bottom:0.5px solid #e0e0e0;}
+.platform-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+.platform-btn{padding:10px 6px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid #e0e0e0;background:white;text-align:center;}
+.platform-btn.selected{border-color:#a3e635;background:#f0f8e0;color:#1a1a1a;}
+.back-btn{display:flex;align-items:center;gap:6px;font-size:13px;color:#a3e635;background:none;border:none;cursor:pointer;margin-bottom:12px;padding:0;}
+.empty-state{text-align:center;padding:40px 20px;color:#888;}
+.empty-icon{font-size:40px;margin-bottom:12px;}
+.refresh-btn{background:#2a2a2a;color:#a3e635;border:none;border-radius:8px;padding:8px 16px;font-size:12px;cursor:pointer;font-weight:500;}
+.views-badge{background:#f0f0f0;border-radius:6px;padding:3px 8px;font-size:11px;color:#555;}
 </style>
 </head>
 <body>
@@ -83,694 +89,394 @@ textarea{resize:vertical;min-height:90px;}
     <img src="/suria.png" class="avatar" alt="SURIA"/>
     <div class="header-title">
       <p>ZIYAD PROPERTY CONSULTANTS</p>
-      <h1>SURIA</h1>
-      <p class="header-sub">Sr Khairul's AI Personal Assistant</p>
+      <h1>SURIA Listing Hub</h1>
+      <p class="header-sub">Sr Khairul's Property Dashboard</p>
     </div>
+    <button class="refresh-btn" onclick="loadListings()">↻ Refresh</button>
   </div>
-  <div class="feature-grid">
-    <div class="feat active" onclick="switchTab('message',this)"><span>✉️</span><p>Message</p></div>
-    <div class="feat" onclick="switchTab('report',this)"><span>🏠</span><p>Report</p></div>
-    <div class="feat" onclick="switchTab('followup',this)"><span>👤</span><p>Follow-up</p></div>
-    <div class="feat" onclick="switchTab('ask',this)"><span>❓</span><p>Ask</p></div>
-  </div>
-  <div class="feature-grid2">
-    <div class="feat" onclick="switchTab('tasks',this)"><span>📋</span><p>Tasks</p></div>
-    <div class="feat" onclick="switchTab('summarize',this)"><span>📄</span><p>Summarize</p></div>
-    <div class="feat" onclick="switchTab('greeting',this)"><span>🌅</span><p>Greeting</p></div>
-    <div class="feat" onclick="switchTab('calculator',this)"><span>🧮</span><p>Calculator</p></div>
-    <div class="feat" onclick="switchTab('listing',this)"><span>✍️</span><p>Listing</p></div>
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="filterTab('all',this)">All</div>
+    <div class="nav-tab" onclick="filterTab('for-sale',this)">For Sale</div>
+    <div class="nav-tab" onclick="filterTab('for-rent',this)">For Rent</div>
+    <div class="nav-tab" onclick="filterTab('sold',this)">Sold</div>
   </div>
 </div>
 
-<div class="voice-bar" id="voice-bar">
-  <div class="voice-indicator">
-    <span></span><span></span><span></span><span></span><span></span>
-  </div>
-  <p id="voice-status">Listening...</p>
+<div class="stats-bar">
+  <div class="stat"><div class="stat-val" id="stat-total">–</div><div class="stat-label">Total</div></div>
+  <div class="stat"><div class="stat-val" id="stat-active">–</div><div class="stat-label">Active</div></div>
+  <div class="stat"><div class="stat-val" id="stat-sold">–</div><div class="stat-label">Sold</div></div>
+  <div class="stat"><div class="stat-val" id="stat-views">–</div><div class="stat-label">Total Views</div></div>
 </div>
 
 <div class="content">
+  <div id="listings-container">
+    <div class="empty-state">
+      <div class="empty-icon">🏠</div>
+      <p>Loading your listings...</p>
+    </div>
+  </div>
+</div>
 
-  <!-- Message -->
-  <div class="panel active" id="panel-message">
-    <div class="card">
-      <div class="card-header"><span>✉️</span><p>Draft Message</p></div>
-      <div class="card-body">
-        <div>
-          <label>Recipient name</label>
-          <div class="input-wrap">
-            <input id="m-recipient" placeholder="e.g. Encik Ahmad"/>
-            <button class="mic-btn" onclick="startVoice('m-recipient')">🎤</button>
-          </div>
-        </div>
-        <div class="row">
-          <div><label>Message type</label>
-            <select id="m-type"><option>WhatsApp</option><option>Email</option><option>Both</option></select>
-          </div>
-          <div><label>Tone</label>
-            <select id="m-tone"><option>Friendly & professional</option><option>Formal</option><option>Urgent</option><option>Casual</option></select>
-          </div>
-        </div>
-        <div>
-          <label>Purpose</label>
-          <div class="input-wrap">
-            <input id="m-purpose" placeholder="e.g. Follow up viewing appointment"/>
-            <button class="mic-btn" onclick="startVoice('m-purpose')">🎤</button>
-          </div>
-        </div>
-        <button class="btn" onclick="generate('message')">Generate with SURIA</button>
+<!-- Log Marketing Action Modal -->
+<div class="modal-overlay" id="log-modal">
+  <div class="modal">
+    <div class="modal-title">
+      Log Marketing Action
+      <button class="modal-close" onclick="closeModal('log-modal')">✕</button>
+    </div>
+    <input type="hidden" id="log-property-id"/>
+    <div class="form-field">
+      <label class="form-label">Platform</label>
+      <div class="platform-grid">
+        <div class="platform-btn" onclick="selectPlatform(this,'Facebook')">📘 Facebook</div>
+        <div class="platform-btn" onclick="selectPlatform(this,'WhatsApp')">💬 WhatsApp</div>
+        <div class="platform-btn" onclick="selectPlatform(this,'iProperty')">🏠 iProperty</div>
+        <div class="platform-btn" onclick="selectPlatform(this,'Mudah')">📋 Mudah</div>
+        <div class="platform-btn" onclick="selectPlatform(this,'Instagram')">📸 Instagram</div>
+        <div class="platform-btn" onclick="selectPlatform(this,'Other')">📢 Other</div>
       </div>
+      <input type="hidden" id="log-platform"/>
     </div>
+    <div class="form-field">
+      <label class="form-label">Action taken</label>
+      <input class="form-input" id="log-action" placeholder="e.g. Posted listing ad, Boosted post"/>
+    </div>
+    <div class="form-field">
+      <label class="form-label">Date</label>
+      <input class="form-input" type="date" id="log-date"/>
+    </div>
+    <div class="form-field">
+      <label class="form-label">Notes / Result</label>
+      <input class="form-input" id="log-notes" placeholder="e.g. 5 enquiries, 2 viewings booked"/>
+    </div>
+    <button class="action-btn btn-green btn-full" onclick="submitLog()" style="width:100%;padding:13px;margin-top:4px;">Save Log</button>
   </div>
+</div>
 
-  <!-- Report -->
-  <div class="panel" id="panel-report">
-    <div class="card">
-      <div class="card-header"><span>🏠</span><p>Property Report</p></div>
-      <div class="card-body">
-        <div>
-          <label>Property address</label>
-          <div class="input-wrap">
-            <input id="r-address" placeholder="e.g. No 12, Jalan Bahagia, JB"/>
-            <button class="mic-btn" onclick="startVoice('r-address')">🎤</button>
-          </div>
-        </div>
-        <div class="row">
-          <div>
-            <label>Property type</label>
-            <div class="input-wrap">
-              <input id="r-proptype" placeholder="e.g. Terrace house"/>
-              <button class="mic-btn" onclick="startVoice('r-proptype')">🎤</button>
-            </div>
-          </div>
-          <div><label>Land area (sqft)</label><input id="r-area" placeholder="e.g. 1500"/></div>
-        </div>
-        <div><label>Purpose</label>
-          <select id="r-purpose"><option>Sale listing</option><option>Rental listing</option><option>Valuation report</option><option>Investment analysis</option></select>
-        </div>
-        <div>
-          <label>Additional notes</label>
-          <div class="input-wrap">
-            <textarea id="r-notes" placeholder="e.g. Renovated kitchen, 3 bedrooms, near school..."></textarea>
-            <button class="mic-btn" onclick="startVoice('r-notes')" style="align-self:flex-start;margin-top:4px;">🎤</button>
-          </div>
-        </div>
-        <button class="btn" onclick="generate('report')">Generate with SURIA</button>
+<!-- Generate Copy Modal -->
+<div class="modal-overlay" id="copy-modal">
+  <div class="modal">
+    <div class="modal-title">
+      Generate Marketing Copy
+      <button class="modal-close" onclick="closeModal('copy-modal')">✕</button>
+    </div>
+    <input type="hidden" id="copy-property-id"/>
+    <p id="copy-property-name" style="font-size:13px;color:#555;margin-bottom:14px;"></p>
+    <div class="form-field">
+      <label class="form-label">Select Platform</label>
+      <div class="platform-grid">
+        <div class="platform-btn" onclick="selectCopyPlatform(this,'Facebook')">📘 Facebook</div>
+        <div class="platform-btn" onclick="selectCopyPlatform(this,'WhatsApp')">💬 WhatsApp</div>
+        <div class="platform-btn" onclick="selectCopyPlatform(this,'iProperty')">🏠 iProperty/Mudah</div>
       </div>
+      <input type="hidden" id="copy-platform"/>
     </div>
+    <button class="action-btn btn-green btn-full" onclick="generateCopy()" style="width:100%;padding:13px;margin-top:4px;">✨ Generate with SURIA</button>
+    <div class="loading-msg" id="copy-loading"><span class="loading-dot">◆</span> SURIA is writing...</div>
+    <div class="copy-result" id="copy-result"></div>
+    <button class="action-btn btn-dark btn-full" id="copy-copy-btn" onclick="copyCopyText()" style="width:100%;padding:10px;margin-top:8px;display:none;">Copy to clipboard</button>
   </div>
-
-  <!-- Follow-up -->
-  <div class="panel" id="panel-followup">
-    <div class="card">
-      <div class="card-header"><span>👤</span><p>Lead Follow-Up</p></div>
-      <div class="card-body">
-        <div>
-          <label>Lead name</label>
-          <div class="input-wrap">
-            <input id="f-name" placeholder="e.g. Ahmad"/>
-            <button class="mic-btn" onclick="startVoice('f-name')">🎤</button>
-          </div>
-        </div>
-        <div>
-          <label>Looking for</label>
-          <div class="input-wrap">
-            <input id="f-interest" placeholder="e.g. 3-bed apartment in JB"/>
-            <button class="mic-btn" onclick="startVoice('f-interest')">🎤</button>
-          </div>
-        </div>
-        <div class="row">
-          <div><label>Budget (RM)</label><input id="f-budget" placeholder="e.g. 500,000"/></div>
-          <div><label>Last contact</label><input id="f-last_contact" placeholder="e.g. 3 days ago"/></div>
-        </div>
-        <div>
-          <label>Current status</label>
-          <div class="input-wrap">
-            <input id="f-status" placeholder="e.g. Viewed 1 unit, not decided"/>
-            <button class="mic-btn" onclick="startVoice('f-status')">🎤</button>
-          </div>
-        </div>
-        <button class="btn" onclick="generate('followup')">Generate with SURIA</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Ask -->
-  <div class="panel" id="panel-ask">
-    <div class="card">
-      <div class="card-header"><span>❓</span><p>Ask SURIA</p></div>
-      <div class="card-body">
-        <div>
-          <label>Your question</label>
-          <div class="input-wrap">
-            <textarea id="a-question" placeholder="e.g. What is the stamp duty for a RM600k property?" style="min-height:120px;"></textarea>
-            <button class="mic-btn" onclick="startVoice('a-question')" style="align-self:flex-start;margin-top:4px;">🎤</button>
-          </div>
-        </div>
-        <button class="btn" onclick="generate('ask')">Ask SURIA</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Tasks -->
-  <div class="panel" id="panel-tasks">
-    <div class="card">
-      <div class="card-header"><span>📋</span><p>My Tasks</p></div>
-      <div class="card-body">
-        <div>
-          <label>Enter today's tasks</label>
-          <div class="input-wrap">
-            <textarea id="t-tasks" placeholder="e.g.&#10;- Call Ahmad re: JB apartment&#10;- Submit valuation report&#10;- Site visit at 2pm" style="min-height:150px;"></textarea>
-            <button class="mic-btn" onclick="startVoice('t-tasks')" style="align-self:flex-start;margin-top:4px;">🎤</button>
-          </div>
-        </div>
-        <button class="btn" onclick="generate('tasks')">Organise My Day</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Summarize -->
-  <div class="panel" id="panel-summarize">
-    <div class="card">
-      <div class="card-header"><span>📄</span><p>Summarize Document</p></div>
-      <div class="card-body">
-        <div><label>Paste text to summarize</label><textarea id="s-content" placeholder="Paste any text, email, agreement or document here..." style="min-height:180px;"></textarea></div>
-        <button class="btn" onclick="generate('summarize')">Summarize with SURIA</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Greeting -->
-  <div class="panel" id="panel-greeting">
-    <div class="card">
-      <div class="card-header"><span>🌅</span><p>Agent Morning Greeting</p></div>
-      <div class="card-body">
-        <div>
-          <label>Today's focus / theme</label>
-          <div class="input-wrap">
-            <input id="g-focus" placeholder="e.g. Follow up all leads, closing targets"/>
-            <button class="mic-btn" onclick="startVoice('g-focus')">🎤</button>
-          </div>
-        </div>
-        <div><label>Number of agents</label><input id="g-agents" placeholder="e.g. 8"/></div>
-        <button class="btn" onclick="generate('greeting')">Generate Greeting</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Calculator -->
-  <div class="panel" id="panel-calculator">
-    <div class="card">
-      <div class="card-header"><span>🏦</span><p>Loan Calculator</p></div>
-      <div class="card-body">
-        <div><label>Property price (RM)</label><input id="c-price" type="number" placeholder="e.g. 500000" oninput="calcLoan()"/></div>
-        <div class="row">
-          <div><label>Down payment</label>
-            <select id="c-dp" onchange="calcLoan()">
-              <option value="10">10%</option>
-              <option value="20">20%</option>
-              <option value="30">30%</option>
-            </select>
-          </div>
-          <div><label>Interest rate (%)</label><input id="c-rate" type="number" placeholder="e.g. 4.5" step="0.1" oninput="calcLoan()"/></div>
-        </div>
-        <div><label>Loan tenure</label>
-          <select id="c-tenure" onchange="calcLoan()">
-            <option value="35">35 years</option>
-            <option value="30">30 years</option>
-            <option value="25">25 years</option>
-            <option value="20">20 years</option>
-            <option value="15">15 years</option>
-            <option value="10">10 years</option>
-          </select>
-        </div>
-        <div class="calc-result" id="loan-result">
-          <div class="calc-section">
-            <div class="calc-section-title">Loan breakdown</div>
-            <div class="calc-row"><span class="calc-label">Property price</span><span class="calc-value" id="l-price">-</span></div>
-            <div class="calc-row"><span class="calc-label">Down payment</span><span class="calc-value" id="l-dp">-</span></div>
-            <div class="calc-row"><span class="calc-label">Loan amount</span><span class="calc-value" id="l-loan">-</span></div>
-            <div class="calc-row"><span class="calc-label">Total interest</span><span class="calc-value" id="l-interest">-</span></div>
-            <div class="calc-row"><span class="calc-label">Total repayment</span><span class="calc-value" id="l-total">-</span></div>
-          </div>
-          <div class="calc-total">
-            <span class="calc-total-label">Monthly instalment</span>
-            <span class="calc-total-value" id="l-monthly">-</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header"><span>📋</span><p>Stamp Duty & Legal Fees</p></div>
-      <div class="card-body">
-        <div><label>Property price (RM)</label><input id="sd-price" type="number" placeholder="e.g. 500000" oninput="calcStampDuty()"/></div>
-        <div class="row">
-          <div><label>Transaction type</label>
-            <select id="sd-type" onchange="calcStampDuty()">
-              <option value="subsale">Sub-sale</option>
-              <option value="new">New project</option>
-            </select>
-          </div>
-          <div><label>Title type</label>
-            <select id="sd-title" onchange="calcStampDuty()">
-              <option value="freehold">Freehold</option>
-              <option value="leasehold">Leasehold</option>
-            </select>
-          </div>
-        </div>
-        <div class="row">
-          <div><label>First time buyer?</label>
-            <select id="sd-firsttime" onchange="calcStampDuty()">
-              <option value="no">No</option>
-              <option value="yes">Yes — exemption</option>
-            </select>
-          </div>
-          <div><label>Consent to transfer?</label>
-            <select id="sd-consent" onchange="calcStampDuty()">
-              <option value="no">No</option>
-              <option value="yes">Yes (+RM2,000)</option>
-            </select>
-          </div>
-        </div>
-        <div class="calc-result" id="sd-result">
-          <div class="calc-section">
-            <div class="calc-section-title">MOT stamp duty</div>
-            <div class="calc-row"><span class="calc-label">First RM100k @ 1%</span><span class="calc-value" id="sd-tier1">-</span></div>
-            <div class="calc-row"><span class="calc-label">Next RM400k @ 2%</span><span class="calc-value" id="sd-tier2">-</span></div>
-            <div class="calc-row"><span class="calc-label">Next RM500k @ 3%</span><span class="calc-value" id="sd-tier3">-</span></div>
-            <div class="calc-row"><span class="calc-label">Above RM1M @ 4%</span><span class="calc-value" id="sd-tier4">-</span></div>
-            <div class="calc-row"><span class="calc-label">First buyer exemption</span><span class="calc-value" id="sd-exempt">-</span></div>
-            <div class="calc-total" style="margin-bottom:12px;">
-              <span class="calc-total-label">MOT Stamp Duty</span>
-              <span class="calc-total-value" id="sd-mot">-</span>
-            </div>
-          </div>
-          <div class="calc-section">
-            <div class="calc-section-title">Loan agreement stamp duty (0.5%)</div>
-            <div class="calc-row"><span class="calc-label">Loan amount (90%)</span><span class="calc-value" id="sd-loanamt">-</span></div>
-            <div class="calc-total" style="margin-bottom:12px;">
-              <span class="calc-total-label">Loan Stamp Duty</span>
-              <span class="calc-total-value" id="sd-loansd">-</span>
-            </div>
-          </div>
-          <div class="calc-section">
-            <div class="calc-section-title">Legal fees</div>
-            <div class="calc-row"><span class="calc-label">SPA legal fee</span><span class="calc-value" id="lf-spa">-</span></div>
-            <div class="calc-row"><span class="calc-label">Loan agreement fee</span><span class="calc-value" id="lf-loan">-</span></div>
-            <div class="calc-row"><span class="calc-label">Disbursements (est.)</span><span class="calc-value" id="lf-disb">-</span></div>
-            <div class="calc-row"><span class="calc-label">Consent to transfer</span><span class="calc-value" id="lf-consent">-</span></div>
-          </div>
-          <div class="calc-total">
-            <span class="calc-total-label">Total upfront cost</span>
-            <span class="calc-total-value" id="sd-grandtotal">-</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Listing Writer -->
-  <div class="panel" id="panel-listing">
-    <div class="card">
-      <div class="card-header"><span>✍️</span><p>Property Listing Writer</p></div>
-      <div class="card-body">
-
-        <div class="row">
-          <div><label>Property type</label>
-            <select id="li-proptype">
-              <option>Condominium</option>
-              <option>Apartment</option>
-              <option>Terrace House</option>
-              <option>Semi-D</option>
-              <option>Bungalow</option>
-              <option>Shop Office</option>
-              <option>Land</option>
-            </select>
-          </div>
-          <div><label>Tenure</label>
-            <select id="li-tenure">
-              <option>Freehold</option>
-              <option>Leasehold</option>
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <label>Address / Location</label>
-          <div class="input-wrap">
-            <input id="li-address" placeholder="e.g. Taman Lagenda, Kluang, Johor"/>
-            <button class="mic-btn" onclick="startVoice('li-address')">🎤</button>
-          </div>
-        </div>
-
-        <div class="row3">
-          <div><label>Built-up <span class="opt-label">(optional)</span></label><input id="li-builtup" placeholder="e.g. 1,200 sq ft"/></div>
-          <div><label>Land area (sq ft)</label><input id="li-landarea" placeholder="e.g. 2,400"/></div>
-          <div><label>Asking price (RM)</label><input id="li-price" placeholder="e.g. 480,000"/></div>
-        </div>
-
-        <div class="row3">
-          <div><label>Bedrooms</label>
-            <select id="li-bedrooms">
-              <option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6+</option>
-            </select>
-          </div>
-          <div><label>Bathrooms</label>
-            <select id="li-bathrooms">
-              <option>1</option><option>2</option><option selected>3</option><option>4</option><option>5+</option>
-            </select>
-          </div>
-          <div><label>Car park</label>
-            <select id="li-carpark">
-              <option>1</option><option selected>2</option><option>3</option><option>None</option>
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <label>Key features</label>
-          <div class="input-wrap">
-            <textarea id="li-features" placeholder="e.g. Fully renovated, furnished, swimming pool, gym, 24hr security, near LRT"></textarea>
-            <button class="mic-btn" onclick="startVoice('li-features')" style="align-self:flex-start;margin-top:4px;">🎤</button>
-          </div>
-        </div>
-
-        <div class="row">
-          <div><label>Furnishing</label>
-            <select id="li-furnishing">
-              <option>Fully Furnished</option>
-              <option>Partially Furnished</option>
-              <option>Unfurnished</option>
-            </select>
-          </div>
-          <div><label>Condition</label>
-            <select id="li-condition">
-              <option>Move-in Ready</option>
-              <option>Renovated</option>
-              <option>Original</option>
-              <option>Under Construction</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="row">
-          <div><label>Target buyer</label>
-            <select id="li-targetbuyer">
-              <option>Own Stay</option>
-              <option>Investor</option>
-              <option>First-time Buyer</option>
-              <option>Upgrader</option>
-            </select>
-          </div>
-          <div><label>Language output</label>
-            <select id="li-language">
-              <option>English + BM</option>
-              <option>English Only</option>
-              <option>BM Only</option>
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <label>Special selling points <span class="opt-label">(optional)</span></label>
-          <div class="input-wrap">
-            <input id="li-specialpoints" placeholder="e.g. Below market value, motivated seller, ROI 6%"/>
-            <button class="mic-btn" onclick="startVoice('li-specialpoints')">🎤</button>
-          </div>
-        </div>
-
-        <button class="btn" onclick="generate('listing')">✨ Generate Listing with SURIA</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Loading -->
-  <div class="loading" id="loading">
-    <span class="loading-dot">◆</span> SURIA is thinking...
-  </div>
-
-  <!-- Result -->
-  <div class="result-card" id="result">
-    <p class="result-label">Result</p>
-    <div class="divider"></div>
-    <div class="result-content" id="output"></div>
-    <div class="result-actions">
-      <button class="copy-btn" onclick="copy()">Copy</button>
-      <button class="speak-btn" id="speak-btn" onclick="speakResult()">🔊 Read aloud</button>
-      <button class="stop-btn" id="stop-btn" onclick="stopSpeaking()">⏹ Stop</button>
-    </div>
-  </div>
-
 </div>
 
 <script>
-let currentMicBtn=null;
-let recognition=null;
-let synth=window.speechSynthesis;
+const AGENT_POST_ID = '12309';
+const WP_API = 'https://ziyad.my/wp-json/wp/v2/properties';
+let allListings = [];
+let allLogs = {};
+let currentFilter = 'all';
+let activeCopyProperty = null;
 
-function switchTab(name,el){
-  document.querySelectorAll('.feat').forEach(f=>f.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('panel-'+name).classList.add('active');
-  document.getElementById('result').style.display='none';
-  document.getElementById('loading').style.display='none';
-  stopSpeaking();
+async function loadListings() {
+  document.getElementById('listings-container').innerHTML = '<div class="empty-state"><div class="loading-dot" style="font-size:24px;">◆</div><p style="margin-top:12px;">Fetching listings from ziyad.my...</p></div>';
+  try {
+    const [propsRes, logsRes] = await Promise.all([
+      fetch(`${WP_API}?per_page=50&_embed=1`),
+      fetch('/marketing/logs')
+    ]);
+    const allProps = await propsRes.json();
+    const logsData = await logsRes.json();
+    allLogs = logsData.logs || {};
+
+    // Filter to only MK's listings (fave_agents contains 12309)
+    allListings = allProps.filter(p => {
+      const agents = p.property_meta?.fave_agents || [];
+      return agents.includes(AGENT_POST_ID) || agents.includes(parseInt(AGENT_POST_ID));
+    });
+
+    updateStats();
+    renderListings();
+  } catch(e) {
+    document.getElementById('listings-container').innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>Could not load listings. Check connection.</p></div>';
+  }
 }
 
-function startVoice(fieldId){
-  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){
-    alert('Voice input not supported. Please use Chrome.');
+function updateStats() {
+  const active = allListings.filter(p => p.class_list?.some(c => c.includes('for-sale') || c.includes('for-rent')));
+  const sold = allListings.filter(p => p.class_list?.some(c => c.includes('sold')));
+  const totalViews = allListings.reduce((sum, p) => sum + parseInt(p.property_meta?.houzez_total_property_views?.[0] || 0), 0);
+  document.getElementById('stat-total').textContent = allListings.length;
+  document.getElementById('stat-active').textContent = active.length;
+  document.getElementById('stat-sold').textContent = sold.length;
+  document.getElementById('stat-views').textContent = totalViews;
+}
+
+function getDaysOnMarket(dateStr) {
+  const posted = new Date(dateStr);
+  const now = new Date();
+  return Math.floor((now - posted) / (1000 * 60 * 60 * 24));
+}
+
+function getStatus(p) {
+  const classes = p.class_list || [];
+  if (classes.some(c => c.includes('sold'))) return 'sold';
+  if (classes.some(c => c.includes('for-rent'))) return 'for-rent';
+  return 'for-sale';
+}
+
+function getStatusLabel(status) {
+  if (status === 'sold') return '<span class="status-badge status-sold">Sold</span>';
+  if (status === 'for-rent') return '<span class="status-badge status-rent">For Rent</span>';
+  return '<span class="status-badge status-active">For Sale</span>';
+}
+
+function getDaysClass(days) {
+  if (days <= 30) return 'days-ok';
+  if (days <= 60) return 'days-warn';
+  return 'days-alert';
+}
+
+function getLastMarketing(propertyId) {
+  const logs = allLogs[String(propertyId)] || [];
+  if (logs.length === 0) return null;
+  return logs[logs.length - 1];
+}
+
+function formatPrice(price) {
+  if (!price) return 'N/A';
+  return 'RM ' + parseInt(price).toLocaleString('en-MY');
+}
+
+function filterTab(filter, el) {
+  currentFilter = filter;
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderListings();
+}
+
+function renderListings() {
+  let filtered = allListings;
+  if (currentFilter !== 'all') {
+    filtered = allListings.filter(p => getStatus(p) === currentFilter);
+  }
+
+  if (filtered.length === 0) {
+    document.getElementById('listings-container').innerHTML = '<div class="empty-state"><div class="empty-icon">🏠</div><p>No listings found in this category.</p></div>';
     return;
   }
-  if(recognition){recognition.stop();}
-  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
-  recognition=new SpeechRecognition();
-  recognition.lang='ms-MY';
-  recognition.interimResults=false;
-  recognition.maxAlternatives=1;
 
-  const btn=event.currentTarget;
-  if(currentMicBtn&&currentMicBtn!==btn) currentMicBtn.classList.remove('listening');
-  currentMicBtn=btn;
-  btn.classList.add('listening');
-  btn.textContent='⏹';
-
-  document.getElementById('voice-bar').classList.add('active');
-  document.getElementById('voice-status').textContent='Listening... speak now';
-
-  recognition.onresult=(e)=>{
-    const text=e.results[0][0].transcript;
-    const field=document.getElementById(fieldId);
-    field.value=(field.value?field.value+' ':'')+text;
-    field.focus();
-  };
-
-  recognition.onend=()=>{
-    btn.classList.remove('listening');
-    btn.textContent='🎤';
-    document.getElementById('voice-bar').classList.remove('active');
-    currentMicBtn=null;
-  };
-
-  recognition.onerror=(e)=>{
-    btn.classList.remove('listening');
-    btn.textContent='🎤';
-    document.getElementById('voice-bar').classList.remove('active');
-    if(e.error!=='aborted') alert('Voice error: '+e.error+'. Try again.');
-    currentMicBtn=null;
-  };
-
-  recognition.start();
+  const html = filtered.map(p => renderCard(p)).join('');
+  document.getElementById('listings-container').innerHTML = html;
 }
 
-function speakResult(){
-  stopSpeaking();
-  const text=document.getElementById('output').textContent;
-  if(!text) return;
-  const utterance=new SpeechSynthesisUtterance(text);
-  utterance.lang='en-MY';
-  utterance.rate=0.95;
-  utterance.pitch=1.1;
-  const voices=synth.getVoices();
-  const femaleVoice=voices.find(v=>v.lang.includes('en')&&v.name.toLowerCase().includes('female'))
-    ||voices.find(v=>v.lang.includes('en-GB'))
-    ||voices.find(v=>v.lang.includes('en'));
-  if(femaleVoice) utterance.voice=femaleVoice;
-  utterance.onstart=()=>{
-    document.getElementById('speak-btn').style.display='none';
-    document.getElementById('stop-btn').style.display='inline-block';
-  };
-  utterance.onend=()=>{
-    document.getElementById('speak-btn').style.display='inline-block';
-    document.getElementById('stop-btn').style.display='none';
-  };
-  synth.speak(utterance);
-}
+function renderCard(p) {
+  const meta = p.property_meta || {};
+  const status = getStatus(p);
+  const days = getDaysOnMarket(p.date);
+  const price = formatPrice(meta.fave_property_price?.[0]);
+  const address = meta.fave_property_address?.[0] || p.title?.rendered || '';
+  const beds = meta.fave_property_bedrooms?.[0] || '';
+  const baths = meta.fave_property_bathrooms?.[0] || '';
+  const land = meta.fave_property_land?.[0] || '';
+  const builtup = meta['fave_built-up']?.[0] || '';
+  const views = meta.houzez_total_property_views?.[0] || 0;
+  const tenure = meta.fave_tenure?.[0] || '';
+  const propId = p.id;
 
-function stopSpeaking(){
-  synth.cancel();
-  document.getElementById('speak-btn').style.display='inline-block';
-  document.getElementById('stop-btn').style.display='none';
-}
-
-function fmt(n){return 'RM '+Math.round(n).toLocaleString('en-MY');}
-
-function calcLoan(){
-  const price=parseFloat(document.getElementById('c-price').value);
-  const dp=parseFloat(document.getElementById('c-dp').value)/100;
-  const rate=parseFloat(document.getElementById('c-rate').value)/100/12;
-  const tenure=parseInt(document.getElementById('c-tenure').value)*12;
-  if(!price||!rate||!tenure) return;
-  const downpay=price*dp;
-  const loan=price-downpay;
-  const monthly=loan*rate*Math.pow(1+rate,tenure)/(Math.pow(1+rate,tenure)-1);
-  const totalRepay=monthly*tenure;
-  const totalInterest=totalRepay-loan;
-  document.getElementById('loan-result').style.display='block';
-  document.getElementById('l-price').textContent=fmt(price);
-  document.getElementById('l-dp').textContent=fmt(downpay);
-  document.getElementById('l-loan').textContent=fmt(loan);
-  document.getElementById('l-interest').textContent=fmt(totalInterest);
-  document.getElementById('l-total').textContent=fmt(totalRepay);
-  document.getElementById('l-monthly').textContent=fmt(monthly);
-}
-
-function calcStampDuty(){
-  const price=parseFloat(document.getElementById('sd-price').value);
-  const firstTime=document.getElementById('sd-firsttime').value==='yes';
-  const titleType=document.getElementById('sd-title').value;
-  const consent=document.getElementById('sd-consent').value==='yes';
-  if(!price) return;
-  let t1=0,t2=0,t3=0,t4=0;
-  if(price>0) t1=Math.min(price,100000)*0.01;
-  if(price>100000) t2=Math.min(price-100000,400000)*0.02;
-  if(price>500000) t3=Math.min(price-500000,500000)*0.03;
-  if(price>1000000) t4=(price-1000000)*0.04;
-  let mot=t1+t2+t3+t4;
-  let exempt=0;
-  if(firstTime&&price<=500000){exempt=mot;mot=0;}
-  else if(firstTime&&price>500000){
-    let e=Math.min(100000,100000)*0.01+Math.min(400000,400000)*0.02;
-    exempt=e;mot=t3+t4;
+  // Get image from embedded or yoast
+  let imgHtml = `<div class="listing-img-placeholder">🏠</div>`;
+  const imgUrl = p.yoast_head_json?.og_image?.[0]?.url;
+  if (imgUrl) {
+    imgHtml = `<img src="${imgUrl}" class="listing-img" onerror="this.style.display='none'" loading="lazy"/>`;
   }
-  const loanAmt=price*0.9;
-  const loanSD=loanAmt*0.005;
-  let spaFee=0;
-  if(price<=500000) spaFee=price*0.01;
-  else if(price<=7500000) spaFee=5000+(price-500000)*0.008;
-  else spaFee=61000+(price-7500000)*0.007;
-  spaFee=Math.max(spaFee,500);
-  let loanFee=loanAmt*0.01;
-  loanFee=Math.max(loanFee,500);
-  let disb=0;
-  if(titleType==='freehold'){
-    if(price<300000) disb=800;
-    else if(price<600000) disb=1200;
-    else if(price<1000000) disb=1800;
-    else disb=2500;
-  } else {
-    if(price<300000) disb=1200;
-    else if(price<600000) disb=1800;
-    else if(price<1000000) disb=2500;
-    else disb=3500;
-  }
-  const consentFee=consent?2000:0;
-  const grandTotal=mot+loanSD+spaFee+loanFee+disb+consentFee;
-  document.getElementById('sd-result').style.display='block';
-  document.getElementById('sd-tier1').textContent=fmt(t1);
-  document.getElementById('sd-tier2').textContent=fmt(t2);
-  document.getElementById('sd-tier3').textContent=fmt(t3);
-  document.getElementById('sd-tier4').textContent=fmt(t4);
-  document.getElementById('sd-exempt').textContent=firstTime?'-'+fmt(exempt):'N/A';
-  document.getElementById('sd-mot').textContent=fmt(mot);
-  document.getElementById('sd-loanamt').textContent=fmt(loanAmt);
-  document.getElementById('sd-loansd').textContent=fmt(loanSD);
-  document.getElementById('lf-spa').textContent=fmt(spaFee);
-  document.getElementById('lf-loan').textContent=fmt(loanFee);
-  document.getElementById('lf-disb').textContent=fmt(disb)+' ('+titleType+')';
-  document.getElementById('lf-consent').textContent=consent?fmt(consentFee):'N/A';
-  document.getElementById('sd-grandtotal').textContent=fmt(grandTotal);
+
+  const lastMarketing = getLastMarketing(propId);
+  const lastMarketingHtml = lastMarketing
+    ? `<div class="log-item"><div class="log-header"><span class="log-platform">${lastMarketing.platform}</span><span class="log-date">${lastMarketing.date}</span></div><div class="log-action">${lastMarketing.action}</div></div>`
+    : `<p class="no-logs">No marketing logged yet</p>`;
+
+  const logs = allLogs[String(propId)] || [];
+  const logsHtml = logs.length > 0
+    ? logs.map((log, idx) => `
+        <div class="log-item">
+          <button class="log-delete" onclick="deleteLog(${propId},${idx})">✕</button>
+          <div class="log-header"><span class="log-platform">${log.platform}</span><span class="log-date">${log.date}</span></div>
+          <div class="log-action">${log.action}</div>
+          ${log.notes ? `<div class="log-result">${log.notes}</div>` : ''}
+        </div>`).join('')
+    : `<p class="no-logs">No marketing actions logged</p>`;
+
+  return `
+  <div class="listing-card">
+    <a href="${p.link}" target="_blank">${imgHtml}</a>
+    <div class="listing-body">
+      <div class="listing-header">
+        <div class="listing-title">${p.title?.rendered || 'Listing'}</div>
+        ${getStatusLabel(status)}
+      </div>
+      <div class="listing-price">${price}</div>
+      <div class="listing-address">📍 ${address}</div>
+      <div class="listing-meta">
+        ${beds ? `<span class="meta-item">🛏 ${beds} bed</span>` : ''}
+        ${baths ? `<span class="meta-item">🚿 ${baths} bath</span>` : ''}
+        ${land ? `<span class="meta-item">📐 ${land} sqft</span>` : ''}
+        ${builtup ? `<span class="meta-item">🏗 ${builtup} sqft built-up</span>` : ''}
+        ${tenure ? `<span class="meta-item">📜 ${tenure}</span>` : ''}
+        <span class="views-badge">👁 ${views} views</span>
+      </div>
+      <div class="days-bar">
+        <span class="days-label">Days on market</span>
+        <span class="days-val ${getDaysClass(days)}">${days} days</span>
+      </div>
+      <div class="listing-actions">
+        <button class="action-btn btn-green" onclick="openCopyModal(${propId})">✍️ Generate Copy</button>
+        <button class="action-btn btn-dark" onclick="openLogModal(${propId})">📣 Log Action</button>
+        <a href="${p.link}" target="_blank" style="text-decoration:none;">
+          <button class="action-btn btn-outline btn-full" style="width:100%;">🔗 View on ziyad.my</button>
+        </a>
+      </div>
+      <div class="marketing-section">
+        <div class="marketing-title">
+          Marketing History (${logs.length})
+          <button class="add-log-btn" onclick="openLogModal(${propId})">+ Add</button>
+        </div>
+        <div id="logs-${propId}">${logsHtml}</div>
+      </div>
+    </div>
+  </div>`;
 }
 
-async function generate(feature){
-  const btn=document.querySelector('.panel.active .btn');
-  const data={feature};
-  if(feature==='message'){
-    data.recipient=document.getElementById('m-recipient').value;
-    data.type=document.getElementById('m-type').value;
-    data.purpose=document.getElementById('m-purpose').value;
-    data.tone=document.getElementById('m-tone').value;
-    if(!data.recipient||!data.purpose){alert('Please fill in recipient and purpose.');return;}
-  } else if(feature==='report'){
-    data.address=document.getElementById('r-address').value;
-    data.proptype=document.getElementById('r-proptype').value;
-    data.area=document.getElementById('r-area').value;
-    data.purpose=document.getElementById('r-purpose').value;
-    data.notes=document.getElementById('r-notes').value;
-    if(!data.address||!data.proptype){alert('Please fill in address and property type.');return;}
-  } else if(feature==='followup'){
-    data.name=document.getElementById('f-name').value;
-    data.interest=document.getElementById('f-interest').value;
-    data.budget=document.getElementById('f-budget').value;
-    data.last_contact=document.getElementById('f-last_contact').value;
-    data.status=document.getElementById('f-status').value;
-    if(!data.name||!data.interest){alert('Please fill in name and interest.');return;}
-  } else if(feature==='ask'){
-    data.question=document.getElementById('a-question').value;
-    if(!data.question){alert('Please enter your question.');return;}
-  } else if(feature==='tasks'){
-    data.tasks=document.getElementById('t-tasks').value;
-    if(!data.tasks){alert('Please enter your tasks.');return;}
-  } else if(feature==='summarize'){
-    data.content=document.getElementById('s-content').value;
-    if(!data.content){alert('Please paste some text.');return;}
-  } else if(feature==='greeting'){
-    data.focus=document.getElementById('g-focus').value;
-    data.agents=document.getElementById('g-agents').value;
-    if(!data.focus){alert('Please enter today\'s focus.');return;}
-  } else if(feature==='listing'){
-    data.proptype=document.getElementById('li-proptype').value;
-    data.tenure=document.getElementById('li-tenure').value;
-    data.address=document.getElementById('li-address').value;
-    data.builtup=document.getElementById('li-builtup').value;
-    data.landarea=document.getElementById('li-landarea').value;
-    data.price=document.getElementById('li-price').value;
-    data.bedrooms=document.getElementById('li-bedrooms').value;
-    data.bathrooms=document.getElementById('li-bathrooms').value;
-    data.carpark=document.getElementById('li-carpark').value;
-    data.features=document.getElementById('li-features').value;
-    data.furnishing=document.getElementById('li-furnishing').value;
-    data.condition=document.getElementById('li-condition').value;
-    data.targetbuyer=document.getElementById('li-targetbuyer').value;
-    data.language=document.getElementById('li-language').value;
-    data.specialpoints=document.getElementById('li-specialpoints').value;
-    if(!data.address||!data.price){alert('Please fill in address and asking price.');return;}
-  }
-  btn.disabled=true;
-  stopSpeaking();
-  document.getElementById('loading').style.display='block';
-  document.getElementById('result').style.display='none';
-  try{
-    const res=await fetch('/pa',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-    const json=await res.json();
-    document.getElementById('output').textContent=json.result;
-    document.getElementById('loading').style.display='none';
-    document.getElementById('result').style.display='block';
-  } catch(e){
+function openLogModal(propertyId) {
+  document.getElementById('log-property-id').value = propertyId;
+  document.getElementById('log-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('log-action').value = '';
+  document.getElementById('log-notes').value = '';
+  document.getElementById('log-platform').value = '';
+  document.querySelectorAll('#log-modal .platform-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('log-modal').classList.add('active');
+}
+
+function openCopyModal(propertyId) {
+  const p = allListings.find(l => l.id === propertyId);
+  if (!p) return;
+  activeCopyProperty = p;
+  document.getElementById('copy-property-id').value = propertyId;
+  document.getElementById('copy-property-name').textContent = p.title?.rendered || '';
+  document.getElementById('copy-result').style.display = 'none';
+  document.getElementById('copy-copy-btn').style.display = 'none';
+  document.getElementById('copy-loading').style.display = 'none';
+  document.getElementById('copy-platform').value = '';
+  document.querySelectorAll('#copy-modal .platform-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('copy-modal').classList.add('active');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+function selectPlatform(el, platform) {
+  document.querySelectorAll('#log-modal .platform-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('log-platform').value = platform;
+}
+
+function selectCopyPlatform(el, platform) {
+  document.querySelectorAll('#copy-modal .platform-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('copy-platform').value = platform;
+}
+
+async function submitLog() {
+  const propId = document.getElementById('log-property-id').value;
+  const platform = document.getElementById('log-platform').value;
+  const action = document.getElementById('log-action').value;
+  const date = document.getElementById('log-date').value;
+  const notes = document.getElementById('log-notes').value;
+  if (!platform || !action || !date) { alert('Please fill in platform, action and date.'); return; }
+
+  await fetch('/marketing/log', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({property_id: propId, platform, action, date, notes})
+  });
+
+  closeModal('log-modal');
+  await loadListings();
+}
+
+async function deleteLog(propId, index) {
+  if (!confirm('Delete this log entry?')) return;
+  await fetch('/marketing/delete', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({property_id: propId, index})
+  });
+  await loadListings();
+}
+
+async function generateCopy() {
+  const platform = document.getElementById('copy-platform').value;
+  if (!platform) { alert('Please select a platform.'); return; }
+
+  const p = activeCopyProperty;
+  if (!p) return;
+  const meta = p.property_meta || {};
+
+  document.getElementById('copy-loading').style.display = 'block';
+  document.getElementById('copy-result').style.display = 'none';
+  document.getElementById('copy-copy-btn').style.display = 'none';
+
+  const days = getDaysOnMarket(p.date);
+  const payload = {
+    feature: 'listing_copy',
+    title: p.title?.rendered || '',
+    address: meta.fave_property_address?.[0] || '',
+    proptype: (p.class_list || []).find(c => c.startsWith('property_type-'))?.replace('property_type-','').replace(/-/g,' ') || '',
+    price: meta.fave_property_price?.[0] || '',
+    bedrooms: meta.fave_property_bedrooms?.[0] || '',
+    bathrooms: meta.fave_property_bathrooms?.[0] || '',
+    land: meta.fave_property_land?.[0] || '',
+    builtup: meta['fave_built-up']?.[0] || '',
+    tenure: meta.fave_tenure?.[0] || '',
+    status: (p.class_list || []).find(c => c.startsWith('property_status-'))?.replace('property_status-','') || 'for-sale',
+    views: meta.houzez_total_property_views?.[0] || 0,
+    days: days,
+    platform: platform
+  };
+
+  try {
+    const res = await fetch('/pa', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+    const json = await res.json();
+    document.getElementById('copy-loading').style.display = 'none';
+    document.getElementById('copy-result').textContent = json.result;
+    document.getElementById('copy-result').style.display = 'block';
+    document.getElementById('copy-copy-btn').style.display = 'block';
+  } catch(e) {
+    document.getElementById('copy-loading').style.display = 'none';
     alert('Something went wrong. Please try again.');
-    document.getElementById('loading').style.display='none';
   }
-  btn.disabled=false;
 }
 
-function copy(){
-  navigator.clipboard.writeText(document.getElementById('output').textContent);
+function copyCopyText() {
+  navigator.clipboard.writeText(document.getElementById('copy-result').textContent);
   alert('Copied to clipboard!');
 }
 
-window.speechSynthesis.onvoiceschanged=()=>{window.speechSynthesis.getVoices();};
+// Set today's date default on load
+document.getElementById('log-date').value = new Date().toISOString().split('T')[0];
+
+// Load on start
+loadListings();
 </script>
 </body>
 </html>

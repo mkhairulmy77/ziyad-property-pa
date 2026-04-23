@@ -141,11 +141,6 @@ Always end with:{SIGNATURE}
 Include phone: 013-342 6242"""
 }
 
-@app.route("/debug")
-def debug():
-    files = os.listdir("/app")
-    return jsonify({"base_dir": "/app", "files": files})
-
 @app.route("/")
 def home():
     return send_from_directory("/app", "index.html")

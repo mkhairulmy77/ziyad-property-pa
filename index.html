@@ -14,7 +14,7 @@ body{font-family:sans-serif;background:#f0f0f0;min-height:100vh;}
 .header-title h1{margin:2px 0 0;font-size:22px;font-weight:500;color:white;letter-spacing:1px;}
 .header-sub{font-size:11px;color:#888;margin-top:2px;}
 .feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:6px;}
-.feature-grid2{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.feature-grid2{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
 .feat{background:#2a2a2a;border-radius:10px;padding:10px 6px;text-align:center;cursor:pointer;border:1.5px solid transparent;transition:all 0.2s;}
 .feat.active{border:1.5px solid #a3e635;background:#333;}
 .feat span{display:block;font-size:18px;margin-bottom:3px;}
@@ -26,12 +26,14 @@ body{font-family:sans-serif;background:#f0f0f0;min-height:100vh;}
 .card-header p{margin:0;font-size:13px;font-weight:500;color:#1a1a1a;}
 .card-body{padding:14px;display:flex;flex-direction:column;gap:10px;}
 label{font-size:10px;color:#888;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.6px;}
+.opt-label{font-size:10px;color:#bbb;font-style:italic;margin-left:3px;}
 .input-wrap{position:relative;display:flex;align-items:center;gap:6px;}
 .input-wrap input,.input-wrap textarea{flex:1;}
 input,textarea,select{width:100%;padding:11px;border:1px solid #e0e0e0;border-radius:8px;font-size:14px;font-family:sans-serif;background:#fafafa;color:#1a1a1a;}
 input:focus,textarea:focus,select:focus{outline:none;border-color:#a3e635;background:white;}
 textarea{resize:vertical;min-height:90px;}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
 .mic-btn{width:36px;height:36px;min-width:36px;background:#2a2a2a;border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all 0.2s;flex-shrink:0;}
 .mic-btn.listening{background:#a3e635;animation:pulse-mic 1s infinite;}
 @keyframes pulse-mic{0%,100%{transform:scale(1);}50%{transform:scale(1.1);}}
@@ -96,6 +98,7 @@ textarea{resize:vertical;min-height:90px;}
     <div class="feat" onclick="switchTab('summarize',this)"><span>📄</span><p>Summarize</p></div>
     <div class="feat" onclick="switchTab('greeting',this)"><span>🌅</span><p>Greeting</p></div>
     <div class="feat" onclick="switchTab('calculator',this)"><span>🧮</span><p>Calculator</p></div>
+    <div class="feat" onclick="switchTab('listing',this)"><span>✍️</span><p>Listing</p></div>
   </div>
 </div>
 
@@ -387,9 +390,124 @@ textarea{resize:vertical;min-height:90px;}
     </div>
   </div>
 
+  <!-- Listing Writer -->
+  <div class="panel" id="panel-listing">
+    <div class="card">
+      <div class="card-header"><span>✍️</span><p>Property Listing Writer</p></div>
+      <div class="card-body">
+
+        <div class="row">
+          <div><label>Property type</label>
+            <select id="li-proptype">
+              <option>Condominium</option>
+              <option>Apartment</option>
+              <option>Terrace House</option>
+              <option>Semi-D</option>
+              <option>Bungalow</option>
+              <option>Shop Office</option>
+              <option>Land</option>
+            </select>
+          </div>
+          <div><label>Tenure</label>
+            <select id="li-tenure">
+              <option>Freehold</option>
+              <option>Leasehold</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label>Address / Location</label>
+          <div class="input-wrap">
+            <input id="li-address" placeholder="e.g. Taman Lagenda, Kluang, Johor"/>
+            <button class="mic-btn" onclick="startVoice('li-address')">🎤</button>
+          </div>
+        </div>
+
+        <div class="row3">
+          <div><label>Built-up <span class="opt-label">(optional)</span></label><input id="li-builtup" placeholder="e.g. 1,200 sq ft"/></div>
+          <div><label>Land area (sq ft)</label><input id="li-landarea" placeholder="e.g. 2,400"/></div>
+          <div><label>Asking price (RM)</label><input id="li-price" placeholder="e.g. 480,000"/></div>
+        </div>
+
+        <div class="row3">
+          <div><label>Bedrooms</label>
+            <select id="li-bedrooms">
+              <option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6+</option>
+            </select>
+          </div>
+          <div><label>Bathrooms</label>
+            <select id="li-bathrooms">
+              <option>1</option><option>2</option><option selected>3</option><option>4</option><option>5+</option>
+            </select>
+          </div>
+          <div><label>Car park</label>
+            <select id="li-carpark">
+              <option>1</option><option selected>2</option><option>3</option><option>None</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label>Key features</label>
+          <div class="input-wrap">
+            <textarea id="li-features" placeholder="e.g. Fully renovated, furnished, swimming pool, gym, 24hr security, near LRT"></textarea>
+            <button class="mic-btn" onclick="startVoice('li-features')" style="align-self:flex-start;margin-top:4px;">🎤</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div><label>Furnishing</label>
+            <select id="li-furnishing">
+              <option>Fully Furnished</option>
+              <option>Partially Furnished</option>
+              <option>Unfurnished</option>
+            </select>
+          </div>
+          <div><label>Condition</label>
+            <select id="li-condition">
+              <option>Move-in Ready</option>
+              <option>Renovated</option>
+              <option>Original</option>
+              <option>Under Construction</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div><label>Target buyer</label>
+            <select id="li-targetbuyer">
+              <option>Own Stay</option>
+              <option>Investor</option>
+              <option>First-time Buyer</option>
+              <option>Upgrader</option>
+            </select>
+          </div>
+          <div><label>Language output</label>
+            <select id="li-language">
+              <option>English + BM</option>
+              <option>English Only</option>
+              <option>BM Only</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label>Special selling points <span class="opt-label">(optional)</span></label>
+          <div class="input-wrap">
+            <input id="li-specialpoints" placeholder="e.g. Below market value, motivated seller, ROI 6%"/>
+            <button class="mic-btn" onclick="startVoice('li-specialpoints')">🎤</button>
+          </div>
+        </div>
+
+        <button class="btn" onclick="generate('listing')">✨ Generate Listing with SURIA</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Loading -->
   <div class="loading" id="loading">
-    <span class="loading-dot">●</span> SURIA is thinking...
+    <span class="loading-dot">◆</span> SURIA is thinking...
   </div>
 
   <!-- Result -->
@@ -423,7 +541,7 @@ function switchTab(name,el){
 
 function startVoice(fieldId){
   if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){
-    alert('Voice input not supported on this browser. Please use Chrome.');
+    alert('Voice input not supported. Please use Chrome.');
     return;
   }
   if(recognition){recognition.stop();}
@@ -460,7 +578,7 @@ function startVoice(fieldId){
     btn.classList.remove('listening');
     btn.textContent='🎤';
     document.getElementById('voice-bar').classList.remove('active');
-    if(e.error!=='aborted') alert('Voice error: '+e.error+'. Please try again.');
+    if(e.error!=='aborted') alert('Voice error: '+e.error+'. Try again.');
     currentMicBtn=null;
   };
 
@@ -475,14 +593,11 @@ function speakResult(){
   utterance.lang='en-MY';
   utterance.rate=0.95;
   utterance.pitch=1.1;
-
-  // Try to find a female voice
   const voices=synth.getVoices();
   const femaleVoice=voices.find(v=>v.lang.includes('en')&&v.name.toLowerCase().includes('female'))
     ||voices.find(v=>v.lang.includes('en-GB'))
     ||voices.find(v=>v.lang.includes('en'));
   if(femaleVoice) utterance.voice=femaleVoice;
-
   utterance.onstart=()=>{
     document.getElementById('speak-btn').style.display='none';
     document.getElementById('stop-btn').style.display='inline-block';
@@ -615,6 +730,23 @@ async function generate(feature){
     data.focus=document.getElementById('g-focus').value;
     data.agents=document.getElementById('g-agents').value;
     if(!data.focus){alert('Please enter today\'s focus.');return;}
+  } else if(feature==='listing'){
+    data.proptype=document.getElementById('li-proptype').value;
+    data.tenure=document.getElementById('li-tenure').value;
+    data.address=document.getElementById('li-address').value;
+    data.builtup=document.getElementById('li-builtup').value;
+    data.landarea=document.getElementById('li-landarea').value;
+    data.price=document.getElementById('li-price').value;
+    data.bedrooms=document.getElementById('li-bedrooms').value;
+    data.bathrooms=document.getElementById('li-bathrooms').value;
+    data.carpark=document.getElementById('li-carpark').value;
+    data.features=document.getElementById('li-features').value;
+    data.furnishing=document.getElementById('li-furnishing').value;
+    data.condition=document.getElementById('li-condition').value;
+    data.targetbuyer=document.getElementById('li-targetbuyer').value;
+    data.language=document.getElementById('li-language').value;
+    data.specialpoints=document.getElementById('li-specialpoints').value;
+    if(!data.address||!data.price){alert('Please fill in address and asking price.');return;}
   }
   btn.disabled=true;
   stopSpeaking();
@@ -638,7 +770,6 @@ function copy(){
   alert('Copied to clipboard!');
 }
 
-// Load voices
 window.speechSynthesis.onvoiceschanged=()=>{window.speechSynthesis.getVoices();};
 </script>
 </body>

@@ -68,7 +68,42 @@ Generate a warm, motivational morning greeting message in Bahasa Malaysia for th
 Today's focus: {d['focus']}
 Number of agents: {d['agents']}
 Keep it short, friendly and professional. Include a property tip or motivation for the day.
-End with the signature of Sr Mohd Khairul."""
+End with the signature of Sr Mohd Khairul.""",
+
+    "listing": lambda d: f"""You are a professional property marketing specialist and copywriter in Malaysia.
+Generate compelling property listing content based on these details:
+
+Property Type: {d['proptype']}
+Tenure: {d['tenure']}
+Address / Location: {d['address']}
+Built-up Area: {d.get('builtup') or 'Not specified'}
+Land Area: {d['landarea']} sqft
+Bedrooms: {d['bedrooms']}
+Bathrooms: {d['bathrooms']}
+Car Park: {d['carpark']}
+Furnishing: {d['furnishing']}
+Condition: {d['condition']}
+Key Features: {d['features']}
+Asking Price: RM {d['price']}
+Target Buyer: {d['targetbuyer']}
+Special Selling Points: {d.get('specialpoints') or 'None'}
+Language Output: {d['language']}
+
+Please generate ALL of the following sections:
+
+1. IPROPERTY / MUDAH LISTING (English)
+Write a professional, SEO-friendly listing with headline, full description (3-4 paragraphs), and key property details. Use property portal style.
+
+2. FACEBOOK / WHATSAPP POST
+Write a short, catchy and engaging post in {'Bahasa Malaysia and English' if 'BM' in d['language'] or 'Both' in d['language'] else 'English'}. Use emojis where appropriate. Max 150 words per version.
+
+3. KEY HIGHLIGHTS
+List 5-7 bullet points of the property's strongest selling points.
+
+4. PRICE JUSTIFICATION
+Write 2-3 sentences explaining why the asking price is reasonable based on location, features and market context in Malaysia.
+
+Sign off with:{SIGNATURE}"""
 }
 
 @app.route("/")

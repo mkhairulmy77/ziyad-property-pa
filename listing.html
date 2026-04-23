@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SURIA — Listing Hub</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:sans-serif;background:#f0f0f0;min-height:100vh;}
+.header{background:#1a1a1a;padding:16px;}
+.header-top{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #a3e635;}
+.header-title p{margin:0;font-size:10px;color:#a3e635;letter-spacing:0.8px;}
+.header-title h1{margin:2px 0 0;font-size:18px;font-weight:500;color:white;}
+.header-sub{font-size:10px;color:#888;}
+.nav-tabs{display:flex;gap:6px;margin-top:4px;}
+.nav-tab{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid #333;color:#888;}
+.nav-tab.active{background:#a3e635;color:#1a1a1a;border-color:#a3e635;}
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px 14px;background:#222;}
+.stat{text-align:center;}
+.stat-val{font-size:20px;font-weight:500;color:#a3e635;}
+.stat-label{font-size:10px;color:#888;margin-top:2px;}
+.content{padding:14px;}
+.listing-card{background:white;border-radius:14px;border:0.5px solid #e0e0e0;overflow:hidden;margin-bottom:12px;}
+.listing-img{width:100%;height:160px;object-fit:cover;background:#f0f0f0;}
+.listing-img-placeholder{width:100%;height:160px;background:#2a2a2a;display:flex;align-items:center;justify-content:center;font-size:32px;}
+.listing-body{padding:14px;}
+.listing-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+.listing-title{font-size:14px;font-weight:500;color:#1a1a1a;flex:1;margin-right:8px;}
+.status-badge{font-size:10px;font-weight:500;padding:3px 10px;border-radius:20px;white-space:nowrap;}
+.status-active{background:#dcfce7;color:#16a34a;}
+.status-sold{background:#fee2e2;color:#dc2626;}
+.status-rent{background:#dbeafe;color:#2563eb;}
+.listing-price{font-size:18px;font-weight:500;color:#1a1a1a;margin-bottom:6px;}
+.listing-address{font-size:12px;color:#888;margin-bottom:10px;}
+.listing-meta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px;}
+.meta-item{font-size:11px;color:#666;}
+.days-bar{background:#f0f0f0;border-radius:6px;padding:8px 10px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
+.days-label{font-size:11px;color:#888;}
+.days-val{font-size:12px;font-weight:500;}
+.days-ok{color:#16a34a;}
+.days-warn{color:#d97706;}
+.days-alert{color:#dc2626;}
+.listing-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.action-btn{padding:9px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:none;text-align:center;}
+.btn-green{background:#a3e635;color:#1a1a1a;}
+.btn-dark{background:#1a1a1a;color:#a3e635;}
+.btn-outline{background:transparent;color:#1a1a1a;border:1px solid #ddd;width:100%;}
+.btn-full{grid-column:1/-1;}
+.marketing-section{margin-top:10px;border-top:0.5px solid #f0f0f0;padding-top:10px;}
+.marketing-title{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+.add-log-btn{font-size:11px;color:#a3e635;cursor:pointer;background:none;border:none;font-weight:500;}
+.log-item{background:#f8f8f8;border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:12px;position:relative;}
+.log-header{display:flex;justify-content:space-between;margin-bottom:3px;}
+.log-platform{font-weight:500;color:#1a1a1a;}
+.log-date{color:#888;}
+.log-action{color:#555;}
+.log-notes{color:#888;font-size:11px;margin-top:2px;}
+.log-delete{color:#dc2626;cursor:pointer;font-size:10px;background:none;border:none;position:absolute;top:8px;right:8px;}
+.no-logs{font-size:12px;color:#bbb;text-align:center;padding:8px;}
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:100;align-items:flex-end;justify-content:center;}
+.modal-overlay.active{display:flex;}
+.modal{background:white;border-radius:20px 20px 0 0;padding:20px;width:100%;max-height:85vh;overflow-y:auto;}
+.modal-title{font-size:15px;font-weight:500;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
+.modal-close{font-size:20px;cursor:pointer;color:#888;background:none;border:none;}
+.form-field{margin-bottom:12px;}
+.form-label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;}
+.form-input{width:100%;padding:10px;border:1px solid #e0e0e0;border-radius:8px;font-size:14px;font-family:sans-serif;}
+.form-input:focus{outline:none;border-color:#a3e635;}
+.copy-result{background:#f8f8f8;border-radius:10px;padding:14px;margin-top:12px;font-size:13px;line-height:1.7;white-space:pre-wrap;display:none;}
+.loading-msg{text-align:center;padding:20px;color:#888;display:none;}
+.loading-dot{animation:pulse 1.2s infinite;}
+@keyframes pulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
+.platform-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+.platform-btn{padding:10px 6px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid #e0e0e0;background:white;text-align:center;}
+.platform-btn.selected{border-color:#a3e635;background:#f0f8e0;color:#1a1a1a;}
+.empty-state{text-align:center;padding:40px 20px;color:#888;}
+.empty-icon{font-size:40px;margin-bottom:12px;}
+.refresh-btn{background:#2a2a2a;color:#a3e635;border:none;border-radius:8px;padding:8px 14px;font-size:12px;cursor:pointer;font-weight:500;margin-left:auto;}
+.views-badge{background:#f0f0f0;border-radius:6px;padding:3px 8px;font-size:11px;color:#555;}
+.suria-link{font-size:12px;color:#a3e635;text-decoration:none;display:block;text-align:center;padding:12px;margin-top:4px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <img src="/suria.png" class="avatar" alt="SURIA"/>
+    <div class="header-title">
+      <p>ZIYAD PROPERTY CONSULTANTS</p>
+      <h1>SURIA Listing Hub</h1>
+      <p class="header-sub">Sr Khairul's Property Dashboard</p>
+    </div>
+    <button class="refresh-btn" onclick="loadListings()">↻ Refresh</button>
+  </div>
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="filterTab('all',this)">All</div>
+    <div class="nav-tab" onclick="filterTab('for-sale',this)">For Sale</div>
+    <div class="nav-tab" onclick="filterTab('for-rent',this)">For Rent</div>
+    <div class="nav-tab" onclick="filterTab('sold',this)">Sold</div>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat"><div class="stat-val" id="stat-total">–</div><div class="stat-label">Total</div></div>
+  <div class="stat"><div class="stat-val" id="stat-active">–</div><div class="stat-label">Active</div></div>
+  <div class="stat"><div class="stat-val" id="stat-sold">–</div><div class="stat-label">Sold</div></div>
+  <div class="stat"><div class="stat-val" id="stat-views">–</div><div class="stat-label">Total Views</div></div>
+</div>
+
+<div class="content">
+  <div id="listings-container">
+    <div class="empty-state">
+      <div class="empty-icon">🏠</div>
+      <p>Loading your listings...</p>
+    </div>
+  </div>
+  <a href="/" class="suria-link">← Back to SURIA</a>
+</div>
+
+<!-- Log Marketing Action Modal -->
+<div class="modal-overlay" id="log-modal">
+  <div class="modal">
+    <div class="modal-title">
+      Log Marketing Action
+      <button class="modal-close" onclick="closeModal('log-modal')">✕</button>
+    </div>
+    <input type="hidden" id="log-property-id"/>
+    <div class="form-field">
+      <label class="form-label">Platform</label>
+      <div class="platform-grid">
+        <div class="platform-btn" onclick="selectPlatform(this,'Facebook')">📘 Facebook</div>
+        <div class="platform-btn" onclick="selectPlatform(this,'WhatsApp')">💬 WhatsApp</div>
+        <div class="platform-btn" onclick="selectPlatform(this,'iProperty')">🏠 iProperty</div>
+        <div class="platform-btn" onclick="selectPlatform(this,'Mudah')">📋 Mudah</div>
+        <div class="platform-btn" onclick="selectPlatform(this,'Instagram')">📸 Instagram</div>
+        <div class="platform-btn" onclick="selectPlatform(this,'Other')">📢 Other</div>
+      </div>
+      <input type="hidden" id="log-platform"/>
+    </div>
+    <div class="form-field">
+      <label class="form-label">Action taken</label>
+      <input class="form-input" id="log-action" placeholder="e.g. Posted listing ad, Boosted post"/>
+    </div>
+    <div class="form-field">
+      <label class="form-label">Date</label>
+      <input class="form-input" type="date" id="log-date"/>
+    </div>
+    <div class="form-field">
+      <label class="form-label">Notes / Result</label>
+      <input class="form-input" id="log-notes" placeholder="e.g. 5 enquiries, 2 viewings booked"/>
+    </div>
+    <button class="action-btn btn-green btn-full" onclick="submitLog()" style="width:100%;padding:13px;margin-top:4px;">Save Log</button>
+  </div>
+</div>
+
+<!-- Generate Copy Modal -->
+<div class="modal-overlay" id="copy-modal">
+  <div class="modal">
+    <div class="modal-title">
+      Generate Marketing Copy
+      <button class="modal-close" onclick="closeModal('copy-modal')">✕</button>
+    </div>
+    <input type="hidden" id="copy-property-id"/>
+    <p id="copy-property-name" style="font-size:13px;color:#555;margin-bottom:14px;"></p>
+    <div class="form-field">
+      <label class="form-label">Select Platform</label>
+      <div class="platform-grid">
+        <div class="platform-btn" onclick="selectCopyPlatform(this,'Facebook')">📘 Facebook</div>
+        <div class="platform-btn" onclick="selectCopyPlatform(this,'WhatsApp')">💬 WhatsApp</div>
+        <div class="platform-btn" onclick="selectCopyPlatform(this,'iProperty/Mudah')">🏠 iProperty/Mudah</div>
+      </div>
+      <input type="hidden" id="copy-platform"/>
+    </div>
+    <button class="action-btn btn-green btn-full" onclick="generateCopy()" style="width:100%;padding:13px;margin-top:4px;">✨ Generate with SURIA</button>
+    <div class="loading-msg" id="copy-loading"><span class="loading-dot">◆</span> SURIA is writing...</div>
+    <div class="copy-result" id="copy-result"></div>
+    <button class="action-btn btn-dark btn-full" id="copy-copy-btn" onclick="copyCopyText()" style="width:100%;padding:10px;margin-top:8px;display:none;">Copy to clipboard</button>
+  </div>
+</div>
+
+<script>
+const AGENT_POST_ID = 12309;
+const WP_API = 'https://ziyad.my/wp-json/wp/v2/properties';
+let allListings = [];
+let allLogs = {};
+let currentFilter = 'all';
+let activeCopyProperty = null;
+
+async function loadListings() {
+  document.getElementById('listings-container').innerHTML = '<div class="empty-state"><div class="loading-dot" style="font-size:24px;">◆</div><p style="margin-top:12px;">Fetching your listings from ziyad.my...</p></div>';
+  try {
+    const [propsRes, logsRes] = await Promise.all([
+      fetch(`${WP_API}?per_page=100&_fields=id,title,link,date,property_meta,class_list,yoast_head_json`),
+      fetch('/marketing/logs')
+    ]);
+    const allProps = await propsRes.json();
+    const logsData = await logsRes.json();
+    allLogs = logsData.logs || {};
+
+    allListings = allProps.filter(p => {
+      const agents = p.property_meta?.fave_agents || [];
+      return agents.includes(AGENT_POST_ID) || agents.includes(String(AGENT_POST_ID));
+    });
+
+    updateStats();
+    renderListings();
+  } catch(e) {
+    document.getElementById('listings-container').innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>Could not load listings. Please check your connection.</p></div>';
+  }
+}
+
+function updateStats() {
+  const active = allListings.filter(p => {
+    const cl = p.class_list || [];
+    return cl.some(c => c.includes('for-sale') || c.includes('for-rent'));
+  });
+  const sold = allListings.filter(p => (p.class_list || []).some(c => c.includes('sold')));
+  const totalViews = allListings.reduce((sum, p) => sum + parseInt(p.property_meta?.houzez_total_property_views?.[0] || 0), 0);
+  document.getElementById('stat-total').textContent = allListings.length;
+  document.getElementById('stat-active').textContent = active.length;
+  document.getElementById('stat-sold').textContent = sold.length;
+  document.getElementById('stat-views').textContent = totalViews;
+}
+
+function getDaysOnMarket(dateStr) {
+  return Math.floor((new Date() - new Date(dateStr)) / (1000*60*60*24));
+}
+
+function getStatus(p) {
+  const cl = p.class_list || [];
+  if (cl.some(c => c.includes('sold'))) return 'sold';
+  if (cl.some(c => c.includes('for-rent'))) return 'for-rent';
+  return 'for-sale';
+}
+
+function getStatusBadge(status) {
+  if (status === 'sold') return '<span class="status-badge status-sold">Sold</span>';
+  if (status === 'for-rent') return '<span class="status-badge status-rent">For Rent</span>';
+  return '<span class="status-badge status-active">For Sale</span>';
+}
+
+function getDaysClass(days) {
+  if (days <= 30) return 'days-ok';
+  if (days <= 60) return 'days-warn';
+  return 'days-alert';
+}
+
+function formatPrice(price) {
+  if (!price) return 'Price on request';
+  const num = parseInt(price);
+  if (isNaN(num)) return price;
+  return 'RM ' + num.toLocaleString('en-MY');
+}
+
+function filterTab(filter, el) {
+  currentFilter = filter;
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderListings();
+}
+
+function renderListings() {
+  let filtered = allListings;
+  if (currentFilter !== 'all') {
+    filtered = allListings.filter(p => getStatus(p) === currentFilter);
+  }
+  if (filtered.length === 0) {
+    document.getElementById('listings-container').innerHTML = '<div class="empty-state"><div class="empty-icon">🏠</div><p>No listings found in this category.</p></div>';
+    return;
+  }
+  document.getElementById('listings-container').innerHTML = filtered.map(p => renderCard(p)).join('') + '<a href="/" class="suria-link">← Back to SURIA</a>';
+}
+
+function renderCard(p) {
+  const meta = p.property_meta || {};
+  const status = getStatus(p);
+  const days = getDaysOnMarket(p.date);
+  const price = formatPrice(meta.fave_property_price?.[0]);
+  const address = meta.fave_property_address?.[0] || '';
+  const beds = meta.fave_property_bedrooms?.[0] || '';
+  const baths = meta.fave_property_bathrooms?.[0] || '';
+  const land = meta.fave_property_land?.[0] || '';
+  const builtup = meta['fave_built-up']?.[0] || '';
+  const views = meta.houzez_total_property_views?.[0] || 0;
+  const tenure = meta.fave_tenure?.[0] || '';
+  const propId = p.id;
+  const imgUrl = p.yoast_head_json?.og_image?.[0]?.url;
+  const imgHtml = imgUrl
+    ? `<a href="${p.link}" target="_blank"><img src="${imgUrl}" class="listing-img" loading="lazy"/></a>`
+    : `<a href="${p.link}" target="_blank"><div class="listing-img-placeholder">🏠</div></a>`;
+
+  const logs = allLogs[String(propId)] || [];
+  const logsHtml = logs.length > 0
+    ? logs.map((log, idx) => `
+        <div class="log-item">
+          <button class="log-delete" onclick="deleteLog(${propId},${idx})">✕</button>
+          <div class="log-header"><span class="log-platform">${log.platform}</span><span class="log-date">${log.date}</span></div>
+          <div class="log-action">${log.action}</div>
+          ${log.notes ? `<div class="log-notes">${log.notes}</div>` : ''}
+        </div>`).join('')
+    : `<p class="no-logs">No marketing actions logged yet</p>`;
+
+  return `
+  <div class="listing-card">
+    ${imgHtml}
+    <div class="listing-body">
+      <div class="listing-header">
+        <div class="listing-title">${p.title?.rendered || 'Listing'}</div>
+        ${getStatusBadge(status)}
+      </div>
+      <div class="listing-price">${price}</div>
+      <div class="listing-address">📍 ${address}</div>
+      <div class="listing-meta">
+        ${beds ? `<span class="meta-item">🛏 ${beds} bed</span>` : ''}
+        ${baths ? `<span class="meta-item">🚿 ${baths} bath</span>` : ''}
+        ${land ? `<span class="meta-item">📐 ${land} sqft</span>` : ''}
+        ${builtup ? `<span class="meta-item">🏗 ${builtup} sqft built-up</span>` : ''}
+        ${tenure ? `<span class="meta-item">📜 ${tenure}</span>` : ''}
+        <span class="views-badge">👁 ${views} views</span>
+      </div>
+      <div class="days-bar">
+        <span class="days-label">Days on market</span>
+        <span class="days-val ${getDaysClass(days)}">${days} days</span>
+      </div>
+      <div class="listing-actions">
+        <button class="action-btn btn-green" onclick="openCopyModal(${propId})">✍️ Generate Copy</button>
+        <button class="action-btn btn-dark" onclick="openLogModal(${propId})">📣 Log Action</button>
+        <a href="${p.link}" target="_blank" style="grid-column:1/-1;text-decoration:none;">
+          <button class="action-btn btn-outline">🔗 View on ziyad.my</button>
+        </a>
+      </div>
+      <div class="marketing-section">
+        <div class="marketing-title">
+          Marketing History (${logs.length})
+          <button class="add-log-btn" onclick="openLogModal(${propId})">+ Add</button>
+        </div>
+        <div id="logs-${propId}">${logsHtml}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function openLogModal(propertyId) {
+  document.getElementById('log-property-id').value = propertyId;
+  document.getElementById('log-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('log-action').value = '';
+  document.getElementById('log-notes').value = '';
+  document.getElementById('log-platform').value = '';
+  document.querySelectorAll('#log-modal .platform-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('log-modal').classList.add('active');
+}
+
+function openCopyModal(propertyId) {
+  const p = allListings.find(l => l.id === propertyId);
+  if (!p) return;
+  activeCopyProperty = p;
+  document.getElementById('copy-property-id').value = propertyId;
+  document.getElementById('copy-property-name').textContent = p.title?.rendered || '';
+  document.getElementById('copy-result').style.display = 'none';
+  document.getElementById('copy-copy-btn').style.display = 'none';
+  document.getElementById('copy-loading').style.display = 'none';
+  document.getElementById('copy-platform').value = '';
+  document.querySelectorAll('#copy-modal .platform-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('copy-modal').classList.add('active');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+function selectPlatform(el, platform) {
+  document.querySelectorAll('#log-modal .platform-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('log-platform').value = platform;
+}
+
+function selectCopyPlatform(el, platform) {
+  document.querySelectorAll('#copy-modal .platform-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('copy-platform').value = platform;
+}
+
+async function submitLog() {
+  const propId = document.getElementById('log-property-id').value;
+  const platform = document.getElementById('log-platform').value;
+  const action = document.getElementById('log-action').value;
+  const date = document.getElementById('log-date').value;
+  const notes = document.getElementById('log-notes').value;
+  if (!platform || !action || !date) { alert('Please fill in platform, action and date.'); return; }
+  await fetch('/marketing/log', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({property_id: propId, platform, action, date, notes})
+  });
+  closeModal('log-modal');
+  await loadListings();
+}
+
+async function deleteLog(propId, index) {
+  if (!confirm('Delete this log entry?')) return;
+  await fetch('/marketing/delete', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({property_id: propId, index})
+  });
+  await loadListings();
+}
+
+async function generateCopy() {
+  const platform = document.getElementById('copy-platform').value;
+  if (!platform) { alert('Please select a platform.'); return; }
+  const p = activeCopyProperty;
+  if (!p) return;
+  const meta = p.property_meta || {};
+  const days = getDaysOnMarket(p.date);
+
+  document.getElementById('copy-loading').style.display = 'block';
+  document.getElementById('copy-result').style.display = 'none';
+  document.getElementById('copy-copy-btn').style.display = 'none';
+
+  const payload = {
+    feature: 'listing_copy',
+    title: p.title?.rendered || '',
+    address: meta.fave_property_address?.[0] || '',
+    proptype: (p.class_list || []).find(c => c.startsWith('property_type-'))?.replace('property_type-','').replace(/-/g,' ') || '',
+    price: meta.fave_property_price?.[0] || '',
+    bedrooms: meta.fave_property_bedrooms?.[0] || '',
+    bathrooms: meta.fave_property_bathrooms?.[0] || '',
+    land: meta.fave_property_land?.[0] || '',
+    builtup: meta['fave_built-up']?.[0] || '',
+    tenure: meta.fave_tenure?.[0] || '',
+    status: (p.class_list || []).find(c => c.startsWith('property_status-'))?.replace('property_status-','') || 'for-sale',
+    views: meta.houzez_total_property_views?.[0] || 0,
+    days: days,
+    platform: platform
+  };
+
+  try {
+    const res = await fetch('/pa', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+    const json = await res.json();
+    document.getElementById('copy-loading').style.display = 'none';
+    document.getElementById('copy-result').textContent = json.result;
+    document.getElementById('copy-result').style.display = 'block';
+    document.getElementById('copy-copy-btn').style.display = 'block';
+  } catch(e) {
+    document.getElementById('copy-loading').style.display = 'none';
+    alert('Something went wrong. Please try again.');
+  }
+}
+
+function copyCopyText() {
+  navigator.clipboard.writeText(document.getElementById('copy-result').textContent);
+  alert('Copied to clipboard!');
+}
+
+loadListings();
+</script>
+</body>
+</html>

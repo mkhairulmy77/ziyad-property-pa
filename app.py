@@ -1,4 +1,5 @@
 import os
+import json
 from flask import Flask, request, jsonify, send_from_directory
 import anthropic
 
@@ -12,6 +13,18 @@ Ziyad Property Consultants Sdn Bhd
 Phone: 013-342 6242
 Email: mkhairul@ziyad.my
 """
+
+MARKETING_LOG_FILE = "marketing_logs.json"
+
+def load_logs():
+    if os.path.exists(MARKETING_LOG_FILE):
+        with open(MARKETING_LOG_FILE, "r") as f:
+            return json.load(f)
+    return {}
+
+def save_logs(logs):
+    with open(MARKETING_LOG_FILE, "w") as f:
+        json.dump(logs, f, indent=2)
 
 PROMPTS = {
     "message": lambda d: f"""You are a professional property consultant assistant in Malaysia.
@@ -92,23 +105,49 @@ Language Output: {d['language']}
 Please generate ALL of the following sections:
 
 1. IPROPERTY / MUDAH LISTING (English)
-Write a professional, SEO-friendly listing with headline, full description (3-4 paragraphs), and key property details. Use property portal style.
+Write a professional, SEO-friendly listing with headline, full description (3-4 paragraphs), and key property details.
 
 2. FACEBOOK / WHATSAPP POST
-Write a short, catchy and engaging post in {'Bahasa Malaysia and English' if 'BM' in d['language'] or 'Both' in d['language'] else 'English'}. Use emojis where appropriate. Max 150 words per version.
+Write a short, catchy and engaging post in Bahasa Malaysia and English. Use emojis. Max 150 words per version.
 
 3. KEY HIGHLIGHTS
 List 5-7 bullet points of the property's strongest selling points.
 
 4. PRICE JUSTIFICATION
-Write 2-3 sentences explaining why the asking price is reasonable based on location, features and market context in Malaysia.
+Write 2-3 sentences explaining why the asking price is reasonable.
 
-Sign off with:{SIGNATURE}"""
+Sign off with:{SIGNATURE}""",
+
+    "listing_copy": lambda d: f"""You are a professional property marketing specialist in Malaysia.
+Generate social media marketing content for this property:
+
+Property: {d['title']}
+Address: {d['address']}
+Type: {d['proptype']}
+Price: RM {d['price']}
+Bedrooms: {d.get('bedrooms', 'N/A')} | Bathrooms: {d.get('bathrooms', 'N/A')}
+Land Area: {d.get('land', 'N/A')} sqft | Built-up: {d.get('builtup', 'N/A')} sqft
+Tenure: {d.get('tenure', 'N/A')} | Status: {d.get('status', 'For Sale')}
+Days on market: {d.get('days', 0)} days | Portal views: {d.get('views', 0)}
+Platform: {d['platform']}
+
+Generate compelling copy for {d['platform']} in BOTH Bahasa Malaysia AND English.
+
+- Facebook post: Engaging, with emojis, highlights, strong call to action. Max 200 words each.
+- WhatsApp broadcast: Short, punchy, key details + contact. Max 100 words each.
+- iProperty/Mudah: Professional listing description with headline. English only, 150-250 words.
+
+Always end with:{SIGNATURE}
+Include phone: 013-342 6242"""
 }
 
 @app.route("/")
 def home():
     return send_from_directory(".", "index.html")
+
+@app.route("/listings")
+def listings_page():
+    return send_from_directory(".", "listings.html")
 
 @app.route("/suria.png")
 def avatar():
@@ -125,6 +164,43 @@ def pa():
         messages=[{"role": "user", "content": prompt}]
     )
     return jsonify({"result": response.content[0].text})
+
+@app.route("/marketing/log", methods=["POST"])
+def add_marketing_log():
+    data = request.json
+    property_id = str(data.get("property_id"))
+    logs = load_logs()
+    if property_id not in logs:
+        logs[property_id] = []
+    logs[property_id].append({
+        "date": data.get("date"),
+        "platform": data.get("platform"),
+        "action": data.get("action"),
+        "notes": data.get("notes", ""),
+        "result": data.get("result", "")
+    })
+    save_logs(logs)
+    return jsonify({"success": True, "logs": logs[property_id]})
+
+@app.route("/marketing/logs/<property_id>", methods=["GET"])
+def get_marketing_logs(property_id):
+    logs = load_logs()
+    return jsonify({"logs": logs.get(str(property_id), [])})
+
+@app.route("/marketing/logs", methods=["GET"])
+def get_all_logs():
+    return jsonify({"logs": load_logs()})
+
+@app.route("/marketing/delete", methods=["POST"])
+def delete_marketing_log():
+    data = request.json
+    property_id = str(data.get("property_id"))
+    index = data.get("index")
+    logs = load_logs()
+    if property_id in logs and 0 <= index < len(logs[property_id]):
+        logs[property_id].pop(index)
+        save_logs(logs)
+    return jsonify({"success": True})
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))

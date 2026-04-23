@@ -15,6 +15,7 @@ Email: mkhairul@ziyad.my
 """
 
 MARKETING_LOG_FILE = "/app/marketing_logs.json"
+PROJECTS_FILE = "/app/projects.json"
 
 def load_logs():
     if os.path.exists(MARKETING_LOG_FILE):
@@ -25,6 +26,16 @@ def load_logs():
 def save_logs(logs):
     with open(MARKETING_LOG_FILE, "w") as f:
         json.dump(logs, f, indent=2)
+
+def load_projects():
+    if os.path.exists(PROJECTS_FILE):
+        with open(PROJECTS_FILE, "r") as f:
+            return json.load(f)
+    return {"projects": [], "leads": {}}
+
+def save_projects(data):
+    with open(PROJECTS_FILE, "w") as f:
+        json.dump(data, f, indent=2)
 
 PROMPTS = {
     "message": lambda d: f"""You are a professional property consultant assistant in Malaysia.
@@ -138,6 +149,27 @@ Generate compelling copy for {d['platform']} in BOTH Bahasa Malaysia AND English
 - iProperty/Mudah: Professional listing description with headline. English only, 150-250 words.
 
 Always end with:{SIGNATURE}
+Include phone: 013-342 6242""",
+
+    "lead_followup": lambda d: f"""You are a professional property consultant assistant in Malaysia.
+Generate a follow-up message for this lead:
+
+Project: {d['project']}
+Lead Name: {d['lead_name']}
+Phone: {d['phone']}
+Unit Interested: {d.get('unit', 'N/A')}
+Budget: RM {d.get('budget', 'N/A')}
+Current Status: {d['status']}
+Last Contact: {d.get('last_contact', 'N/A')}
+Notes: {d.get('notes', 'None')}
+
+Generate:
+1. WhatsApp message in Bahasa Malaysia (friendly, professional)
+2. WhatsApp message in English
+3. Suggested next action to move this lead forward
+
+Keep messages short and conversational.
+Always sign off with:{SIGNATURE}
 Include phone: 013-342 6242"""
 }
 
@@ -165,6 +197,7 @@ def pa():
     )
     return jsonify({"result": response.content[0].text})
 
+# --- Marketing Log Routes ---
 @app.route("/marketing/log", methods=["POST"])
 def add_marketing_log():
     data = request.json
@@ -200,6 +233,101 @@ def delete_marketing_log():
     if property_id in logs and 0 <= index < len(logs[property_id]):
         logs[property_id].pop(index)
         save_logs(logs)
+    return jsonify({"success": True})
+
+# --- Project CRM Routes ---
+@app.route("/crm/projects", methods=["GET"])
+def get_projects():
+    data = load_projects()
+    return jsonify(data)
+
+@app.route("/crm/project/add", methods=["POST"])
+def add_project():
+    req = request.json
+    data = load_projects()
+    import time
+    project = {
+        "id": str(int(time.time())),
+        "name": req.get("name"),
+        "developer": req.get("developer"),
+        "location": req.get("location"),
+        "type": req.get("type"),
+        "price_min": req.get("price_min"),
+        "price_max": req.get("price_max"),
+        "launch_date": req.get("launch_date"),
+        "completion_date": req.get("completion_date"),
+        "commission": req.get("commission"),
+        "status": req.get("status", "Active"),
+        "agents": req.get("agents", []),
+        "created": req.get("date", "")
+    }
+    data["projects"].append(project)
+    save_projects(data)
+    return jsonify({"success": True, "project": project})
+
+@app.route("/crm/project/delete", methods=["POST"])
+def delete_project():
+    req = request.json
+    project_id = req.get("id")
+    data = load_projects()
+    data["projects"] = [p for p in data["projects"] if p["id"] != project_id]
+    if project_id in data["leads"]:
+        del data["leads"][project_id]
+    save_projects(data)
+    return jsonify({"success": True})
+
+@app.route("/crm/lead/add", methods=["POST"])
+def add_lead():
+    req = request.json
+    project_id = req.get("project_id")
+    data = load_projects()
+    import time
+    if project_id not in data["leads"]:
+        data["leads"][project_id] = []
+    lead = {
+        "id": str(int(time.time())),
+        "name": req.get("name"),
+        "phone": req.get("phone"),
+        "source": req.get("source"),
+        "agent": req.get("agent"),
+        "unit": req.get("unit", ""),
+        "budget": req.get("budget", ""),
+        "status": req.get("status", "New"),
+        "follow_up_date": req.get("follow_up_date", ""),
+        "notes": req.get("notes", ""),
+        "created": req.get("date", "")
+    }
+    data["leads"][project_id].append(lead)
+    save_projects(data)
+    return jsonify({"success": True, "lead": lead})
+
+@app.route("/crm/lead/update", methods=["POST"])
+def update_lead():
+    req = request.json
+    project_id = req.get("project_id")
+    lead_id = req.get("lead_id")
+    data = load_projects()
+    if project_id in data["leads"]:
+        for lead in data["leads"][project_id]:
+            if lead["id"] == lead_id:
+                lead["status"] = req.get("status", lead["status"])
+                lead["notes"] = req.get("notes", lead["notes"])
+                lead["follow_up_date"] = req.get("follow_up_date", lead["follow_up_date"])
+                lead["unit"] = req.get("unit", lead["unit"])
+                lead["budget"] = req.get("budget", lead["budget"])
+                break
+    save_projects(data)
+    return jsonify({"success": True})
+
+@app.route("/crm/lead/delete", methods=["POST"])
+def delete_lead():
+    req = request.json
+    project_id = req.get("project_id")
+    lead_id = req.get("lead_id")
+    data = load_projects()
+    if project_id in data["leads"]:
+        data["leads"][project_id] = [l for l in data["leads"][project_id] if l["id"] != lead_id]
+    save_projects(data)
     return jsonify({"success": True})
 
 if __name__ == "__main__":

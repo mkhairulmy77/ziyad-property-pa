@@ -13,16 +13,21 @@ body{font-family:sans-serif;background:#f0f0f0;min-height:100vh;}
 .header-title p{margin:0;font-size:10px;color:#a3e635;letter-spacing:0.8px;}
 .header-title h1{margin:2px 0 0;font-size:18px;font-weight:500;color:white;}
 .header-sub{font-size:10px;color:#888;}
-.nav-tabs{display:flex;gap:6px;margin-top:4px;}
-.nav-tab{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid #333;color:#888;}
-.nav-tab.active{background:#a3e635;color:#1a1a1a;border-color:#a3e635;}
+.main-tabs{display:flex;gap:6px;}
+.main-tab{flex:1;padding:10px 6px;text-align:center;font-size:12px;font-weight:500;cursor:pointer;background:#2a2a2a;color:#888;border:none;border-radius:8px 8px 0 0;}
+.main-tab.active{background:#a3e635;color:#1a1a1a;}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
 .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px 14px;background:#222;}
 .stat{text-align:center;}
 .stat-val{font-size:20px;font-weight:500;color:#a3e635;}
 .stat-label{font-size:10px;color:#888;margin-top:2px;}
 .content{padding:14px;}
+.filter-tabs{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px;}
+.filter-tab{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid #333;color:#888;white-space:nowrap;background:#1a1a1a;}
+.filter-tab.active{background:#a3e635;color:#1a1a1a;border-color:#a3e635;}
 .listing-card{background:white;border-radius:14px;border:0.5px solid #e0e0e0;overflow:hidden;margin-bottom:12px;}
-.listing-img{width:100%;height:160px;object-fit:cover;background:#f0f0f0;}
+.listing-img{width:100%;height:160px;object-fit:cover;}
 .listing-img-placeholder{width:100%;height:160px;background:#2a2a2a;display:flex;align-items:center;justify-content:center;font-size:32px;}
 .listing-body{padding:14px;}
 .listing-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
@@ -45,11 +50,11 @@ body{font-family:sans-serif;background:#f0f0f0;min-height:100vh;}
 .action-btn{padding:9px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:none;text-align:center;}
 .btn-green{background:#a3e635;color:#1a1a1a;}
 .btn-dark{background:#1a1a1a;color:#a3e635;}
+.btn-red{background:#fee2e2;color:#dc2626;}
 .btn-outline{background:transparent;color:#1a1a1a;border:1px solid #ddd;width:100%;}
-.btn-full{grid-column:1/-1;}
 .marketing-section{margin-top:10px;border-top:0.5px solid #f0f0f0;padding-top:10px;}
-.marketing-title{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
-.add-log-btn{font-size:11px;color:#a3e635;cursor:pointer;background:none;border:none;font-weight:500;}
+.section-title-row{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+.add-btn-sm{font-size:11px;color:#a3e635;cursor:pointer;background:none;border:none;font-weight:500;}
 .log-item{background:#f8f8f8;border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:12px;position:relative;}
 .log-header{display:flex;justify-content:space-between;margin-bottom:3px;}
 .log-platform{font-weight:500;color:#1a1a1a;}
@@ -57,28 +62,76 @@ body{font-family:sans-serif;background:#f0f0f0;min-height:100vh;}
 .log-action{color:#555;}
 .log-notes{color:#888;font-size:11px;margin-top:2px;}
 .log-delete{color:#dc2626;cursor:pointer;font-size:10px;background:none;border:none;position:absolute;top:8px;right:8px;}
-.no-logs{font-size:12px;color:#bbb;text-align:center;padding:8px;}
+.no-items{font-size:12px;color:#bbb;text-align:center;padding:8px;}
+/* Project CRM */
+.project-card{background:white;border-radius:14px;border:0.5px solid #e0e0e0;overflow:hidden;margin-bottom:12px;}
+.project-header{background:#1a1a1a;padding:14px 16px;display:flex;justify-content:space-between;align-items:flex-start;}
+.project-name{font-size:15px;font-weight:500;color:#a3e635;}
+.project-dev{font-size:11px;color:#888;margin-top:2px;}
+.project-status-badge{font-size:10px;font-weight:500;padding:3px 10px;border-radius:20px;white-space:nowrap;}
+.proj-active{background:#a3e635;color:#1a1a1a;}
+.proj-hold{background:#fef3c7;color:#92400e;}
+.proj-done{background:#e0e0e0;color:#555;}
+.project-stats{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:0.5px solid #f0f0f0;}
+.proj-stat{padding:10px 8px;text-align:center;border-right:0.5px solid #f0f0f0;}
+.proj-stat:last-child{border-right:none;}
+.proj-stat-val{font-size:16px;font-weight:500;color:#1a1a1a;}
+.proj-stat-label{font-size:9px;color:#888;margin-top:2px;}
+.project-body{padding:14px;}
+.project-info{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.info-item{font-size:11px;color:#888;}
+.info-val{font-size:12px;font-weight:500;color:#1a1a1a;margin-top:2px;}
+.pipeline-stages{display:flex;gap:3px;margin-top:6px;}
+.stage-pill{flex:1;text-align:center;padding:5px 2px;border-radius:4px;font-size:9px;font-weight:500;line-height:1.3;}
+.stage-new{background:#dbeafe;color:#1e40af;}
+.stage-viewing{background:#fef3c7;color:#92400e;}
+.stage-offer{background:#fed7aa;color:#c2410c;}
+.stage-booked{background:#e9d5ff;color:#6b21a8;}
+.stage-spa{background:#d1fae5;color:#065f46;}
+.stage-loan{background:#cffafe;color:#155e75;}
+.stage-closed{background:#a3e635;color:#1a1a1a;}
+.lead-item{background:#f8f8f8;border-radius:8px;padding:10px 12px;margin-bottom:8px;position:relative;}
+.lead-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
+.lead-name{font-size:13px;font-weight:500;color:#1a1a1a;}
+.lead-agent-lbl{font-size:10px;color:#888;margin-top:2px;}
+.lead-status-badge{font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;white-space:nowrap;}
+.lead-meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px;}
+.lead-meta-item{font-size:11px;color:#555;}
+.lead-notes-txt{font-size:11px;color:#888;margin-bottom:6px;}
+.lead-followup{font-size:11px;color:#d97706;font-weight:500;}
+.lead-followup.overdue{color:#dc2626;}
+.lead-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.lead-btn{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;border:none;}
+.agent-row{background:#f8f8f8;border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.agent-name-col{font-size:13px;font-weight:500;color:#1a1a1a;}
+.conversion-bar{height:4px;background:#e0e0e0;border-radius:2px;margin-top:4px;width:80px;}
+.conversion-fill{height:4px;background:#a3e635;border-radius:2px;}
+.section-divider{height:1px;background:#f0f0f0;margin:12px 0;}
+/* Modals */
 .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:100;align-items:flex-end;justify-content:center;}
 .modal-overlay.active{display:flex;}
-.modal{background:white;border-radius:20px 20px 0 0;padding:20px;width:100%;max-height:85vh;overflow-y:auto;}
+.modal{background:white;border-radius:20px 20px 0 0;padding:20px;width:100%;max-height:90vh;overflow-y:auto;}
 .modal-title{font-size:15px;font-weight:500;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
 .modal-close{font-size:20px;cursor:pointer;color:#888;background:none;border:none;}
 .form-field{margin-bottom:12px;}
 .form-label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;}
-.form-input{width:100%;padding:10px;border:1px solid #e0e0e0;border-radius:8px;font-size:14px;font-family:sans-serif;}
+.form-input{width:100%;padding:10px;border:1px solid #e0e0e0;border-radius:8px;font-size:14px;font-family:sans-serif;background:#fafafa;}
 .form-input:focus{outline:none;border-color:#a3e635;}
-.copy-result{background:#f8f8f8;border-radius:10px;padding:14px;margin-top:12px;font-size:13px;line-height:1.7;white-space:pre-wrap;display:none;}
-.loading-msg{text-align:center;padding:20px;color:#888;display:none;}
-.loading-dot{animation:pulse 1.2s infinite;}
-@keyframes pulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.submit-btn{width:100%;padding:13px;background:#a3e635;color:#1a1a1a;border:none;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;margin-top:4px;}
 .platform-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
 .platform-btn{padding:10px 6px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid #e0e0e0;background:white;text-align:center;}
-.platform-btn.selected{border-color:#a3e635;background:#f0f8e0;color:#1a1a1a;}
+.platform-btn.selected{border-color:#a3e635;background:#f0f8e0;}
+.copy-result{background:#f8f8f8;border-radius:10px;padding:14px;margin-top:12px;font-size:13px;line-height:1.7;white-space:pre-wrap;display:none;}
+.loading-msg{text-align:center;padding:16px;color:#888;display:none;font-size:13px;}
+.loading-dot{animation:pulse 1.2s infinite;display:inline-block;}
+@keyframes pulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
+.views-badge{background:#f0f0f0;border-radius:6px;padding:3px 8px;font-size:11px;color:#555;}
+.refresh-btn{background:#2a2a2a;color:#a3e635;border:none;border-radius:8px;padding:8px 14px;font-size:12px;cursor:pointer;font-weight:500;margin-left:auto;}
 .empty-state{text-align:center;padding:40px 20px;color:#888;}
 .empty-icon{font-size:40px;margin-bottom:12px;}
-.refresh-btn{background:#2a2a2a;color:#a3e635;border:none;border-radius:8px;padding:8px 14px;font-size:12px;cursor:pointer;font-weight:500;margin-left:auto;}
-.views-badge{background:#f0f0f0;border-radius:6px;padding:3px 8px;font-size:11px;color:#555;}
-.suria-link{font-size:12px;color:#a3e635;text-decoration:none;display:block;text-align:center;padding:12px;margin-top:4px;}
+.suria-link{font-size:12px;color:#a3e635;text-decoration:none;display:block;text-align:center;padding:16px;}
+.overdue-alert{background:#fee2e2;border-radius:8px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#dc2626;font-weight:500;}
 </style>
 </head>
 <body>
@@ -91,40 +144,61 @@ body{font-family:sans-serif;background:#f0f0f0;min-height:100vh;}
       <h1>SURIA Listing Hub</h1>
       <p class="header-sub">Sr Khairul's Property Dashboard</p>
     </div>
-    <button class="refresh-btn" onclick="loadListings()">↻ Refresh</button>
+    <button class="refresh-btn" onclick="refreshAll()">↻</button>
   </div>
-  <div class="nav-tabs">
-    <div class="nav-tab active" onclick="filterTab('all',this)">All</div>
-    <div class="nav-tab" onclick="filterTab('for-sale',this)">For Sale</div>
-    <div class="nav-tab" onclick="filterTab('for-rent',this)">For Rent</div>
-    <div class="nav-tab" onclick="filterTab('sold',this)">Sold</div>
+  <div class="main-tabs">
+    <button class="main-tab active" onclick="switchMainTab('listings',this)">🏠 My Listings</button>
+    <button class="main-tab" onclick="switchMainTab('projects',this)">🏗️ Projects CRM</button>
   </div>
 </div>
 
-<div class="stats-bar">
-  <div class="stat"><div class="stat-val" id="stat-total">–</div><div class="stat-label">Total</div></div>
-  <div class="stat"><div class="stat-val" id="stat-active">–</div><div class="stat-label">Active</div></div>
-  <div class="stat"><div class="stat-val" id="stat-sold">–</div><div class="stat-label">Sold</div></div>
-  <div class="stat"><div class="stat-val" id="stat-views">–</div><div class="stat-label">Total Views</div></div>
-</div>
-
-<div class="content">
-  <div id="listings-container">
-    <div class="empty-state">
-      <div class="empty-icon">🏠</div>
-      <p>Loading your listings...</p>
+<!-- LISTINGS TAB -->
+<div class="tab-content active" id="tab-listings">
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-val" id="stat-total">–</div><div class="stat-label">Total</div></div>
+    <div class="stat"><div class="stat-val" id="stat-active">–</div><div class="stat-label">Active</div></div>
+    <div class="stat"><div class="stat-val" id="stat-sold">–</div><div class="stat-label">Sold</div></div>
+    <div class="stat"><div class="stat-val" id="stat-views">–</div><div class="stat-label">Views</div></div>
+  </div>
+  <div class="content">
+    <div class="filter-tabs">
+      <div class="filter-tab active" onclick="filterTab('all',this)">All</div>
+      <div class="filter-tab" onclick="filterTab('for-sale',this)">For Sale</div>
+      <div class="filter-tab" onclick="filterTab('for-rent',this)">For Rent</div>
+      <div class="filter-tab" onclick="filterTab('sold',this)">Sold</div>
     </div>
+    <div id="listings-container"><div class="empty-state"><div class="loading-dot" style="font-size:24px;">◆</div><p style="margin-top:12px;">Loading listings...</p></div></div>
+    <a href="/" class="suria-link">← Back to SURIA</a>
   </div>
-  <a href="/" class="suria-link">← Back to SURIA</a>
 </div>
 
-<!-- Log Marketing Action Modal -->
+<!-- PROJECTS CRM TAB -->
+<div class="tab-content" id="tab-projects">
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-val" id="proj-stat-total">–</div><div class="stat-label">Projects</div></div>
+    <div class="stat"><div class="stat-val" id="proj-stat-leads">–</div><div class="stat-label">Leads</div></div>
+    <div class="stat"><div class="stat-val" id="proj-stat-booked">–</div><div class="stat-label">Booked</div></div>
+    <div class="stat"><div class="stat-val" id="proj-stat-closed">–</div><div class="stat-label">Closed</div></div>
+  </div>
+  <div class="content">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px;">
+      <div class="filter-tabs" style="margin-bottom:0;flex:1;">
+        <div class="filter-tab active" onclick="filterProjects('all',this)">All</div>
+        <div class="filter-tab" onclick="filterProjects('Active',this)">Active</div>
+        <div class="filter-tab" onclick="filterProjects('On Hold',this)">On Hold</div>
+        <div class="filter-tab" onclick="filterProjects('Completed',this)">Done</div>
+      </div>
+      <button class="action-btn btn-green" onclick="openModal('add-project-modal')" style="padding:8px 12px;font-size:12px;white-space:nowrap;">+ Project</button>
+    </div>
+    <div id="projects-container"><div class="empty-state"><div class="empty-icon">🏗️</div><p>No projects yet.<br/>Tap + Project to add one!</p></div></div>
+    <a href="/" class="suria-link">← Back to SURIA</a>
+  </div>
+</div>
+
+<!-- Log Marketing Modal -->
 <div class="modal-overlay" id="log-modal">
   <div class="modal">
-    <div class="modal-title">
-      Log Marketing Action
-      <button class="modal-close" onclick="closeModal('log-modal')">✕</button>
-    </div>
+    <div class="modal-title">Log Marketing Action <button class="modal-close" onclick="closeModal('log-modal')">✕</button></div>
     <input type="hidden" id="log-property-id"/>
     <div class="form-field">
       <label class="form-label">Platform</label>
@@ -138,323 +212,531 @@ body{font-family:sans-serif;background:#f0f0f0;min-height:100vh;}
       </div>
       <input type="hidden" id="log-platform"/>
     </div>
-    <div class="form-field">
-      <label class="form-label">Action taken</label>
-      <input class="form-input" id="log-action" placeholder="e.g. Posted listing ad, Boosted post"/>
-    </div>
-    <div class="form-field">
-      <label class="form-label">Date</label>
-      <input class="form-input" type="date" id="log-date"/>
-    </div>
-    <div class="form-field">
-      <label class="form-label">Notes / Result</label>
-      <input class="form-input" id="log-notes" placeholder="e.g. 5 enquiries, 2 viewings booked"/>
-    </div>
-    <button class="action-btn btn-green btn-full" onclick="submitLog()" style="width:100%;padding:13px;margin-top:4px;">Save Log</button>
+    <div class="form-field"><label class="form-label">Action taken</label><input class="form-input" id="log-action" placeholder="e.g. Posted listing ad, Boosted post"/></div>
+    <div class="form-field"><label class="form-label">Date</label><input class="form-input" type="date" id="log-date"/></div>
+    <div class="form-field"><label class="form-label">Notes / Result</label><input class="form-input" id="log-notes" placeholder="e.g. 5 enquiries received"/></div>
+    <button class="submit-btn" onclick="submitLog()">Save Log</button>
   </div>
 </div>
 
 <!-- Generate Copy Modal -->
 <div class="modal-overlay" id="copy-modal">
   <div class="modal">
-    <div class="modal-title">
-      Generate Marketing Copy
-      <button class="modal-close" onclick="closeModal('copy-modal')">✕</button>
-    </div>
+    <div class="modal-title">Generate Marketing Copy <button class="modal-close" onclick="closeModal('copy-modal')">✕</button></div>
     <input type="hidden" id="copy-property-id"/>
     <p id="copy-property-name" style="font-size:13px;color:#555;margin-bottom:14px;"></p>
     <div class="form-field">
-      <label class="form-label">Select Platform</label>
+      <label class="form-label">Platform</label>
       <div class="platform-grid">
         <div class="platform-btn" onclick="selectCopyPlatform(this,'Facebook')">📘 Facebook</div>
         <div class="platform-btn" onclick="selectCopyPlatform(this,'WhatsApp')">💬 WhatsApp</div>
-        <div class="platform-btn" onclick="selectCopyPlatform(this,'iProperty/Mudah')">🏠 iProperty/Mudah</div>
+        <div class="platform-btn" onclick="selectCopyPlatform(this,'iProperty/Mudah')">🏠 iProperty</div>
       </div>
       <input type="hidden" id="copy-platform"/>
     </div>
-    <button class="action-btn btn-green btn-full" onclick="generateCopy()" style="width:100%;padding:13px;margin-top:4px;">✨ Generate with SURIA</button>
+    <button class="submit-btn" onclick="generateCopy()">✨ Generate with SURIA</button>
     <div class="loading-msg" id="copy-loading"><span class="loading-dot">◆</span> SURIA is writing...</div>
     <div class="copy-result" id="copy-result"></div>
-    <button class="action-btn btn-dark btn-full" id="copy-copy-btn" onclick="copyCopyText()" style="width:100%;padding:10px;margin-top:8px;display:none;">Copy to clipboard</button>
+    <button class="action-btn btn-dark" id="copy-copy-btn" onclick="copyCopyText()" style="width:100%;padding:10px;margin-top:8px;display:none;">Copy to clipboard</button>
+  </div>
+</div>
+
+<!-- Add Project Modal -->
+<div class="modal-overlay" id="add-project-modal">
+  <div class="modal">
+    <div class="modal-title">Add New Project <button class="modal-close" onclick="closeModal('add-project-modal')">✕</button></div>
+    <div class="form-field"><label class="form-label">Project Name *</label><input class="form-input" id="proj-name" placeholder="e.g. Residensi Kluang Utama"/></div>
+    <div class="form-field"><label class="form-label">Developer</label><input class="form-input" id="proj-dev" placeholder="e.g. Maju Development Sdn Bhd"/></div>
+    <div class="form-field"><label class="form-label">Location</label><input class="form-input" id="proj-location" placeholder="e.g. Kluang, Johor"/></div>
+    <div class="form-row">
+      <div class="form-field"><label class="form-label">Type</label>
+        <select class="form-input" id="proj-type">
+          <option>Condominium</option><option>Apartment</option><option>Terrace House</option>
+          <option>Semi-D</option><option>Bungalow</option><option>Shop Office</option><option>Mixed Development</option>
+        </select>
+      </div>
+      <div class="form-field"><label class="form-label">Status</label>
+        <select class="form-input" id="proj-status">
+          <option>Active</option><option>On Hold</option><option>Completed</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label class="form-label">Price From (RM)</label><input class="form-input" id="proj-price-min" placeholder="e.g. 350000"/></div>
+      <div class="form-field"><label class="form-label">Price To (RM)</label><input class="form-input" id="proj-price-max" placeholder="e.g. 600000"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label class="form-label">Launch Date</label><input class="form-input" type="date" id="proj-launch"/></div>
+      <div class="form-field"><label class="form-label">Completion</label><input class="form-input" type="date" id="proj-completion"/></div>
+    </div>
+    <div class="form-field"><label class="form-label">Commission (%)</label><input class="form-input" id="proj-commission" placeholder="e.g. 2.5"/></div>
+    <button class="submit-btn" onclick="submitProject()">Save Project</button>
+  </div>
+</div>
+
+<!-- Add Lead Modal -->
+<div class="modal-overlay" id="add-lead-modal">
+  <div class="modal">
+    <div class="modal-title">Add Lead <button class="modal-close" onclick="closeModal('add-lead-modal')">✕</button></div>
+    <input type="hidden" id="lead-project-id"/>
+    <div class="form-row">
+      <div class="form-field"><label class="form-label">Name *</label><input class="form-input" id="lead-name" placeholder="e.g. Ahmad Razif"/></div>
+      <div class="form-field"><label class="form-label">Phone *</label><input class="form-input" id="lead-phone" placeholder="e.g. 0123456789"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label class="form-label">Source</label>
+        <select class="form-input" id="lead-source">
+          <option>Facebook</option><option>WhatsApp</option><option>Referral</option>
+          <option>Walk-in</option><option>iProperty</option><option>Mudah</option><option>Other</option>
+        </select>
+      </div>
+      <div class="form-field"><label class="form-label">Agent</label><input class="form-input" id="lead-agent" placeholder="e.g. Fariz"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label class="form-label">Unit Interested</label><input class="form-input" id="lead-unit" placeholder="e.g. Type A, Level 5"/></div>
+      <div class="form-field"><label class="form-label">Budget (RM)</label><input class="form-input" id="lead-budget" placeholder="e.g. 450,000"/></div>
+    </div>
+    <div class="form-field"><label class="form-label">Status</label>
+      <select class="form-input" id="lead-status">
+        <option>New</option><option>Viewing</option><option>Offer</option>
+        <option>Booked</option><option>SPA Signed</option><option>Loan Approved</option><option>Closed</option>
+      </select>
+    </div>
+    <div class="form-field"><label class="form-label">Follow-up Date</label><input class="form-input" type="date" id="lead-followup"/></div>
+    <div class="form-field"><label class="form-label">Notes</label><input class="form-input" id="lead-notes" placeholder="e.g. Interested in corner unit, waiting bank approval"/></div>
+    <button class="submit-btn" onclick="submitLead()">Save Lead</button>
+  </div>
+</div>
+
+<!-- Update Lead Modal -->
+<div class="modal-overlay" id="update-lead-modal">
+  <div class="modal">
+    <div class="modal-title">Update Lead <button class="modal-close" onclick="closeModal('update-lead-modal')">✕</button></div>
+    <input type="hidden" id="update-lead-id"/>
+    <input type="hidden" id="update-lead-project-id"/>
+    <div class="form-field"><label class="form-label">Status</label>
+      <select class="form-input" id="update-lead-status">
+        <option>New</option><option>Viewing</option><option>Offer</option>
+        <option>Booked</option><option>SPA Signed</option><option>Loan Approved</option><option>Closed</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label class="form-label">Unit</label><input class="form-input" id="update-lead-unit" placeholder="e.g. Type A"/></div>
+      <div class="form-field"><label class="form-label">Budget (RM)</label><input class="form-input" id="update-lead-budget" placeholder="e.g. 450,000"/></div>
+    </div>
+    <div class="form-field"><label class="form-label">Follow-up Date</label><input class="form-input" type="date" id="update-lead-followup"/></div>
+    <div class="form-field"><label class="form-label">Notes</label><input class="form-input" id="update-lead-notes" placeholder="Latest update..."/></div>
+    <button class="submit-btn" onclick="submitUpdateLead()">Update Lead</button>
+  </div>
+</div>
+
+<!-- Lead Follow-up Modal -->
+<div class="modal-overlay" id="lead-copy-modal">
+  <div class="modal">
+    <div class="modal-title">Generate Follow-up <button class="modal-close" onclick="closeModal('lead-copy-modal')">✕</button></div>
+    <p id="lead-copy-name" style="font-size:13px;color:#555;margin-bottom:14px;"></p>
+    <button class="submit-btn" onclick="generateLeadFollowup()">✨ Generate with SURIA</button>
+    <div class="loading-msg" id="lead-copy-loading"><span class="loading-dot">◆</span> SURIA is writing...</div>
+    <div class="copy-result" id="lead-copy-result"></div>
+    <button class="action-btn btn-dark" id="lead-copy-btn" onclick="copyLeadText()" style="width:100%;padding:10px;margin-top:8px;display:none;">Copy to clipboard</button>
   </div>
 </div>
 
 <script>
 const AGENT_POST_ID = 12309;
 const WP_API = 'https://ziyad.my/wp-json/wp/v2/properties';
-let allListings = [];
-let allLogs = {};
-let currentFilter = 'all';
-let activeCopyProperty = null;
+let allListings=[], allLogs={}, allProjects=[], allLeads={};
+let currentFilter='all', currentProjFilter='all';
+let activeCopyProperty=null, activeLeadData=null;
+const today = new Date().toISOString().split('T')[0];
 
+function switchMainTab(tab, el) {
+  document.querySelectorAll('.main-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+}
+
+function refreshAll() { loadListings(); loadProjects(); }
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+// ===== LISTINGS =====
 async function loadListings() {
-  document.getElementById('listings-container').innerHTML = '<div class="empty-state"><div class="loading-dot" style="font-size:24px;">◆</div><p style="margin-top:12px;">Fetching your listings from ziyad.my...</p></div>';
+  document.getElementById('listings-container').innerHTML='<div class="empty-state"><div class="loading-dot" style="font-size:24px;">◆</div><p style="margin-top:12px;">Fetching listings...</p></div>';
   try {
-    const [propsRes, logsRes] = await Promise.all([
+    const [r1,r2]=await Promise.all([
       fetch(`${WP_API}?per_page=100&_fields=id,title,link,date,property_meta,class_list,yoast_head_json`),
       fetch('/marketing/logs')
     ]);
-    const allProps = await propsRes.json();
-    const logsData = await logsRes.json();
-    allLogs = logsData.logs || {};
-
-    allListings = allProps.filter(p => {
-      const agents = p.property_meta?.fave_agents || [];
-      return agents.includes(AGENT_POST_ID) || agents.includes(String(AGENT_POST_ID));
+    const props=await r1.json();
+    allLogs=(await r2.json()).logs||{};
+    allListings=props.filter(p=>{
+      const a=p.property_meta?.fave_agents||[];
+      return a.includes(AGENT_POST_ID)||a.includes(String(AGENT_POST_ID));
     });
-
-    updateStats();
+    updateListingStats();
     renderListings();
-  } catch(e) {
-    document.getElementById('listings-container').innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>Could not load listings. Please check your connection.</p></div>';
-  }
+  } catch(e){ document.getElementById('listings-container').innerHTML='<div class="empty-state"><div class="empty-icon">⚠️</div><p>Could not load listings.</p></div>'; }
 }
 
-function updateStats() {
-  const active = allListings.filter(p => {
-    const cl = p.class_list || [];
-    return cl.some(c => c.includes('for-sale') || c.includes('for-rent'));
-  });
-  const sold = allListings.filter(p => (p.class_list || []).some(c => c.includes('sold')));
-  const totalViews = allListings.reduce((sum, p) => sum + parseInt(p.property_meta?.houzez_total_property_views?.[0] || 0), 0);
-  document.getElementById('stat-total').textContent = allListings.length;
-  document.getElementById('stat-active').textContent = active.length;
-  document.getElementById('stat-sold').textContent = sold.length;
-  document.getElementById('stat-views').textContent = totalViews;
+function updateListingStats() {
+  const active=allListings.filter(p=>(p.class_list||[]).some(c=>c.includes('for-sale')||c.includes('for-rent')));
+  const sold=allListings.filter(p=>(p.class_list||[]).some(c=>c.includes('sold')));
+  const views=allListings.reduce((s,p)=>s+parseInt(p.property_meta?.houzez_total_property_views?.[0]||0),0);
+  document.getElementById('stat-total').textContent=allListings.length;
+  document.getElementById('stat-active').textContent=active.length;
+  document.getElementById('stat-sold').textContent=sold.length;
+  document.getElementById('stat-views').textContent=views;
 }
 
-function getDaysOnMarket(dateStr) {
-  return Math.floor((new Date() - new Date(dateStr)) / (1000*60*60*24));
-}
+function getDays(d){return Math.floor((new Date()-new Date(d))/86400000);}
+function getStatus(p){const c=p.class_list||[];if(c.some(x=>x.includes('sold')))return 'sold';if(c.some(x=>x.includes('for-rent')))return 'for-rent';return 'for-sale';}
+function getStatusBadge(s){if(s==='sold')return '<span class="status-badge status-sold">Sold</span>';if(s==='for-rent')return '<span class="status-badge status-rent">For Rent</span>';return '<span class="status-badge status-active">For Sale</span>';}
+function getDaysClass(d){return d<=30?'days-ok':d<=60?'days-warn':'days-alert';}
+function fmtPrice(p){const n=parseInt(p);return isNaN(n)?p||'Price on request':'RM '+n.toLocaleString('en-MY');}
 
-function getStatus(p) {
-  const cl = p.class_list || [];
-  if (cl.some(c => c.includes('sold'))) return 'sold';
-  if (cl.some(c => c.includes('for-rent'))) return 'for-rent';
-  return 'for-sale';
-}
-
-function getStatusBadge(status) {
-  if (status === 'sold') return '<span class="status-badge status-sold">Sold</span>';
-  if (status === 'for-rent') return '<span class="status-badge status-rent">For Rent</span>';
-  return '<span class="status-badge status-active">For Sale</span>';
-}
-
-function getDaysClass(days) {
-  if (days <= 30) return 'days-ok';
-  if (days <= 60) return 'days-warn';
-  return 'days-alert';
-}
-
-function formatPrice(price) {
-  if (!price) return 'Price on request';
-  const num = parseInt(price);
-  if (isNaN(num)) return price;
-  return 'RM ' + num.toLocaleString('en-MY');
-}
-
-function filterTab(filter, el) {
-  currentFilter = filter;
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+function filterTab(f,el){
+  currentFilter=f;
+  document.querySelectorAll('#tab-listings .filter-tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
   renderListings();
 }
 
-function renderListings() {
-  let filtered = allListings;
-  if (currentFilter !== 'all') {
-    filtered = allListings.filter(p => getStatus(p) === currentFilter);
-  }
-  if (filtered.length === 0) {
-    document.getElementById('listings-container').innerHTML = '<div class="empty-state"><div class="empty-icon">🏠</div><p>No listings found in this category.</p></div>';
-    return;
-  }
-  document.getElementById('listings-container').innerHTML = filtered.map(p => renderCard(p)).join('') + '<a href="/" class="suria-link">← Back to SURIA</a>';
+function renderListings(){
+  let list=currentFilter==='all'?allListings:allListings.filter(p=>getStatus(p)===currentFilter);
+  if(!list.length){document.getElementById('listings-container').innerHTML='<div class="empty-state"><div class="empty-icon">🏠</div><p>No listings found.</p></div>';return;}
+  document.getElementById('listings-container').innerHTML=list.map(p=>renderListingCard(p)).join('')+'<a href="/" class="suria-link">← Back to SURIA</a>';
 }
 
-function renderCard(p) {
-  const meta = p.property_meta || {};
-  const status = getStatus(p);
-  const days = getDaysOnMarket(p.date);
-  const price = formatPrice(meta.fave_property_price?.[0]);
-  const address = meta.fave_property_address?.[0] || '';
-  const beds = meta.fave_property_bedrooms?.[0] || '';
-  const baths = meta.fave_property_bathrooms?.[0] || '';
-  const land = meta.fave_property_land?.[0] || '';
-  const builtup = meta['fave_built-up']?.[0] || '';
-  const views = meta.houzez_total_property_views?.[0] || 0;
-  const tenure = meta.fave_tenure?.[0] || '';
-  const propId = p.id;
-  const imgUrl = p.yoast_head_json?.og_image?.[0]?.url;
-  const imgHtml = imgUrl
-    ? `<a href="${p.link}" target="_blank"><img src="${imgUrl}" class="listing-img" loading="lazy"/></a>`
-    : `<a href="${p.link}" target="_blank"><div class="listing-img-placeholder">🏠</div></a>`;
+function renderListingCard(p){
+  const m=p.property_meta||{},s=getStatus(p),days=getDays(p.date);
+  const logs=allLogs[String(p.id)]||[];
+  const imgUrl=p.yoast_head_json?.og_image?.[0]?.url;
+  const imgHtml=imgUrl?`<a href="${p.link}" target="_blank"><img src="${imgUrl}" class="listing-img" loading="lazy"/></a>`:`<a href="${p.link}" target="_blank"><div class="listing-img-placeholder">🏠</div></a>`;
+  const logsHtml=logs.length?logs.map((l,i)=>`<div class="log-item"><button class="log-delete" onclick="deleteLog(${p.id},${i})">✕</button><div class="log-header"><span class="log-platform">${l.platform}</span><span class="log-date">${l.date}</span></div><div class="log-action">${l.action}</div>${l.notes?`<div class="log-notes">${l.notes}</div>`:''}</div>`).join(''):'<p class="no-items">No marketing logged yet</p>';
+  return `<div class="listing-card">${imgHtml}<div class="listing-body">
+    <div class="listing-header"><div class="listing-title">${p.title?.rendered||''}</div>${getStatusBadge(s)}</div>
+    <div class="listing-price">${fmtPrice(m.fave_property_price?.[0])}</div>
+    <div class="listing-address">📍 ${m.fave_property_address?.[0]||''}</div>
+    <div class="listing-meta">
+      ${m.fave_property_bedrooms?.[0]?`<span class="meta-item">🛏 ${m.fave_property_bedrooms[0]} bed</span>`:''}
+      ${m.fave_property_bathrooms?.[0]?`<span class="meta-item">🚿 ${m.fave_property_bathrooms[0]} bath</span>`:''}
+      ${m.fave_property_land?.[0]?`<span class="meta-item">📐 ${m.fave_property_land[0]} sqft</span>`:''}
+      ${m.fave_tenure?.[0]?`<span class="meta-item">📜 ${m.fave_tenure[0]}</span>`:''}
+      <span class="views-badge">👁 ${m.houzez_total_property_views?.[0]||0} views</span>
+    </div>
+    <div class="days-bar"><span class="days-label">Days on market</span><span class="days-val ${getDaysClass(days)}">${days} days</span></div>
+    <div class="listing-actions">
+      <button class="action-btn btn-green" onclick="openCopyModal(${p.id})">✍️ Generate Copy</button>
+      <button class="action-btn btn-dark" onclick="openLogModal(${p.id})">📣 Log Action</button>
+      <a href="${p.link}" target="_blank" style="grid-column:1/-1;text-decoration:none;"><button class="action-btn btn-outline">🔗 View on ziyad.my</button></a>
+    </div>
+    <div class="marketing-section">
+      <div class="section-title-row">Marketing History (${logs.length})<button class="add-btn-sm" onclick="openLogModal(${p.id})">+ Add</button></div>
+      ${logsHtml}
+    </div>
+  </div></div>`;
+}
 
-  const logs = allLogs[String(propId)] || [];
-  const logsHtml = logs.length > 0
-    ? logs.map((log, idx) => `
-        <div class="log-item">
-          <button class="log-delete" onclick="deleteLog(${propId},${idx})">✕</button>
-          <div class="log-header"><span class="log-platform">${log.platform}</span><span class="log-date">${log.date}</span></div>
-          <div class="log-action">${log.action}</div>
-          ${log.notes ? `<div class="log-notes">${log.notes}</div>` : ''}
-        </div>`).join('')
-    : `<p class="no-logs">No marketing actions logged yet</p>`;
+// ===== PROJECTS CRM =====
+async function loadProjects(){
+  try{
+    const res=await fetch('/crm/projects');
+    const data=await res.json();
+    allProjects=data.projects||[];
+    allLeads=data.leads||{};
+    updateProjectStats();
+    renderProjects();
+  }catch(e){console.error(e);}
+}
 
-  return `
-  <div class="listing-card">
-    ${imgHtml}
-    <div class="listing-body">
-      <div class="listing-header">
-        <div class="listing-title">${p.title?.rendered || 'Listing'}</div>
-        ${getStatusBadge(status)}
+function updateProjectStats(){
+  let leads=0,booked=0,closed=0;
+  allProjects.forEach(p=>{
+    const l=allLeads[p.id]||[];
+    leads+=l.length;
+    booked+=l.filter(x=>['Booked','SPA Signed','Loan Approved'].includes(x.status)).length;
+    closed+=l.filter(x=>x.status==='Closed').length;
+  });
+  document.getElementById('proj-stat-total').textContent=allProjects.length;
+  document.getElementById('proj-stat-leads').textContent=leads;
+  document.getElementById('proj-stat-booked').textContent=booked;
+  document.getElementById('proj-stat-closed').textContent=closed;
+}
+
+function filterProjects(f,el){
+  currentProjFilter=f;
+  document.querySelectorAll('#tab-projects .filter-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderProjects();
+}
+
+function getStageClass(s){const m={'New':'stage-new','Viewing':'stage-viewing','Offer':'stage-offer','Booked':'stage-booked','SPA Signed':'stage-spa','Loan Approved':'stage-loan','Closed':'stage-closed'};return m[s]||'stage-new';}
+
+function renderProjects(){
+  let list=currentProjFilter==='all'?allProjects:allProjects.filter(p=>p.status===currentProjFilter);
+  if(!list.length){document.getElementById('projects-container').innerHTML='<div class="empty-state"><div class="empty-icon">🏗️</div><p>No projects found.<br/>Tap + Project to add one!</p></div>';return;}
+  document.getElementById('projects-container').innerHTML=list.map(p=>renderProjectCard(p)).join('')+'<a href="/" class="suria-link">← Back to SURIA</a>';
+}
+
+function renderProjectCard(p){
+  const leads=allLeads[p.id]||[];
+  const stages=['New','Viewing','Offer','Booked','SPA Signed','Loan Approved','Closed'];
+  const sc={};stages.forEach(s=>sc[s]=leads.filter(l=>l.status===s).length);
+  const closed=sc['Closed'],conv=leads.length>0?Math.round(closed/leads.length*100):0;
+  const overdue=leads.filter(l=>l.follow_up_date&&l.follow_up_date<today&&l.status!=='Closed').length;
+  const statusClass=p.status==='Active'?'proj-active':p.status==='On Hold'?'proj-hold':'proj-done';
+
+  // Agent stats
+  const agentMap={};
+  leads.forEach(l=>{
+    if(!l.agent)return;
+    if(!agentMap[l.agent])agentMap[l.agent]={leads:0,closed:0};
+    agentMap[l.agent].leads++;
+    if(l.status==='Closed')agentMap[l.agent].closed++;
+  });
+  const agentHtml=Object.keys(agentMap).length>0?Object.entries(agentMap).map(([name,stats])=>{
+    const rate=stats.leads>0?Math.round(stats.closed/stats.leads*100):0;
+    return `<div class="agent-row"><div><div class="agent-name-col">${name}</div><div style="font-size:10px;color:#888;">${stats.leads} leads · ${stats.closed} closed</div></div><div style="text-align:right;"><div style="font-size:14px;font-weight:500;">${rate}%</div><div class="conversion-bar"><div class="conversion-fill" style="width:${rate}%"></div></div></div></div>`;
+  }).join(''):'<p class="no-items">No leads yet</p>';
+
+  const leadsHtml=leads.length>0?leads.map(l=>{
+    const od=l.follow_up_date&&l.follow_up_date<today&&l.status!=='Closed';
+    return `<div class="lead-item">
+      <div class="lead-header">
+        <div><div class="lead-name">${l.name}</div><div class="lead-agent-lbl">Agent: ${l.agent||'–'} · ${l.source||'–'}</div></div>
+        <span class="lead-status-badge ${getStageClass(l.status)}">${l.status}</span>
       </div>
-      <div class="listing-price">${price}</div>
-      <div class="listing-address">📍 ${address}</div>
-      <div class="listing-meta">
-        ${beds ? `<span class="meta-item">🛏 ${beds} bed</span>` : ''}
-        ${baths ? `<span class="meta-item">🚿 ${baths} bath</span>` : ''}
-        ${land ? `<span class="meta-item">📐 ${land} sqft</span>` : ''}
-        ${builtup ? `<span class="meta-item">🏗 ${builtup} sqft built-up</span>` : ''}
-        ${tenure ? `<span class="meta-item">📜 ${tenure}</span>` : ''}
-        <span class="views-badge">👁 ${views} views</span>
+      <div class="lead-meta">
+        <span class="lead-meta-item">📞 ${l.phone}</span>
+        ${l.unit?`<span class="lead-meta-item">🏠 ${l.unit}</span>`:''}
+        ${l.budget?`<span class="lead-meta-item">💰 RM${l.budget}</span>`:''}
       </div>
-      <div class="days-bar">
-        <span class="days-label">Days on market</span>
-        <span class="days-val ${getDaysClass(days)}">${days} days</span>
+      ${l.notes?`<div class="lead-notes-txt">💬 ${l.notes}</div>`:''}
+      ${l.follow_up_date?`<div class="lead-followup ${od?'overdue':''}">📅 ${l.follow_up_date}${od?' ⚠️ OVERDUE':''}</div>`:''}
+      <div class="lead-actions">
+        <button class="lead-btn btn-green" onclick="openUpdateLead('${p.id}','${l.id}')">✏️ Update</button>
+        <button class="lead-btn btn-dark" onclick="openLeadCopy('${p.id}','${l.id}')">✨ Follow-up</button>
+        <button class="lead-btn btn-red" onclick="deleteLead('${p.id}','${l.id}')">Delete</button>
       </div>
-      <div class="listing-actions">
-        <button class="action-btn btn-green" onclick="openCopyModal(${propId})">✍️ Generate Copy</button>
-        <button class="action-btn btn-dark" onclick="openLogModal(${propId})">📣 Log Action</button>
-        <a href="${p.link}" target="_blank" style="grid-column:1/-1;text-decoration:none;">
-          <button class="action-btn btn-outline">🔗 View on ziyad.my</button>
-        </a>
+    </div>`;
+  }).join(''):'<p class="no-items">No leads yet — tap + Add Lead!</p>';
+
+  return `<div class="project-card">
+    <div class="project-header">
+      <div><div class="project-name">${p.name}</div><div class="project-dev">${p.developer||''} · ${p.location||''}</div></div>
+      <span class="project-status-badge ${statusClass}">${p.status}</span>
+    </div>
+    <div class="project-stats">
+      <div class="proj-stat"><div class="proj-stat-val">${leads.length}</div><div class="proj-stat-label">Leads</div></div>
+      <div class="proj-stat"><div class="proj-stat-val">${sc['Booked']}</div><div class="proj-stat-label">Booked</div></div>
+      <div class="proj-stat"><div class="proj-stat-val">${closed}</div><div class="proj-stat-label">Closed</div></div>
+      <div class="proj-stat"><div class="proj-stat-val" style="color:${conv>=50?'#16a34a':'#d97706'}">${conv}%</div><div class="proj-stat-label">Conv.</div></div>
+    </div>
+    <div class="project-body">
+      <div class="project-info">
+        <div class="info-item"><div class="info-val">RM ${parseInt(p.price_min||0).toLocaleString()} – ${parseInt(p.price_max||0).toLocaleString()}</div><div>Price Range</div></div>
+        <div class="info-item"><div class="info-val">${p.commission||'–'}%</div><div>Commission</div></div>
+        <div class="info-item"><div class="info-val">${p.launch_date||'–'}</div><div>Launch Date</div></div>
+        <div class="info-item"><div class="info-val">${p.completion_date||'–'}</div><div>Completion</div></div>
       </div>
-      <div class="marketing-section">
-        <div class="marketing-title">
-          Marketing History (${logs.length})
-          <button class="add-log-btn" onclick="openLogModal(${propId})">+ Add</button>
-        </div>
-        <div id="logs-${propId}">${logsHtml}</div>
+      ${overdue>0?`<div class="overdue-alert">⚠️ ${overdue} overdue follow-up${overdue>1?'s':''} need attention!</div>`:''}
+      <div class="section-title-row" style="margin-bottom:6px;">Pipeline</div>
+      <div class="pipeline-stages">${stages.map(s=>`<div class="stage-pill ${getStageClass(s)}">${sc[s]}<br/><span style="font-size:8px;">${s.split(' ')[0]}</span></div>`).join('')}</div>
+      <div class="section-divider"></div>
+      <div class="section-title-row">Team Performance</div>
+      ${agentHtml}
+      <div class="section-divider"></div>
+      <div class="section-title-row">Leads (${leads.length})<button class="add-btn-sm" onclick="openAddLead('${p.id}')">+ Add Lead</button></div>
+      ${leadsHtml}
+      <div style="margin-top:12px;">
+        <button class="action-btn btn-red" onclick="deleteProject('${p.id}')" style="width:100%;padding:8px;font-size:12px;">🗑 Delete Project</button>
       </div>
     </div>
   </div>`;
 }
 
-function openLogModal(propertyId) {
-  document.getElementById('log-property-id').value = propertyId;
-  document.getElementById('log-date').value = new Date().toISOString().split('T')[0];
-  document.getElementById('log-action').value = '';
-  document.getElementById('log-notes').value = '';
-  document.getElementById('log-platform').value = '';
-  document.querySelectorAll('#log-modal .platform-btn').forEach(b => b.classList.remove('selected'));
-  document.getElementById('log-modal').classList.add('active');
+// Project actions
+async function submitProject(){
+  const name=document.getElementById('proj-name').value;
+  if(!name){alert('Please enter project name.');return;}
+  await fetch('/crm/project/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    name,developer:document.getElementById('proj-dev').value,location:document.getElementById('proj-location').value,
+    type:document.getElementById('proj-type').value,status:document.getElementById('proj-status').value,
+    price_min:document.getElementById('proj-price-min').value,price_max:document.getElementById('proj-price-max').value,
+    launch_date:document.getElementById('proj-launch').value,completion_date:document.getElementById('proj-completion').value,
+    commission:document.getElementById('proj-commission').value,date:today
+  })});
+  closeModal('add-project-modal');
+  document.getElementById('proj-name').value='';
+  await loadProjects();
 }
 
-function openCopyModal(propertyId) {
-  const p = allListings.find(l => l.id === propertyId);
-  if (!p) return;
-  activeCopyProperty = p;
-  document.getElementById('copy-property-id').value = propertyId;
-  document.getElementById('copy-property-name').textContent = p.title?.rendered || '';
-  document.getElementById('copy-result').style.display = 'none';
-  document.getElementById('copy-copy-btn').style.display = 'none';
-  document.getElementById('copy-loading').style.display = 'none';
-  document.getElementById('copy-platform').value = '';
-  document.querySelectorAll('#copy-modal .platform-btn').forEach(b => b.classList.remove('selected'));
-  document.getElementById('copy-modal').classList.add('active');
+async function deleteProject(id){
+  if(!confirm('Delete this project and all leads?'))return;
+  await fetch('/crm/project/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})});
+  await loadProjects();
 }
 
-function closeModal(id) {
-  document.getElementById(id).classList.remove('active');
+function openAddLead(projectId){
+  document.getElementById('lead-project-id').value=projectId;
+  ['lead-name','lead-phone','lead-agent','lead-unit','lead-budget','lead-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('lead-followup').value='';
+  openModal('add-lead-modal');
 }
 
-function selectPlatform(el, platform) {
-  document.querySelectorAll('#log-modal .platform-btn').forEach(b => b.classList.remove('selected'));
-  el.classList.add('selected');
-  document.getElementById('log-platform').value = platform;
+async function submitLead(){
+  const name=document.getElementById('lead-name').value,phone=document.getElementById('lead-phone').value;
+  if(!name||!phone){alert('Please fill in name and phone.');return;}
+  const projectId=document.getElementById('lead-project-id').value;
+  await fetch('/crm/lead/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    project_id:projectId,name,phone,source:document.getElementById('lead-source').value,
+    agent:document.getElementById('lead-agent').value,unit:document.getElementById('lead-unit').value,
+    budget:document.getElementById('lead-budget').value,status:document.getElementById('lead-status').value,
+    follow_up_date:document.getElementById('lead-followup').value,notes:document.getElementById('lead-notes').value,date:today
+  })});
+  closeModal('add-lead-modal');
+  await loadProjects();
 }
 
-function selectCopyPlatform(el, platform) {
-  document.querySelectorAll('#copy-modal .platform-btn').forEach(b => b.classList.remove('selected'));
-  el.classList.add('selected');
-  document.getElementById('copy-platform').value = platform;
+function openUpdateLead(projectId,leadId){
+  const lead=(allLeads[projectId]||[]).find(l=>l.id===leadId);
+  if(!lead)return;
+  document.getElementById('update-lead-id').value=leadId;
+  document.getElementById('update-lead-project-id').value=projectId;
+  document.getElementById('update-lead-status').value=lead.status;
+  document.getElementById('update-lead-unit').value=lead.unit||'';
+  document.getElementById('update-lead-budget').value=lead.budget||'';
+  document.getElementById('update-lead-followup').value=lead.follow_up_date||'';
+  document.getElementById('update-lead-notes').value=lead.notes||'';
+  openModal('update-lead-modal');
 }
 
-async function submitLog() {
-  const propId = document.getElementById('log-property-id').value;
-  const platform = document.getElementById('log-platform').value;
-  const action = document.getElementById('log-action').value;
-  const date = document.getElementById('log-date').value;
-  const notes = document.getElementById('log-notes').value;
-  if (!platform || !action || !date) { alert('Please fill in platform, action and date.'); return; }
-  await fetch('/marketing/log', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({property_id: propId, platform, action, date, notes})
-  });
+async function submitUpdateLead(){
+  await fetch('/crm/lead/update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    project_id:document.getElementById('update-lead-project-id').value,
+    lead_id:document.getElementById('update-lead-id').value,
+    status:document.getElementById('update-lead-status').value,
+    unit:document.getElementById('update-lead-unit').value,
+    budget:document.getElementById('update-lead-budget').value,
+    follow_up_date:document.getElementById('update-lead-followup').value,
+    notes:document.getElementById('update-lead-notes').value
+  })});
+  closeModal('update-lead-modal');
+  await loadProjects();
+}
+
+async function deleteLead(projectId,leadId){
+  if(!confirm('Delete this lead?'))return;
+  await fetch('/crm/lead/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({project_id:projectId,lead_id:leadId})});
+  await loadProjects();
+}
+
+function openLeadCopy(projectId,leadId){
+  const lead=(allLeads[projectId]||[]).find(l=>l.id===leadId);
+  const project=allProjects.find(p=>p.id===projectId);
+  if(!lead||!project)return;
+  activeLeadData={...lead,project:project.name};
+  document.getElementById('lead-copy-name').textContent=`${lead.name} · ${project.name}`;
+  document.getElementById('lead-copy-result').style.display='none';
+  document.getElementById('lead-copy-btn').style.display='none';
+  document.getElementById('lead-copy-loading').style.display='none';
+  openModal('lead-copy-modal');
+}
+
+async function generateLeadFollowup(){
+  if(!activeLeadData)return;
+  document.getElementById('lead-copy-loading').style.display='block';
+  document.getElementById('lead-copy-result').style.display='none';
+  document.getElementById('lead-copy-btn').style.display='none';
+  try{
+    const res=await fetch('/pa',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({feature:'lead_followup',...activeLeadData})});
+    const json=await res.json();
+    document.getElementById('lead-copy-loading').style.display='none';
+    document.getElementById('lead-copy-result').textContent=json.result;
+    document.getElementById('lead-copy-result').style.display='block';
+    document.getElementById('lead-copy-btn').style.display='block';
+  }catch(e){document.getElementById('lead-copy-loading').style.display='none';alert('Something went wrong.');}
+}
+
+function copyLeadText(){navigator.clipboard.writeText(document.getElementById('lead-copy-result').textContent);alert('Copied!');}
+
+// Listing marketing
+function openLogModal(propertyId){
+  document.getElementById('log-property-id').value=propertyId;
+  document.getElementById('log-date').value=today;
+  document.getElementById('log-action').value='';
+  document.getElementById('log-notes').value='';
+  document.getElementById('log-platform').value='';
+  document.querySelectorAll('#log-modal .platform-btn').forEach(b=>b.classList.remove('selected'));
+  openModal('log-modal');
+}
+
+function openCopyModal(propertyId){
+  const p=allListings.find(l=>l.id===propertyId);if(!p)return;
+  activeCopyProperty=p;
+  document.getElementById('copy-property-id').value=propertyId;
+  document.getElementById('copy-property-name').textContent=p.title?.rendered||'';
+  document.getElementById('copy-result').style.display='none';
+  document.getElementById('copy-copy-btn').style.display='none';
+  document.getElementById('copy-loading').style.display='none';
+  document.getElementById('copy-platform').value='';
+  document.querySelectorAll('#copy-modal .platform-btn').forEach(b=>b.classList.remove('selected'));
+  openModal('copy-modal');
+}
+
+function selectPlatform(el,platform){document.querySelectorAll('#log-modal .platform-btn').forEach(b=>b.classList.remove('selected'));el.classList.add('selected');document.getElementById('log-platform').value=platform;}
+function selectCopyPlatform(el,platform){document.querySelectorAll('#copy-modal .platform-btn').forEach(b=>b.classList.remove('selected'));el.classList.add('selected');document.getElementById('copy-platform').value=platform;}
+
+async function submitLog(){
+  const propId=document.getElementById('log-property-id').value;
+  const platform=document.getElementById('log-platform').value;
+  const action=document.getElementById('log-action').value;
+  const date=document.getElementById('log-date').value;
+  const notes=document.getElementById('log-notes').value;
+  if(!platform||!action||!date){alert('Please fill in platform, action and date.');return;}
+  await fetch('/marketing/log',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({property_id:propId,platform,action,date,notes})});
   closeModal('log-modal');
   await loadListings();
 }
 
-async function deleteLog(propId, index) {
-  if (!confirm('Delete this log entry?')) return;
-  await fetch('/marketing/delete', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({property_id: propId, index})
-  });
+async function deleteLog(propId,index){
+  if(!confirm('Delete this log?'))return;
+  await fetch('/marketing/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({property_id:propId,index})});
   await loadListings();
 }
 
-async function generateCopy() {
-  const platform = document.getElementById('copy-platform').value;
-  if (!platform) { alert('Please select a platform.'); return; }
-  const p = activeCopyProperty;
-  if (!p) return;
-  const meta = p.property_meta || {};
-  const days = getDaysOnMarket(p.date);
-
-  document.getElementById('copy-loading').style.display = 'block';
-  document.getElementById('copy-result').style.display = 'none';
-  document.getElementById('copy-copy-btn').style.display = 'none';
-
-  const payload = {
-    feature: 'listing_copy',
-    title: p.title?.rendered || '',
-    address: meta.fave_property_address?.[0] || '',
-    proptype: (p.class_list || []).find(c => c.startsWith('property_type-'))?.replace('property_type-','').replace(/-/g,' ') || '',
-    price: meta.fave_property_price?.[0] || '',
-    bedrooms: meta.fave_property_bedrooms?.[0] || '',
-    bathrooms: meta.fave_property_bathrooms?.[0] || '',
-    land: meta.fave_property_land?.[0] || '',
-    builtup: meta['fave_built-up']?.[0] || '',
-    tenure: meta.fave_tenure?.[0] || '',
-    status: (p.class_list || []).find(c => c.startsWith('property_status-'))?.replace('property_status-','') || 'for-sale',
-    views: meta.houzez_total_property_views?.[0] || 0,
-    days: days,
-    platform: platform
-  };
-
-  try {
-    const res = await fetch('/pa', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
-    const json = await res.json();
-    document.getElementById('copy-loading').style.display = 'none';
-    document.getElementById('copy-result').textContent = json.result;
-    document.getElementById('copy-result').style.display = 'block';
-    document.getElementById('copy-copy-btn').style.display = 'block';
-  } catch(e) {
-    document.getElementById('copy-loading').style.display = 'none';
-    alert('Something went wrong. Please try again.');
-  }
+async function generateCopy(){
+  const platform=document.getElementById('copy-platform').value;
+  if(!platform){alert('Please select a platform.');return;}
+  const p=activeCopyProperty,m=p.property_meta||{};
+  document.getElementById('copy-loading').style.display='block';
+  document.getElementById('copy-result').style.display='none';
+  document.getElementById('copy-copy-btn').style.display='none';
+  try{
+    const res=await fetch('/pa',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      feature:'listing_copy',title:p.title?.rendered||'',address:m.fave_property_address?.[0]||'',
+      proptype:(p.class_list||[]).find(c=>c.startsWith('property_type-'))?.replace('property_type-','').replace(/-/g,' ')||'',
+      price:m.fave_property_price?.[0]||'',bedrooms:m.fave_property_bedrooms?.[0]||'',
+      bathrooms:m.fave_property_bathrooms?.[0]||'',land:m.fave_property_land?.[0]||'',
+      builtup:m['fave_built-up']?.[0]||'',tenure:m.fave_tenure?.[0]||'',
+      status:(p.class_list||[]).find(c=>c.startsWith('property_status-'))?.replace('property_status-','')||'',
+      views:m.houzez_total_property_views?.[0]||0,days:getDays(p.date),platform
+    })});
+    const json=await res.json();
+    document.getElementById('copy-loading').style.display='none';
+    document.getElementById('copy-result').textContent=json.result;
+    document.getElementById('copy-result').style.display='block';
+    document.getElementById('copy-copy-btn').style.display='block';
+  }catch(e){document.getElementById('copy-loading').style.display='none';alert('Something went wrong.');}
 }
 
-function copyCopyText() {
-  navigator.clipboard.writeText(document.getElementById('copy-result').textContent);
-  alert('Copied to clipboard!');
-}
+function copyCopyText(){navigator.clipboard.writeText(document.getElementById('copy-result').textContent);alert('Copied!');}
 
+// Init
 loadListings();
+loadProjects();
 </script>
 </body>
 </html>

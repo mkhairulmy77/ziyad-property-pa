@@ -1,10 +1,9 @@
 import os
 import json
-# v2
 from flask import Flask, request, jsonify, send_from_directory
 import anthropic
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='/app', static_url_path='')
 client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
 
 SIGNATURE = """
@@ -15,7 +14,7 @@ Phone: 013-342 6242
 Email: mkhairul@ziyad.my
 """
 
-MARKETING_LOG_FILE = "marketing_logs.json"
+MARKETING_LOG_FILE = "/app/marketing_logs.json"
 
 def load_logs():
     if os.path.exists(MARKETING_LOG_FILE):
@@ -144,20 +143,20 @@ Include phone: 013-342 6242"""
 
 @app.route("/debug")
 def debug():
-    import os
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    files = os.listdir(base_dir)
-    return jsonify({"base_dir": base_dir, "files": files})
-    return send_from_directory(".", "index.html")
+    files = os.listdir("/app")
+    return jsonify({"base_dir": "/app", "files": files})
+
+@app.route("/")
+def home():
+    return send_from_directory("/app", "index.html")
 
 @app.route("/listings")
 def listings_page():
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    return send_from_directory(base_dir, "listings.html")
+    return send_from_directory("/app", "listings.html")
 
 @app.route("/suria.png")
 def avatar():
-    return send_from_directory(".", "suria.png")
+    return send_from_directory("/app", "suria.png")
 
 @app.route("/pa", methods=["POST"])
 def pa():

@@ -147,6 +147,23 @@ Generate for {d['platform']} in BOTH Bahasa Malaysia AND English.
 End with:{SIGNATURE}
 Phone: 013-342 6242""",
 
+    "briefing": lambda d: f"""You are SURIA, the personal AI assistant of Sr Mohd Khairul Mohd Yunos, a Registered Valuer and Estate Agent at Ziyad Property Consultants Sdn Bhd.
+
+He has just said "Hi SURIA" to wake you up. Respond warmly and professionally.
+
+Current time: {d['time']}
+Greeting: {d['greeting']}
+Listing marketing status: {d['marketing_info']}
+
+Generate a short, warm, personalised daily briefing for Sr Khairul in English. Include:
+1. A warm greeting using {d['greeting']} and his name
+2. Today's date and day
+3. A quick motivational line for a property consultant
+4. Marketing reminder based on: {d['marketing_info']}
+5. Ask what he needs help with today
+
+Keep it short, friendly and professional — like a real PA greeting her boss. Max 150 words.""",
+
     "lead_followup": lambda d: f"""You are a professional property consultant assistant in Malaysia.
 Generate a follow-up message for this project lead:
 

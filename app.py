@@ -1,10 +1,19 @@
 import os
 import json
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, session
 import anthropic
 
 app = Flask(__name__, static_folder='/app', static_url_path='')
+app.secret_key = os.environ.get("SECRET_KEY", "suria-ziyad-2026")
 client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
+
+# ── Passwords — set in Railway Environment Variables ───
+PASSWORDS = {
+    "principal": os.environ.get("PW_PRINCIPAL", ""),
+    "admin":     os.environ.get("PW_ADMIN", ""),
+    "manager":   os.environ.get("PW_MANAGER", ""),
+    "agent":     os.environ.get("PW_AGENT", "")
+}
 
 SIGNATURE = """
 Sr Mohd Khairul Mohd Yunos
@@ -15,11 +24,11 @@ Email: mkhairul@ziyad.my
 """
 
 MARKETING_LOG_FILE = "/app/marketing_logs.json"
-PROJECTS_FILE = "/app/projects.json"
+PROJECTS_FILE      = "/app/projects.json"
 
 def load_logs():
     if os.path.exists(MARKETING_LOG_FILE):
-        with open(MARKETING_LOG_FILE, "r") as f:
+        with open(MARKETING_LOG_FILE) as f:
             return json.load(f)
     return {}
 
@@ -29,7 +38,7 @@ def save_logs(logs):
 
 def load_projects():
     if os.path.exists(PROJECTS_FILE):
-        with open(PROJECTS_FILE, "r") as f:
+        with open(PROJECTS_FILE) as f:
             return json.load(f)
     return {"projects": [], "leads": {}}
 
@@ -47,7 +56,7 @@ Always sign off with:{SIGNATURE}
 Format with headers: BAHASA MALAYSIA, ENGLISH""",
 
     "report": lambda d: f"""You are a certified property consultant and valuer in Malaysia.
-Generate a professional property report with these details:
+Generate a professional property report:
 Address: {d['address']}
 Type: {d['proptype']}
 Land Area: {d['area']} sqft
@@ -79,7 +88,6 @@ If relevant, sign off with:{SIGNATURE}""",
 Help organize and prioritize these tasks for today:
 {d['tasks']}
 Suggest a time schedule from 9am to 6pm.
-Add reminders and tips where relevant.
 Format clearly with: PRIORITY LIST, TIME SCHEDULE, REMINDERS""",
 
     "summarize": lambda d: f"""You are a professional property consultant assistant.
@@ -87,45 +95,34 @@ Summarize this document clearly and concisely:
 {d['content']}
 Provide: Key Points, Action Items, Important Dates/Deadlines (if any).""",
 
-    "greeting": lambda d: f"""You are the personal assistant to Sr Mohd Khairul, a senior property consultant at Ziyad Property Consultants.
-Generate a warm, motivational morning greeting message in Bahasa Malaysia for the property agents team.
+    "greeting": lambda d: f"""You are the personal assistant to Sr Mohd Khairul at Ziyad Property Consultants.
+Generate a warm, motivational morning greeting in Bahasa Malaysia for the agents team.
 Today's focus: {d['focus']}
 Number of agents: {d['agents']}
-Keep it short, friendly and professional. Include a property tip or motivation for the day.
+Keep it short, friendly and professional. Include a property tip or motivation.
 End with the signature of Sr Mohd Khairul.""",
 
     "listing": lambda d: f"""You are a professional property marketing specialist and copywriter in Malaysia.
-Generate compelling property listing content based on these details:
+Generate compelling property listing content:
 
 Property Type: {d['proptype']}
 Tenure: {d['tenure']}
-Address / Location: {d['address']}
+Address: {d['address']}
 Built-up Area: {d.get('builtup') or 'Not specified'}
 Land Area: {d['landarea']} sqft
-Bedrooms: {d['bedrooms']}
-Bathrooms: {d['bathrooms']}
-Car Park: {d['carpark']}
-Furnishing: {d['furnishing']}
-Condition: {d['condition']}
+Bedrooms: {d['bedrooms']} | Bathrooms: {d['bathrooms']} | Car Park: {d['carpark']}
+Furnishing: {d['furnishing']} | Condition: {d['condition']}
 Key Features: {d['features']}
 Asking Price: RM {d['price']}
 Target Buyer: {d['targetbuyer']}
 Special Selling Points: {d.get('specialpoints') or 'None'}
 Language Output: {d['language']}
 
-Please generate ALL of the following sections:
-
-1. IPROPERTY / MUDAH LISTING (English)
-Write a professional, SEO-friendly listing with headline, full description (3-4 paragraphs), and key property details.
-
-2. FACEBOOK / WHATSAPP POST
-Write a short, catchy and engaging post in Bahasa Malaysia and English. Use emojis. Max 150 words per version.
-
-3. KEY HIGHLIGHTS
-List 5-7 bullet points of the property's strongest selling points.
-
-4. PRICE JUSTIFICATION
-Write 2-3 sentences explaining why the asking price is reasonable.
+Generate:
+1. IPROPERTY / MUDAH LISTING (English) — SEO-friendly, 3-4 paragraphs
+2. FACEBOOK / WHATSAPP POST — catchy, emojis, max 150 words each, BM and English
+3. KEY HIGHLIGHTS — 5-7 bullet points
+4. PRICE JUSTIFICATION — 2-3 sentences
 
 Sign off with:{SIGNATURE}""",
 
@@ -136,42 +133,68 @@ Property: {d['title']}
 Address: {d['address']}
 Type: {d['proptype']}
 Price: RM {d['price']}
-Bedrooms: {d.get('bedrooms', 'N/A')} | Bathrooms: {d.get('bathrooms', 'N/A')}
-Land Area: {d.get('land', 'N/A')} sqft | Built-up: {d.get('builtup', 'N/A')} sqft
-Tenure: {d.get('tenure', 'N/A')} | Status: {d.get('status', 'For Sale')}
-Days on market: {d.get('days', 0)} days | Portal views: {d.get('views', 0)}
+Bedrooms: {d.get('bedrooms','N/A')} | Bathrooms: {d.get('bathrooms','N/A')}
+Land: {d.get('land','N/A')} sqft | Built-up: {d.get('builtup','N/A')} sqft
+Tenure: {d.get('tenure','N/A')} | Status: {d.get('status','For Sale')}
+Days on market: {d.get('days',0)} | Portal views: {d.get('views',0)}
 Platform: {d['platform']}
 
-Generate compelling copy for {d['platform']} in BOTH Bahasa Malaysia AND English.
+Generate for {d['platform']} in BOTH Bahasa Malaysia AND English.
+- Facebook: engaging, emojis, call to action, max 200 words each
+- WhatsApp: short, punchy, max 100 words each
+- iProperty/Mudah: professional, English only, 150-250 words
 
-- Facebook post: Engaging, with emojis, highlights, strong call to action. Max 200 words each.
-- WhatsApp broadcast: Short, punchy, key details + contact. Max 100 words each.
-- iProperty/Mudah: Professional listing description with headline. English only, 150-250 words.
-
-Always end with:{SIGNATURE}
-Include phone: 013-342 6242""",
+End with:{SIGNATURE}
+Phone: 013-342 6242""",
 
     "lead_followup": lambda d: f"""You are a professional property consultant assistant in Malaysia.
-Generate a follow-up message for this lead:
+Generate a follow-up message for this project lead:
 
 Project: {d['project']}
-Lead Name: {d['lead_name']}
-Phone: {d['phone']}
-Unit Interested: {d.get('unit', 'N/A')}
-Budget: RM {d.get('budget', 'N/A')}
-Current Status: {d['status']}
-Last Contact: {d.get('last_contact', 'N/A')}
-Notes: {d.get('notes', 'None')}
+Lead: {d['lead_name']} | Phone: {d['phone']}
+Unit: {d.get('unit','N/A')} | Budget: RM {d.get('budget','N/A')}
+Status: {d['status']} | Notes: {d.get('notes','None')}
 
 Generate:
-1. WhatsApp message in Bahasa Malaysia (friendly, professional)
+1. WhatsApp message in Bahasa Malaysia
 2. WhatsApp message in English
-3. Suggested next action to move this lead forward
+3. Suggested next action
 
 Keep messages short and conversational.
-Always sign off with:{SIGNATURE}
-Include phone: 013-342 6242"""
+Sign off with:{SIGNATURE}
+Phone: 013-342 6242"""
 }
+
+# ── Auth ───────────────────────────────────────────────
+
+@app.route("/auth/login", methods=["POST"])
+def login():
+    data = request.json
+    role = data.get("role","").lower()
+    password = data.get("password","")
+    name = data.get("name","").strip()
+    if role not in PASSWORDS:
+        return jsonify({"success": False, "message": "Invalid role."})
+    if password != PASSWORDS[role]:
+        return jsonify({"success": False, "message": "Wrong password. Please try again."})
+    if role == "agent" and not name:
+        return jsonify({"success": False, "message": "Please enter your name."})
+    session["role"] = role
+    session["name"] = name if role == "agent" else role.capitalize()
+    return jsonify({"success": True, "role": role, "name": session["name"]})
+
+@app.route("/auth/logout", methods=["POST"])
+def logout():
+    session.clear()
+    return jsonify({"success": True})
+
+@app.route("/auth/check", methods=["GET"])
+def auth_check():
+    if "role" in session:
+        return jsonify({"logged_in": True, "role": session["role"], "name": session["name"]})
+    return jsonify({"logged_in": False})
+
+# ── Static ─────────────────────────────────────────────
 
 @app.route("/")
 def home():
@@ -185,6 +208,8 @@ def listings_page():
 def avatar():
     return send_from_directory("/app", "suria.png")
 
+# ── AI ─────────────────────────────────────────────────
+
 @app.route("/pa", methods=["POST"])
 def pa():
     data = request.json
@@ -197,28 +222,21 @@ def pa():
     )
     return jsonify({"result": response.content[0].text})
 
-# --- Marketing Log Routes ---
+# ── Marketing logs ─────────────────────────────────────
+
 @app.route("/marketing/log", methods=["POST"])
 def add_marketing_log():
     data = request.json
-    property_id = str(data.get("property_id"))
+    pid = str(data.get("property_id"))
     logs = load_logs()
-    if property_id not in logs:
-        logs[property_id] = []
-    logs[property_id].append({
-        "date": data.get("date"),
-        "platform": data.get("platform"),
-        "action": data.get("action"),
-        "notes": data.get("notes", ""),
-        "result": data.get("result", "")
+    if pid not in logs:
+        logs[pid] = []
+    logs[pid].append({
+        "date": data.get("date"), "platform": data.get("platform"),
+        "action": data.get("action"), "notes": data.get("notes","")
     })
     save_logs(logs)
-    return jsonify({"success": True, "logs": logs[property_id]})
-
-@app.route("/marketing/logs/<property_id>", methods=["GET"])
-def get_marketing_logs(property_id):
-    logs = load_logs()
-    return jsonify({"logs": logs.get(str(property_id), [])})
+    return jsonify({"success": True})
 
 @app.route("/marketing/logs", methods=["GET"])
 def get_all_logs():
@@ -227,39 +245,33 @@ def get_all_logs():
 @app.route("/marketing/delete", methods=["POST"])
 def delete_marketing_log():
     data = request.json
-    property_id = str(data.get("property_id"))
+    pid = str(data.get("property_id"))
     index = data.get("index")
     logs = load_logs()
-    if property_id in logs and 0 <= index < len(logs[property_id]):
-        logs[property_id].pop(index)
+    if pid in logs and 0 <= index < len(logs[pid]):
+        logs[pid].pop(index)
         save_logs(logs)
     return jsonify({"success": True})
 
-# --- Project CRM Routes ---
+# ── CRM ────────────────────────────────────────────────
+
 @app.route("/crm/projects", methods=["GET"])
 def get_projects():
-    data = load_projects()
-    return jsonify(data)
+    return jsonify(load_projects())
 
 @app.route("/crm/project/add", methods=["POST"])
 def add_project():
+    import time
     req = request.json
     data = load_projects()
-    import time
     project = {
         "id": str(int(time.time())),
-        "name": req.get("name"),
-        "developer": req.get("developer"),
-        "location": req.get("location"),
-        "type": req.get("type"),
-        "price_min": req.get("price_min"),
-        "price_max": req.get("price_max"),
-        "launch_date": req.get("launch_date"),
-        "completion_date": req.get("completion_date"),
-        "commission": req.get("commission"),
-        "status": req.get("status", "Active"),
-        "agents": req.get("agents", []),
-        "created": req.get("date", "")
+        "name": req.get("name"), "developer": req.get("developer"),
+        "location": req.get("location"), "type": req.get("type"),
+        "price_min": req.get("price_min"), "price_max": req.get("price_max"),
+        "launch_date": req.get("launch_date"), "completion_date": req.get("completion_date"),
+        "commission": req.get("commission"), "status": req.get("status","Active"),
+        "created": req.get("date","")
     }
     data["projects"].append(project)
     save_projects(data)
@@ -268,65 +280,60 @@ def add_project():
 @app.route("/crm/project/delete", methods=["POST"])
 def delete_project():
     req = request.json
-    project_id = req.get("id")
+    pid = req.get("id")
     data = load_projects()
-    data["projects"] = [p for p in data["projects"] if p["id"] != project_id]
-    if project_id in data["leads"]:
-        del data["leads"][project_id]
+    data["projects"] = [p for p in data["projects"] if p["id"] != pid]
+    if pid in data["leads"]:
+        del data["leads"][pid]
     save_projects(data)
     return jsonify({"success": True})
 
 @app.route("/crm/lead/add", methods=["POST"])
 def add_lead():
-    req = request.json
-    project_id = req.get("project_id")
-    data = load_projects()
     import time
-    if project_id not in data["leads"]:
-        data["leads"][project_id] = []
+    req = request.json
+    pid = req.get("project_id")
+    data = load_projects()
+    if pid not in data["leads"]:
+        data["leads"][pid] = []
     lead = {
         "id": str(int(time.time())),
-        "name": req.get("name"),
-        "phone": req.get("phone"),
-        "source": req.get("source"),
-        "agent": req.get("agent"),
-        "unit": req.get("unit", ""),
-        "budget": req.get("budget", ""),
-        "status": req.get("status", "New"),
-        "follow_up_date": req.get("follow_up_date", ""),
-        "notes": req.get("notes", ""),
-        "created": req.get("date", "")
+        "name": req.get("name"), "phone": req.get("phone"),
+        "source": req.get("source"), "agent": req.get("agent"),
+        "unit": req.get("unit",""), "budget": req.get("budget",""),
+        "status": req.get("status","New"),
+        "follow_up_date": req.get("follow_up_date",""),
+        "notes": req.get("notes",""), "created": req.get("date","")
     }
-    data["leads"][project_id].append(lead)
+    data["leads"][pid].append(lead)
     save_projects(data)
     return jsonify({"success": True, "lead": lead})
 
 @app.route("/crm/lead/update", methods=["POST"])
 def update_lead():
     req = request.json
-    project_id = req.get("project_id")
-    lead_id = req.get("lead_id")
+    pid = req.get("project_id")
+    lid = req.get("lead_id")
     data = load_projects()
-    if project_id in data["leads"]:
-        for lead in data["leads"][project_id]:
-            if lead["id"] == lead_id:
-                lead["status"] = req.get("status", lead["status"])
-                lead["notes"] = req.get("notes", lead["notes"])
-                lead["follow_up_date"] = req.get("follow_up_date", lead["follow_up_date"])
-                lead["unit"] = req.get("unit", lead["unit"])
-                lead["budget"] = req.get("budget", lead["budget"])
-                break
+    for lead in data["leads"].get(pid,[]):
+        if lead["id"] == lid:
+            lead["status"]         = req.get("status",         lead["status"])
+            lead["notes"]          = req.get("notes",          lead["notes"])
+            lead["follow_up_date"] = req.get("follow_up_date", lead["follow_up_date"])
+            lead["unit"]           = req.get("unit",           lead["unit"])
+            lead["budget"]         = req.get("budget",         lead["budget"])
+            break
     save_projects(data)
     return jsonify({"success": True})
 
 @app.route("/crm/lead/delete", methods=["POST"])
 def delete_lead():
     req = request.json
-    project_id = req.get("project_id")
-    lead_id = req.get("lead_id")
+    pid = req.get("project_id")
+    lid = req.get("lead_id")
     data = load_projects()
-    if project_id in data["leads"]:
-        data["leads"][project_id] = [l for l in data["leads"][project_id] if l["id"] != lead_id]
+    if pid in data["leads"]:
+        data["leads"][pid] = [l for l in data["leads"][pid] if l["id"] != lid]
     save_projects(data)
     return jsonify({"success": True})
 

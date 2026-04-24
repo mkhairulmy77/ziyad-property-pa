@@ -325,6 +325,35 @@ body{font-family:sans-serif;background:#f0f0f0;min-height:100vh;}
   </div>
 </div>
 
+<!-- Edit Project -->
+<div class="modal-ov" id="m-editproj">
+  <div class="modal">
+    <div class="modal-title">Edit Project <button class="mc" onclick="closeM('m-editproj')">✕</button></div>
+    <input type="hidden" id="ep-id"/>
+    <div class="ff"><label class="fl">Project Name *</label><input class="fi" id="ep-name" placeholder="e.g. Residensi Kluang Utama"/></div>
+    <div class="ff"><label class="fl">Developer</label><input class="fi" id="ep-dev" placeholder="e.g. Maju Development Sdn Bhd"/></div>
+    <div class="ff"><label class="fl">Location</label><input class="fi" id="ep-loc" placeholder="e.g. Kluang, Johor"/></div>
+    <div class="frow">
+      <div class="ff"><label class="fl">Type</label>
+        <select class="fi" id="ep-type"><option>Condominium</option><option>Apartment</option><option>Terrace House</option><option>Semi-D</option><option>Bungalow</option><option>Shop Office</option><option>Mixed Development</option></select>
+      </div>
+      <div class="ff"><label class="fl">Status</label>
+        <select class="fi" id="ep-status"><option>Active</option><option>On Hold</option><option>Completed</option></select>
+      </div>
+    </div>
+    <div class="frow">
+      <div class="ff"><label class="fl">Price From (RM)</label><input class="fi" id="ep-pmin" placeholder="e.g. 350000"/></div>
+      <div class="ff"><label class="fl">Price To (RM)</label><input class="fi" id="ep-pmax" placeholder="e.g. 600000"/></div>
+    </div>
+    <div class="frow">
+      <div class="ff"><label class="fl">Launch Date</label><input class="fi" type="date" id="ep-launch"/></div>
+      <div class="ff"><label class="fl">Completion</label><input class="fi" type="date" id="ep-comp"/></div>
+    </div>
+    <div class="ff"><label class="fl">Commission (%)</label><input class="fi" id="ep-comm" placeholder="e.g. 2.5"/></div>
+    <button class="sbtn" onclick="submitEditProj()">Save Changes</button>
+  </div>
+</div>
+
 <!-- Add Lead -->
 <div class="modal-ov" id="m-addlead">
   <div class="modal">
@@ -634,7 +663,7 @@ function renderPCard(p){
       <div class="sdiv"></div>
       <div class="str">Leads (${leads.length})<button class="add-sm" onclick="openAddLead('${p.id}')">+ Add Lead</button></div>
       ${leadsHtml}
-      ${canMgr?`<div style="margin-top:12px;"><button class="abtn ar" onclick="delProj('${p.id}')" style="width:100%;padding:8px;font-size:12px;">🗑 Delete Project</button></div>`:''}
+      ${canMgr?`<div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;"><button class="abtn ad" onclick="openEditProj('${p.id}')" style="padding:8px;font-size:12px;">✏️ Edit Project</button><button class="abtn ar" onclick="delProj('${p.id}')" style="padding:8px;font-size:12px;">🗑 Delete</button></div>`:''}
     </div>
   </div>`;
 }
@@ -653,6 +682,40 @@ async function submitProj(){
   closeM('m-addproj');
   document.getElementById('p-name').value='';
   await loadProjects();
+}
+
+function openEditProj(id){
+  const p=allProjects.find(x=>x.id===id);if(!p)return;
+  document.getElementById('ep-id').value=id;
+  document.getElementById('ep-name').value=p.name||'';
+  document.getElementById('ep-dev').value=p.developer||'';
+  document.getElementById('ep-loc').value=p.location||'';
+  document.getElementById('ep-type').value=p.type||'Condominium';
+  document.getElementById('ep-status').value=p.status||'Active';
+  document.getElementById('ep-pmin').value=p.price_min||'';
+  document.getElementById('ep-pmax').value=p.price_max||'';
+  document.getElementById('ep-launch').value=p.launch_date||'';
+  document.getElementById('ep-comp').value=p.completion_date||'';
+  document.getElementById('ep-comm').value=p.commission||'';
+  openM('m-editproj');
+}
+
+async function submitEditProj(){
+  const name=document.getElementById('ep-name').value;
+  if(!name){alert('Please enter project name.');return;}
+  const id=document.getElementById('ep-id').value;
+  await fetch('/crm/project/update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    id,name,developer:document.getElementById('ep-dev').value,
+    location:document.getElementById('ep-loc').value,
+    type:document.getElementById('ep-type').value,
+    status:document.getElementById('ep-status').value,
+    price_min:document.getElementById('ep-pmin').value,
+    price_max:document.getElementById('ep-pmax').value,
+    launch_date:document.getElementById('ep-launch').value,
+    completion_date:document.getElementById('ep-comp').value,
+    commission:document.getElementById('ep-comm').value
+  })});
+  closeM('m-editproj');await loadProjects();
 }
 
 async function delProj(id){

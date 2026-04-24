@@ -20,6 +20,28 @@ body{font-family:sans-serif;background:#f0f0f0;min-height:100vh;}
 .feat span{display:block;font-size:18px;margin-bottom:3px;}
 .feat p{font-size:10px;color:#a3e635;font-weight:500;margin:0;}
 .feat-link{background:#1a3a1a;border:1.5px solid #a3e635;}
+/* Hi SURIA button */
+.suria-wake{width:100%;margin-top:10px;padding:14px;background:linear-gradient(135deg,#a3e635,#7bc22a);color:#1a1a1a;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;letter-spacing:0.5px;position:relative;overflow:hidden;}
+.suria-wake.listening{background:linear-gradient(135deg,#ff6b6b,#ee4444);color:white;animation:wake-pulse 1.5s infinite;}
+.suria-wake.thinking{background:linear-gradient(135deg,#333,#555);color:#a3e635;}
+@keyframes wake-pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.02);}}
+.wake-icon{font-size:20px;}
+/* Briefing card */
+.briefing-card{background:white;border-radius:14px;border:0.5px solid #a3e635;padding:16px;margin:12px 16px;display:none;}
+.briefing-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.briefing-avatar{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid #a3e635;}
+.briefing-title{font-size:13px;font-weight:500;color:#1a1a1a;}
+.briefing-time{font-size:11px;color:#888;}
+.briefing-content{font-size:13px;line-height:1.8;color:#1a1a1a;white-space:pre-wrap;}
+.briefing-actions{display:flex;gap:8px;margin-top:12px;}
+.briefing-btn{padding:8px 16px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:none;}
+.bb-speak{background:#1a1a1a;color:#a3e635;}
+.bb-stop{background:#ff4444;color:white;display:none;}
+.bb-close{background:#f0f0f0;color:#555;}
+.briefing-loading{text-align:center;padding:16px;color:#888;font-size:13px;display:none;}
+.ldot{animation:pulse 1.2s infinite;display:inline-block;}
+@keyframes pulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
+/* Rest of styles */
 .content{padding:16px;}
 .card{background:white;border-radius:14px;border:0.5px solid #e0e0e0;overflow:hidden;margin-bottom:12px;}
 .card-header{background:#f8f8f8;padding:12px 16px;border-bottom:0.5px solid #e8e8e8;display:flex;align-items:center;gap:8px;}
@@ -40,7 +62,6 @@ textarea{resize:vertical;min-height:90px;}
 @keyframes pulse-mic{0%,100%{transform:scale(1);}50%{transform:scale(1.1);}}
 .btn{width:100%;padding:14px;background:#a3e635;color:#1a1a1a;border:none;border-radius:10px;font-size:15px;font-weight:500;margin-top:4px;cursor:pointer;letter-spacing:0.3px;}
 .btn:disabled{background:#ccc;color:#888;}
-.btn:active{opacity:0.9;}
 .panel{display:none;}
 .panel.active{display:block;}
 .result-card{background:white;border-radius:14px;border:0.5px solid #e0e0e0;padding:16px;margin-bottom:12px;display:none;}
@@ -51,8 +72,6 @@ textarea{resize:vertical;min-height:90px;}
 .speak-btn{padding:8px 18px;background:#2a2a2a;color:#a3e635;border:1px solid #2a2a2a;border-radius:8px;font-size:12px;cursor:pointer;font-weight:500;}
 .stop-btn{padding:8px 18px;background:#ff4444;color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;font-weight:500;display:none;}
 .loading{text-align:center;padding:24px;color:#888;display:none;background:white;border-radius:14px;margin-bottom:12px;font-size:14px;}
-.loading-dot{display:inline-block;animation:pulse 1.2s infinite;}
-@keyframes pulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
 .divider{height:1px;background:#f0f0f0;margin:4px 0;}
 .voice-bar{background:#1a1a1a;padding:10px 16px;display:none;align-items:center;gap:10px;}
 .voice-bar.active{display:flex;}
@@ -100,10 +119,13 @@ textarea{resize:vertical;min-height:90px;}
     <div class="feat" onclick="switchTab('greeting',this)"><span>🌅</span><p>Greeting</p></div>
     <div class="feat" onclick="switchTab('calculator',this)"><span>🧮</span><p>Calculator</p></div>
     <div class="feat" onclick="switchTab('listing',this)"><span>✍️</span><p>Listing</p></div>
-    <a href="/listings" style="text-decoration:none;">
-  <div class="feat feat-link"><span>🏡</span><p>My Listings</p></div>
-</a>
+    <div class="feat feat-link" onclick="window.location.href='/listings'"><span>🏡</span><p>My Listings</p></div>
   </div>
+  <!-- Hi SURIA Wake Button -->
+  <button class="suria-wake" id="wake-btn" onclick="toggleWake()">
+    <span class="wake-icon">🎤</span>
+    <span id="wake-label">Hi SURIA — tap to wake</span>
+  </button>
 </div>
 
 <div class="voice-bar" id="voice-bar">
@@ -111,6 +133,24 @@ textarea{resize:vertical;min-height:90px;}
     <span></span><span></span><span></span><span></span><span></span>
   </div>
   <p id="voice-status">Listening...</p>
+</div>
+
+<!-- SURIA Briefing Card -->
+<div class="briefing-card" id="briefing-card">
+  <div class="briefing-header">
+    <img src="/suria.png" class="briefing-avatar"/>
+    <div>
+      <div class="briefing-title">SURIA — Daily Briefing</div>
+      <div class="briefing-time" id="briefing-time"></div>
+    </div>
+  </div>
+  <div class="briefing-loading" id="briefing-loading"><span class="ldot">◆</span> SURIA is preparing your briefing...</div>
+  <div class="briefing-content" id="briefing-content"></div>
+  <div class="briefing-actions" id="briefing-actions" style="display:none;">
+    <button class="briefing-btn bb-speak" id="brief-speak-btn" onclick="speakBriefing()">🔊 Read aloud</button>
+    <button class="briefing-btn bb-stop" id="brief-stop-btn" onclick="stopBriefing()">⏹ Stop</button>
+    <button class="briefing-btn bb-close" onclick="closeBriefing()">✕ Close</button>
+  </div>
 </div>
 
 <div class="content">
@@ -291,21 +331,15 @@ textarea{resize:vertical;min-height:90px;}
         <div class="row">
           <div><label>Down payment</label>
             <select id="c-dp" onchange="calcLoan()">
-              <option value="10">10%</option>
-              <option value="20">20%</option>
-              <option value="30">30%</option>
+              <option value="10">10%</option><option value="20">20%</option><option value="30">30%</option>
             </select>
           </div>
           <div><label>Interest rate (%)</label><input id="c-rate" type="number" placeholder="e.g. 4.5" step="0.1" oninput="calcLoan()"/></div>
         </div>
         <div><label>Loan tenure</label>
           <select id="c-tenure" onchange="calcLoan()">
-            <option value="35">35 years</option>
-            <option value="30">30 years</option>
-            <option value="25">25 years</option>
-            <option value="20">20 years</option>
-            <option value="15">15 years</option>
-            <option value="10">10 years</option>
+            <option value="35">35 years</option><option value="30">30 years</option><option value="25">25 years</option>
+            <option value="20">20 years</option><option value="15">15 years</option><option value="10">10 years</option>
           </select>
         </div>
         <div class="calc-result" id="loan-result">
@@ -331,30 +365,18 @@ textarea{resize:vertical;min-height:90px;}
         <div><label>Property price (RM)</label><input id="sd-price" type="number" placeholder="e.g. 500000" oninput="calcStampDuty()"/></div>
         <div class="row">
           <div><label>Transaction type</label>
-            <select id="sd-type" onchange="calcStampDuty()">
-              <option value="subsale">Sub-sale</option>
-              <option value="new">New project</option>
-            </select>
+            <select id="sd-type" onchange="calcStampDuty()"><option value="subsale">Sub-sale</option><option value="new">New project</option></select>
           </div>
           <div><label>Title type</label>
-            <select id="sd-title" onchange="calcStampDuty()">
-              <option value="freehold">Freehold</option>
-              <option value="leasehold">Leasehold</option>
-            </select>
+            <select id="sd-title" onchange="calcStampDuty()"><option value="freehold">Freehold</option><option value="leasehold">Leasehold</option></select>
           </div>
         </div>
         <div class="row">
           <div><label>First time buyer?</label>
-            <select id="sd-firsttime" onchange="calcStampDuty()">
-              <option value="no">No</option>
-              <option value="yes">Yes — exemption</option>
-            </select>
+            <select id="sd-firsttime" onchange="calcStampDuty()"><option value="no">No</option><option value="yes">Yes — exemption</option></select>
           </div>
           <div><label>Consent to transfer?</label>
-            <select id="sd-consent" onchange="calcStampDuty()">
-              <option value="no">No</option>
-              <option value="yes">Yes (+RM2,000)</option>
-            </select>
+            <select id="sd-consent" onchange="calcStampDuty()"><option value="no">No</option><option value="yes">Yes (+RM2,000)</option></select>
           </div>
         </div>
         <div class="calc-result" id="sd-result">
@@ -366,16 +388,14 @@ textarea{resize:vertical;min-height:90px;}
             <div class="calc-row"><span class="calc-label">Above RM1M @ 4%</span><span class="calc-value" id="sd-tier4">-</span></div>
             <div class="calc-row"><span class="calc-label">First buyer exemption</span><span class="calc-value" id="sd-exempt">-</span></div>
             <div class="calc-total" style="margin-bottom:12px;">
-              <span class="calc-total-label">MOT Stamp Duty</span>
-              <span class="calc-total-value" id="sd-mot">-</span>
+              <span class="calc-total-label">MOT Stamp Duty</span><span class="calc-total-value" id="sd-mot">-</span>
             </div>
           </div>
           <div class="calc-section">
             <div class="calc-section-title">Loan agreement stamp duty (0.5%)</div>
             <div class="calc-row"><span class="calc-label">Loan amount (90%)</span><span class="calc-value" id="sd-loanamt">-</span></div>
             <div class="calc-total" style="margin-bottom:12px;">
-              <span class="calc-total-label">Loan Stamp Duty</span>
-              <span class="calc-total-value" id="sd-loansd">-</span>
+              <span class="calc-total-label">Loan Stamp Duty</span><span class="calc-total-value" id="sd-loansd">-</span>
             </div>
           </div>
           <div class="calc-section">
@@ -386,8 +406,7 @@ textarea{resize:vertical;min-height:90px;}
             <div class="calc-row"><span class="calc-label">Consent to transfer</span><span class="calc-value" id="lf-consent">-</span></div>
           </div>
           <div class="calc-total">
-            <span class="calc-total-label">Total upfront cost</span>
-            <span class="calc-total-value" id="sd-grandtotal">-</span>
+            <span class="calc-total-label">Total upfront cost</span><span class="calc-total-value" id="sd-grandtotal">-</span>
           </div>
         </div>
       </div>
@@ -418,25 +437,19 @@ textarea{resize:vertical;min-height:90px;}
           </div>
         </div>
         <div class="row3">
-          <div><label>Built-up <span class="opt-label">(optional)</span></label><input id="li-builtup" placeholder="e.g. 1,200 sq ft"/></div>
-          <div><label>Land area (sq ft)</label><input id="li-landarea" placeholder="e.g. 2,400"/></div>
+          <div><label>Built-up <span class="opt-label">(opt)</span></label><input id="li-builtup" placeholder="e.g. 1,200 sqft"/></div>
+          <div><label>Land area (sqft)</label><input id="li-landarea" placeholder="e.g. 2,400"/></div>
           <div><label>Asking price (RM)</label><input id="li-price" placeholder="e.g. 480,000"/></div>
         </div>
         <div class="row3">
           <div><label>Bedrooms</label>
-            <select id="li-bedrooms">
-              <option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6+</option>
-            </select>
+            <select id="li-bedrooms"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6+</option></select>
           </div>
           <div><label>Bathrooms</label>
-            <select id="li-bathrooms">
-              <option>1</option><option>2</option><option selected>3</option><option>4</option><option>5+</option>
-            </select>
+            <select id="li-bathrooms"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5+</option></select>
           </div>
           <div><label>Car park</label>
-            <select id="li-carpark">
-              <option>1</option><option selected>2</option><option>3</option><option>None</option>
-            </select>
+            <select id="li-carpark"><option>1</option><option selected>2</option><option>3</option><option>None</option></select>
           </div>
         </div>
         <div>
@@ -448,26 +461,18 @@ textarea{resize:vertical;min-height:90px;}
         </div>
         <div class="row">
           <div><label>Furnishing</label>
-            <select id="li-furnishing">
-              <option>Fully Furnished</option><option>Partially Furnished</option><option>Unfurnished</option>
-            </select>
+            <select id="li-furnishing"><option>Fully Furnished</option><option>Partially Furnished</option><option>Unfurnished</option></select>
           </div>
           <div><label>Condition</label>
-            <select id="li-condition">
-              <option>Move-in Ready</option><option>Renovated</option><option>Original</option><option>Under Construction</option>
-            </select>
+            <select id="li-condition"><option>Move-in Ready</option><option>Renovated</option><option>Original</option><option>Under Construction</option></select>
           </div>
         </div>
         <div class="row">
           <div><label>Target buyer</label>
-            <select id="li-targetbuyer">
-              <option>Own Stay</option><option>Investor</option><option>First-time Buyer</option><option>Upgrader</option>
-            </select>
+            <select id="li-targetbuyer"><option>Own Stay</option><option>Investor</option><option>First-time Buyer</option><option>Upgrader</option></select>
           </div>
           <div><label>Language output</label>
-            <select id="li-language">
-              <option>English + BM</option><option>English Only</option><option>BM Only</option>
-            </select>
+            <select id="li-language"><option>English + BM</option><option>English Only</option><option>BM Only</option></select>
           </div>
         </div>
         <div>
@@ -483,9 +488,7 @@ textarea{resize:vertical;min-height:90px;}
   </div>
 
   <!-- Loading -->
-  <div class="loading" id="loading">
-    <span class="loading-dot">◆</span> SURIA is thinking...
-  </div>
+  <div class="loading" id="loading"><span class="ldot">◆</span> SURIA is thinking...</div>
 
   <!-- Result -->
   <div class="result-card" id="result">
@@ -502,206 +505,373 @@ textarea{resize:vertical;min-height:90px;}
 </div>
 
 <script>
-let currentMicBtn=null;
-let recognition=null;
-let synth=window.speechSynthesis;
+const synth = window.speechSynthesis;
+let currentMicBtn = null;
+let recognition = null;
+let wakeRecognition = null;
+let isWakeListening = false;
 
-function switchTab(name,el){
-  document.querySelectorAll('.feat').forEach(f=>f.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('panel-'+name).classList.add('active');
-  document.getElementById('result').style.display='none';
-  document.getElementById('loading').style.display='none';
-  stopSpeaking();
+// ── WAKE WORD ──────────────────────────────────────────
+function toggleWake() {
+  if (isWakeListening) {
+    stopWake();
+  } else {
+    startWake();
+  }
 }
 
-function startVoice(fieldId){
-  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){
-    alert('Voice input not supported. Please use Chrome.');
+function startWake() {
+  if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+    alert('Voice not supported. Please use Chrome.');
     return;
   }
-  if(recognition){recognition.stop();}
-  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
-  recognition=new SpeechRecognition();
-  recognition.lang='ms-MY';
-  recognition.interimResults=false;
-  recognition.maxAlternatives=1;
-  const btn=event.currentTarget;
-  if(currentMicBtn&&currentMicBtn!==btn) currentMicBtn.classList.remove('listening');
-  currentMicBtn=btn;
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  wakeRecognition = new SR();
+  wakeRecognition.lang = 'ms-MY';
+  wakeRecognition.continuous = true;
+  wakeRecognition.interimResults = true;
+
+  isWakeListening = true;
+  const btn = document.getElementById('wake-btn');
   btn.classList.add('listening');
-  btn.textContent='⏹';
+  document.getElementById('wake-label').textContent = 'Listening... say "Hi SURIA"';
   document.getElementById('voice-bar').classList.add('active');
-  document.getElementById('voice-status').textContent='Listening... speak now';
-  recognition.onresult=(e)=>{
-    const text=e.results[0][0].transcript;
-    const field=document.getElementById(fieldId);
-    field.value=(field.value?field.value+' ':'')+text;
-    field.focus();
+  document.getElementById('voice-status').textContent = 'Waiting for "Hi SURIA"...';
+
+  wakeRecognition.onresult = (e) => {
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const transcript = e.results[i][0].transcript.toLowerCase().trim();
+      if (transcript.includes('hi suria') || transcript.includes('hey suria') ||
+          transcript.includes('hai suria') || transcript.includes('hi surya')) {
+        stopWake();
+        triggerBriefing();
+        return;
+      }
+    }
   };
-  recognition.onend=()=>{
-    btn.classList.remove('listening');
-    btn.textContent='🎤';
-    document.getElementById('voice-bar').classList.remove('active');
-    currentMicBtn=null;
+
+  wakeRecognition.onend = () => {
+    if (isWakeListening) wakeRecognition.start(); // keep listening
   };
-  recognition.onerror=(e)=>{
-    btn.classList.remove('listening');
-    btn.textContent='🎤';
-    document.getElementById('voice-bar').classList.remove('active');
-    if(e.error!=='aborted') alert('Voice error: '+e.error+'. Try again.');
-    currentMicBtn=null;
+
+  wakeRecognition.onerror = (e) => {
+    if (e.error !== 'aborted') {
+      if (isWakeListening) setTimeout(() => wakeRecognition.start(), 1000);
+    }
   };
-  recognition.start();
+
+  wakeRecognition.start();
 }
 
-function speakResult(){
+function stopWake() {
+  isWakeListening = false;
+  if (wakeRecognition) { wakeRecognition.abort(); wakeRecognition = null; }
+  const btn = document.getElementById('wake-btn');
+  btn.classList.remove('listening');
+  btn.classList.remove('thinking');
+  document.getElementById('wake-label').textContent = 'Hi SURIA — tap to wake';
+  document.getElementById('voice-bar').classList.remove('active');
+}
+
+async function triggerBriefing() {
+  // Show briefing card
+  const card = document.getElementById('briefing-card');
+  card.style.display = 'block';
+  document.getElementById('briefing-loading').style.display = 'block';
+  document.getElementById('briefing-content').textContent = '';
+  document.getElementById('briefing-actions').style.display = 'none';
+
+  // Set time
+  const now = new Date();
+  const timeStr = now.toLocaleDateString('en-MY', {weekday:'long',year:'numeric',month:'long',day:'numeric'}) +
+    ' • ' + now.toLocaleTimeString('en-MY', {hour:'2-digit',minute:'2-digit'});
+  document.getElementById('briefing-time').textContent = timeStr;
+
+  // Update wake button
+  const btn = document.getElementById('wake-btn');
+  btn.classList.add('thinking');
+  document.getElementById('wake-label').textContent = 'SURIA is preparing your briefing...';
+
+  // Get hour for greeting
+  const hour = now.getHours();
+  const greeting = hour < 12 ? 'Selamat pagi' : hour < 15 ? 'Selamat tengah hari' : hour < 19 ? 'Selamat petang' : 'Selamat malam';
+
+  // Fetch marketing logs to check listings needing attention
+  let marketingInfo = '';
+  try {
+    const logsRes = await fetch('/marketing/logs');
+    const logsData = await logsRes.json();
+    const logs = logsData.logs || {};
+    const listingIds = Object.keys(logs);
+    if (listingIds.length > 0) {
+      const staleLists = listingIds.filter(id => {
+        const entries = logs[id];
+        if (!entries.length) return true;
+        const last = new Date(entries[entries.length-1].date);
+        const daysSince = Math.floor((now - last) / 86400000);
+        return daysSince > 7;
+      });
+      if (staleLists.length > 0) {
+        marketingInfo = `There are ${staleLists.length} listing(s) that have not been marketed in over 7 days and need attention.`;
+      } else {
+        marketingInfo = 'All listings have recent marketing activity. Good job!';
+      }
+    } else {
+      marketingInfo = 'No marketing logs recorded yet for your listings.';
+    }
+  } catch(e) {
+    marketingInfo = 'Could not retrieve marketing data.';
+  }
+
+  // Generate briefing via SURIA
+  try {
+    const res = await fetch('/pa', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        feature: 'briefing',
+        greeting,
+        time: timeStr,
+        marketing_info: marketingInfo
+      })
+    });
+    const json = await res.json();
+    document.getElementById('briefing-loading').style.display = 'none';
+    document.getElementById('briefing-content').textContent = json.result;
+    document.getElementById('briefing-actions').style.display = 'flex';
+
+    // Auto speak
+    speakBriefing();
+  } catch(e) {
+    document.getElementById('briefing-loading').style.display = 'none';
+    document.getElementById('briefing-content').textContent = 'Sorry, could not generate briefing. Please try again.';
+    document.getElementById('briefing-actions').style.display = 'flex';
+  }
+
+  // Reset wake button
+  btn.classList.remove('thinking');
+  document.getElementById('wake-label').textContent = 'Hi SURIA — tap to wake';
+}
+
+function speakBriefing() {
   stopSpeaking();
-  const text=document.getElementById('output').textContent;
-  if(!text) return;
-  const utterance=new SpeechSynthesisUtterance(text);
-  utterance.lang='en-MY';
-  utterance.rate=0.95;
-  utterance.pitch=1.1;
-  const voices=synth.getVoices();
-  const femaleVoice=voices.find(v=>v.lang.includes('en')&&v.name.toLowerCase().includes('female'))
-    ||voices.find(v=>v.lang.includes('en-GB'))
-    ||voices.find(v=>v.lang.includes('en'));
-  if(femaleVoice) utterance.voice=femaleVoice;
-  utterance.onstart=()=>{
-    document.getElementById('speak-btn').style.display='none';
-    document.getElementById('stop-btn').style.display='inline-block';
+  const text = document.getElementById('briefing-content').textContent;
+  if (!text) return;
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-MY';
+  utterance.rate = 0.95;
+  utterance.pitch = 1.1;
+  const voices = synth.getVoices();
+  const femaleVoice = voices.find(v => v.lang.includes('en') && v.name.toLowerCase().includes('female'))
+    || voices.find(v => v.lang.includes('en-GB'))
+    || voices.find(v => v.lang.includes('en'));
+  if (femaleVoice) utterance.voice = femaleVoice;
+  utterance.onstart = () => {
+    document.getElementById('brief-speak-btn').style.display = 'none';
+    document.getElementById('brief-stop-btn').style.display = 'inline-block';
   };
-  utterance.onend=()=>{
-    document.getElementById('speak-btn').style.display='inline-block';
-    document.getElementById('stop-btn').style.display='none';
+  utterance.onend = () => {
+    document.getElementById('brief-speak-btn').style.display = 'inline-block';
+    document.getElementById('brief-stop-btn').style.display = 'none';
   };
   synth.speak(utterance);
 }
 
-function stopSpeaking(){
+function stopBriefing() {
   synth.cancel();
-  document.getElementById('speak-btn').style.display='inline-block';
-  document.getElementById('stop-btn').style.display='none';
+  document.getElementById('brief-speak-btn').style.display = 'inline-block';
+  document.getElementById('brief-stop-btn').style.display = 'none';
 }
 
-function fmt(n){return 'RM '+Math.round(n).toLocaleString('en-MY');}
-
-function calcLoan(){
-  const price=parseFloat(document.getElementById('c-price').value);
-  const dp=parseFloat(document.getElementById('c-dp').value)/100;
-  const rate=parseFloat(document.getElementById('c-rate').value)/100/12;
-  const tenure=parseInt(document.getElementById('c-tenure').value)*12;
-  if(!price||!rate||!tenure) return;
-  const downpay=price*dp;
-  const loan=price-downpay;
-  const monthly=loan*rate*Math.pow(1+rate,tenure)/(Math.pow(1+rate,tenure)-1);
-  const totalRepay=monthly*tenure;
-  const totalInterest=totalRepay-loan;
-  document.getElementById('loan-result').style.display='block';
-  document.getElementById('l-price').textContent=fmt(price);
-  document.getElementById('l-dp').textContent=fmt(downpay);
-  document.getElementById('l-loan').textContent=fmt(loan);
-  document.getElementById('l-interest').textContent=fmt(totalInterest);
-  document.getElementById('l-total').textContent=fmt(totalRepay);
-  document.getElementById('l-monthly').textContent=fmt(monthly);
+function closeBriefing() {
+  synth.cancel();
+  document.getElementById('briefing-card').style.display = 'none';
 }
 
-function calcStampDuty(){
-  const price=parseFloat(document.getElementById('sd-price').value);
-  const firstTime=document.getElementById('sd-firsttime').value==='yes';
-  const titleType=document.getElementById('sd-title').value;
-  const consent=document.getElementById('sd-consent').value==='yes';
-  if(!price) return;
+// ── TABS ───────────────────────────────────────────────
+function switchTab(name, el) {
+  document.querySelectorAll('.feat').forEach(f => f.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('loading').style.display = 'none';
+  stopSpeaking();
+}
+
+// ── VOICE INPUT ────────────────────────────────────────
+function startVoice(fieldId) {
+  if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+    alert('Voice input not supported. Please use Chrome.');
+    return;
+  }
+  if (recognition) { recognition.stop(); }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SR();
+  recognition.lang = 'ms-MY';
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+  const btn = event.currentTarget;
+  if (currentMicBtn && currentMicBtn !== btn) currentMicBtn.classList.remove('listening');
+  currentMicBtn = btn;
+  btn.classList.add('listening');
+  btn.textContent = '⏹';
+  document.getElementById('voice-bar').classList.add('active');
+  document.getElementById('voice-status').textContent = 'Listening... speak now';
+  recognition.onresult = (e) => {
+    const text = e.results[0][0].transcript;
+    const field = document.getElementById(fieldId);
+    field.value = (field.value ? field.value + ' ' : '') + text;
+    field.focus();
+  };
+  recognition.onend = () => {
+    btn.classList.remove('listening');
+    btn.textContent = '🎤';
+    document.getElementById('voice-bar').classList.remove('active');
+    currentMicBtn = null;
+  };
+  recognition.onerror = (e) => {
+    btn.classList.remove('listening');
+    btn.textContent = '🎤';
+    document.getElementById('voice-bar').classList.remove('active');
+    if (e.error !== 'aborted') alert('Voice error: ' + e.error);
+    currentMicBtn = null;
+  };
+  recognition.start();
+}
+
+// ── SPEAK RESULT ───────────────────────────────────────
+function speakResult() {
+  stopSpeaking();
+  const text = document.getElementById('output').textContent;
+  if (!text) return;
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-MY';
+  utterance.rate = 0.95;
+  utterance.pitch = 1.1;
+  const voices = synth.getVoices();
+  const femaleVoice = voices.find(v => v.lang.includes('en') && v.name.toLowerCase().includes('female'))
+    || voices.find(v => v.lang.includes('en-GB'))
+    || voices.find(v => v.lang.includes('en'));
+  if (femaleVoice) utterance.voice = femaleVoice;
+  utterance.onstart = () => {
+    document.getElementById('speak-btn').style.display = 'none';
+    document.getElementById('stop-btn').style.display = 'inline-block';
+  };
+  utterance.onend = () => {
+    document.getElementById('speak-btn').style.display = 'inline-block';
+    document.getElementById('stop-btn').style.display = 'none';
+  };
+  synth.speak(utterance);
+}
+
+function stopSpeaking() {
+  synth.cancel();
+  document.getElementById('speak-btn').style.display = 'inline-block';
+  document.getElementById('stop-btn').style.display = 'none';
+}
+
+// ── CALCULATORS ────────────────────────────────────────
+function fmt(n) { return 'RM ' + Math.round(n).toLocaleString('en-MY'); }
+
+function calcLoan() {
+  const price = parseFloat(document.getElementById('c-price').value);
+  const dp = parseFloat(document.getElementById('c-dp').value) / 100;
+  const rate = parseFloat(document.getElementById('c-rate').value) / 100 / 12;
+  const tenure = parseInt(document.getElementById('c-tenure').value) * 12;
+  if (!price || !rate || !tenure) return;
+  const downpay = price * dp;
+  const loan = price - downpay;
+  const monthly = loan * rate * Math.pow(1+rate, tenure) / (Math.pow(1+rate, tenure) - 1);
+  const totalRepay = monthly * tenure;
+  document.getElementById('loan-result').style.display = 'block';
+  document.getElementById('l-price').textContent = fmt(price);
+  document.getElementById('l-dp').textContent = fmt(downpay);
+  document.getElementById('l-loan').textContent = fmt(loan);
+  document.getElementById('l-interest').textContent = fmt(totalRepay - loan);
+  document.getElementById('l-total').textContent = fmt(totalRepay);
+  document.getElementById('l-monthly').textContent = fmt(monthly);
+}
+
+function calcStampDuty() {
+  const price = parseFloat(document.getElementById('sd-price').value);
+  const firstTime = document.getElementById('sd-firsttime').value === 'yes';
+  const titleType = document.getElementById('sd-title').value;
+  const consent = document.getElementById('sd-consent').value === 'yes';
+  if (!price) return;
   let t1=0,t2=0,t3=0,t4=0;
-  if(price>0) t1=Math.min(price,100000)*0.01;
-  if(price>100000) t2=Math.min(price-100000,400000)*0.02;
-  if(price>500000) t3=Math.min(price-500000,500000)*0.03;
-  if(price>1000000) t4=(price-1000000)*0.04;
-  let mot=t1+t2+t3+t4;
-  let exempt=0;
-  if(firstTime&&price<=500000){exempt=mot;mot=0;}
-  else if(firstTime&&price>500000){
-    let e=Math.min(100000,100000)*0.01+Math.min(400000,400000)*0.02;
-    exempt=e;mot=t3+t4;
-  }
-  const loanAmt=price*0.9;
-  const loanSD=loanAmt*0.005;
-  let spaFee=0;
-  if(price<=500000) spaFee=price*0.01;
-  else if(price<=7500000) spaFee=5000+(price-500000)*0.008;
-  else spaFee=61000+(price-7500000)*0.007;
-  spaFee=Math.max(spaFee,500);
-  let loanFee=loanAmt*0.01;
-  loanFee=Math.max(loanFee,500);
-  let disb=0;
-  if(titleType==='freehold'){
-    if(price<300000) disb=800;
-    else if(price<600000) disb=1200;
-    else if(price<1000000) disb=1800;
-    else disb=2500;
-  } else {
-    if(price<300000) disb=1200;
-    else if(price<600000) disb=1800;
-    else if(price<1000000) disb=2500;
-    else disb=3500;
-  }
-  const consentFee=consent?2000:0;
-  const grandTotal=mot+loanSD+spaFee+loanFee+disb+consentFee;
-  document.getElementById('sd-result').style.display='block';
-  document.getElementById('sd-tier1').textContent=fmt(t1);
-  document.getElementById('sd-tier2').textContent=fmt(t2);
-  document.getElementById('sd-tier3').textContent=fmt(t3);
-  document.getElementById('sd-tier4').textContent=fmt(t4);
-  document.getElementById('sd-exempt').textContent=firstTime?'-'+fmt(exempt):'N/A';
-  document.getElementById('sd-mot').textContent=fmt(mot);
-  document.getElementById('sd-loanamt').textContent=fmt(loanAmt);
-  document.getElementById('sd-loansd').textContent=fmt(loanSD);
-  document.getElementById('lf-spa').textContent=fmt(spaFee);
-  document.getElementById('lf-loan').textContent=fmt(loanFee);
-  document.getElementById('lf-disb').textContent=fmt(disb)+' ('+titleType+')';
-  document.getElementById('lf-consent').textContent=consent?fmt(consentFee):'N/A';
-  document.getElementById('sd-grandtotal').textContent=fmt(grandTotal);
+  if (price > 0) t1 = Math.min(price, 100000) * 0.01;
+  if (price > 100000) t2 = Math.min(price-100000, 400000) * 0.02;
+  if (price > 500000) t3 = Math.min(price-500000, 500000) * 0.03;
+  if (price > 1000000) t4 = (price-1000000) * 0.04;
+  let mot = t1+t2+t3+t4;
+  let exempt = 0;
+  if (firstTime && price <= 500000) { exempt = mot; mot = 0; }
+  else if (firstTime && price > 500000) { exempt = t1+t2; mot = t3+t4; }
+  const loanAmt = price * 0.9;
+  const loanSD = loanAmt * 0.005;
+  let spaFee = price <= 500000 ? price*0.01 : price <= 7500000 ? 5000+(price-500000)*0.008 : 61000+(price-7500000)*0.007;
+  spaFee = Math.max(spaFee, 500);
+  let loanFee = Math.max(loanAmt * 0.01, 500);
+  let disb = titleType === 'freehold'
+    ? (price<300000?800:price<600000?1200:price<1000000?1800:2500)
+    : (price<300000?1200:price<600000?1800:price<1000000?2500:3500);
+  const consentFee = consent ? 2000 : 0;
+  const grandTotal = mot + loanSD + spaFee + loanFee + disb + consentFee;
+  document.getElementById('sd-result').style.display = 'block';
+  document.getElementById('sd-tier1').textContent = fmt(t1);
+  document.getElementById('sd-tier2').textContent = fmt(t2);
+  document.getElementById('sd-tier3').textContent = fmt(t3);
+  document.getElementById('sd-tier4').textContent = fmt(t4);
+  document.getElementById('sd-exempt').textContent = firstTime ? '-'+fmt(exempt) : 'N/A';
+  document.getElementById('sd-mot').textContent = fmt(mot);
+  document.getElementById('sd-loanamt').textContent = fmt(loanAmt);
+  document.getElementById('sd-loansd').textContent = fmt(loanSD);
+  document.getElementById('lf-spa').textContent = fmt(spaFee);
+  document.getElementById('lf-loan').textContent = fmt(loanFee);
+  document.getElementById('lf-disb').textContent = fmt(disb) + ' (' + titleType + ')';
+  document.getElementById('lf-consent').textContent = consent ? fmt(consentFee) : 'N/A';
+  document.getElementById('sd-grandtotal').textContent = fmt(grandTotal);
 }
 
-async function generate(feature){
-  const btn=document.querySelector('.panel.active .btn');
-  const data={feature};
-  if(feature==='message'){
+// ── GENERATE ───────────────────────────────────────────
+async function generate(feature) {
+  const btn = document.querySelector('.panel.active .btn');
+  const data = {feature};
+  if (feature==='message') {
     data.recipient=document.getElementById('m-recipient').value;
     data.type=document.getElementById('m-type').value;
     data.purpose=document.getElementById('m-purpose').value;
     data.tone=document.getElementById('m-tone').value;
-    if(!data.recipient||!data.purpose){alert('Please fill in recipient and purpose.');return;}
-  } else if(feature==='report'){
+    if (!data.recipient||!data.purpose) {alert('Please fill in recipient and purpose.');return;}
+  } else if (feature==='report') {
     data.address=document.getElementById('r-address').value;
     data.proptype=document.getElementById('r-proptype').value;
     data.area=document.getElementById('r-area').value;
     data.purpose=document.getElementById('r-purpose').value;
     data.notes=document.getElementById('r-notes').value;
-    if(!data.address||!data.proptype){alert('Please fill in address and property type.');return;}
-  } else if(feature==='followup'){
+    if (!data.address||!data.proptype) {alert('Please fill in address and property type.');return;}
+  } else if (feature==='followup') {
     data.name=document.getElementById('f-name').value;
     data.interest=document.getElementById('f-interest').value;
     data.budget=document.getElementById('f-budget').value;
     data.last_contact=document.getElementById('f-last_contact').value;
     data.status=document.getElementById('f-status').value;
-    if(!data.name||!data.interest){alert('Please fill in name and interest.');return;}
-  } else if(feature==='ask'){
+    if (!data.name||!data.interest) {alert('Please fill in name and interest.');return;}
+  } else if (feature==='ask') {
     data.question=document.getElementById('a-question').value;
-    if(!data.question){alert('Please enter your question.');return;}
-  } else if(feature==='tasks'){
+    if (!data.question) {alert('Please enter your question.');return;}
+  } else if (feature==='tasks') {
     data.tasks=document.getElementById('t-tasks').value;
-    if(!data.tasks){alert('Please enter your tasks.');return;}
-  } else if(feature==='summarize'){
+    if (!data.tasks) {alert('Please enter your tasks.');return;}
+  } else if (feature==='summarize') {
     data.content=document.getElementById('s-content').value;
-    if(!data.content){alert('Please paste some text.');return;}
-  } else if(feature==='greeting'){
+    if (!data.content) {alert('Please paste some text.');return;}
+  } else if (feature==='greeting') {
     data.focus=document.getElementById('g-focus').value;
     data.agents=document.getElementById('g-agents').value;
-    if(!data.focus){alert('Please enter today\'s focus.');return;}
-  } else if(feature==='listing'){
+    if (!data.focus) {alert('Please enter today\'s focus.');return;}
+  } else if (feature==='listing') {
     data.proptype=document.getElementById('li-proptype').value;
     data.tenure=document.getElementById('li-tenure').value;
     data.address=document.getElementById('li-address').value;
@@ -717,31 +887,31 @@ async function generate(feature){
     data.targetbuyer=document.getElementById('li-targetbuyer').value;
     data.language=document.getElementById('li-language').value;
     data.specialpoints=document.getElementById('li-specialpoints').value;
-    if(!data.address||!data.price){alert('Please fill in address and asking price.');return;}
+    if (!data.address||!data.price) {alert('Please fill in address and asking price.');return;}
   }
-  btn.disabled=true;
+  if (btn) btn.disabled = true;
   stopSpeaking();
-  document.getElementById('loading').style.display='block';
-  document.getElementById('result').style.display='none';
-  try{
-    const res=await fetch('/pa',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-    const json=await res.json();
-    document.getElementById('output').textContent=json.result;
-    document.getElementById('loading').style.display='none';
-    document.getElementById('result').style.display='block';
-  } catch(e){
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('result').style.display = 'none';
+  try {
+    const res = await fetch('/pa', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)});
+    const json = await res.json();
+    document.getElementById('output').textContent = json.result;
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('result').style.display = 'block';
+  } catch(e) {
     alert('Something went wrong. Please try again.');
-    document.getElementById('loading').style.display='none';
+    document.getElementById('loading').style.display = 'none';
   }
-  btn.disabled=false;
+  if (btn) btn.disabled = false;
 }
 
-function copy(){
+function copy() {
   navigator.clipboard.writeText(document.getElementById('output').textContent);
   alert('Copied to clipboard!');
 }
 
-window.speechSynthesis.onvoiceschanged=()=>{window.speechSynthesis.getVoices();};
+window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
 </script>
 </body>
 </html>

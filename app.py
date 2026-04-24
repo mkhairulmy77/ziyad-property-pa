@@ -277,6 +277,27 @@ def add_project():
     save_projects(data)
     return jsonify({"success": True, "project": project})
 
+@app.route("/crm/project/update", methods=["POST"])
+def update_project():
+    req = request.json
+    pid = req.get("id")
+    data = load_projects()
+    for project in data["projects"]:
+        if project["id"] == pid:
+            project["name"]            = req.get("name",            project["name"])
+            project["developer"]       = req.get("developer",       project["developer"])
+            project["location"]        = req.get("location",        project["location"])
+            project["type"]            = req.get("type",            project["type"])
+            project["status"]          = req.get("status",          project["status"])
+            project["price_min"]       = req.get("price_min",       project["price_min"])
+            project["price_max"]       = req.get("price_max",       project["price_max"])
+            project["launch_date"]     = req.get("launch_date",     project["launch_date"])
+            project["completion_date"] = req.get("completion_date", project["completion_date"])
+            project["commission"]      = req.get("commission",      project["commission"])
+            break
+    save_projects(data)
+    return jsonify({"success": True})
+
 @app.route("/crm/project/delete", methods=["POST"])
 def delete_project():
     req = request.json

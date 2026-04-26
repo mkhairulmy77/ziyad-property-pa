@@ -653,19 +653,52 @@ async function triggerBriefing() {
   document.getElementById('wake-label').textContent = 'Hi SURIA — tap to wake';
 }
 
-function speakBriefing() {
-  stopSpeaking();
-  const text = document.getElementById('briefing-content').textContent;
-  if (!text) return;
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = 'en-MY';
-  utterance.rate = 0.95;
-  utterance.pitch = 1.1;
+function cleanForSpeech(text) {
+  return text
+    .replace(/#{1,6}\s*/g, '')         // remove markdown headers
+    .replace(/\*\*/g, '')               // remove bold **
+    .replace(/\*/g, '')                 // remove italic *
+    .replace(/_{1,2}/g, '')             // remove underscores
+    .replace(/`/g, '')                  // remove code ticks
+    .replace(/[-–—]{2,}/g, '.')         // long dashes to pause
+    .replace(/•/g, '')                  // remove bullet dots
+    .replace(/✅|❌|⚠️|🔴|🟡|🟢|📋|🏠|👤|✉️|🌅|🧮|✍️|🏡|👑|🏢|🧑‍💼|👤|📍|🛏|🚿|📐|📜|👁/g, '') // remove emojis
+    .replace(/(\d+)\./g, '$1')          // "1." just say "1"
+    .replace(/RM\s*/g, 'Ringgit Malaysia ') // say RM properly
+    .replace(/\n{2,}/g, '. ')           // double newlines to pause
+    .replace(/\n/g, ', ')               // single newlines to comma pause
+    .replace(/[^\w\s.,!?;:()\-']/g, '') // remove remaining special chars
+    .replace(/\s{2,}/g, ' ')            // clean extra spaces
+    .trim();
+}
+
+function getSuriaVoice() {
   const voices = synth.getVoices();
-  const femaleVoice = voices.find(v => v.lang.includes('en') && v.name.toLowerCase().includes('female'))
+  // Try Malay female voice first
+  return voices.find(v => v.lang.includes('ms') && v.name.toLowerCase().includes('female'))
+    || voices.find(v => v.lang === 'ms-MY')
+    || voices.find(v => v.lang.includes('ms'))
+    // Fallback to friendly English female
+    || voices.find(v => v.name.includes('Samantha'))
+    || voices.find(v => v.name.includes('Karen'))
+    || voices.find(v => v.name.includes('Moira'))
+    || voices.find(v => v.lang.includes('en') && v.name.toLowerCase().includes('female'))
     || voices.find(v => v.lang.includes('en-GB'))
     || voices.find(v => v.lang.includes('en'));
-  if (femaleVoice) utterance.voice = femaleVoice;
+}
+
+function speakBriefing() {
+  stopSpeaking();
+  const raw = document.getElementById('briefing-content').textContent;
+  if (!raw) return;
+  const text = cleanForSpeech(raw);
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'ms-MY';
+  utterance.rate = 0.88;
+  utterance.pitch = 1.15;
+  utterance.volume = 1;
+  const voice = getSuriaVoice();
+  if (voice) utterance.voice = voice;
   utterance.onstart = () => {
     document.getElementById('brief-speak-btn').style.display = 'none';
     document.getElementById('brief-stop-btn').style.display = 'inline-block';
@@ -743,17 +776,16 @@ function startVoice(fieldId) {
 // ── SPEAK RESULT ───────────────────────────────────────
 function speakResult() {
   stopSpeaking();
-  const text = document.getElementById('output').textContent;
-  if (!text) return;
+  const raw = document.getElementById('output').textContent;
+  if (!raw) return;
+  const text = cleanForSpeech(raw);
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = 'en-MY';
-  utterance.rate = 0.95;
-  utterance.pitch = 1.1;
-  const voices = synth.getVoices();
-  const femaleVoice = voices.find(v => v.lang.includes('en') && v.name.toLowerCase().includes('female'))
-    || voices.find(v => v.lang.includes('en-GB'))
-    || voices.find(v => v.lang.includes('en'));
-  if (femaleVoice) utterance.voice = femaleVoice;
+  utterance.lang = 'ms-MY';
+  utterance.rate = 0.88;
+  utterance.pitch = 1.15;
+  utterance.volume = 1;
+  const voice = getSuriaVoice();
+  if (voice) utterance.voice = voice;
   utterance.onstart = () => {
     document.getElementById('speak-btn').style.display = 'none';
     document.getElementById('stop-btn').style.display = 'inline-block';

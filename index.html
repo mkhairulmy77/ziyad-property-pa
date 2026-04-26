@@ -124,7 +124,7 @@ textarea{resize:vertical;min-height:90px;}
   <!-- Hi SURIA Wake Button -->
   <button class="suria-wake" id="wake-btn" onclick="toggleWake()">
     <span class="wake-icon">🎤</span>
-    <span id="wake-label">Hi SURIA — tap to wake</span>
+    <span id="wake-label">Hi SURIA — tap for daily briefing</span>
   </button>
 </div>
 
@@ -508,95 +508,32 @@ textarea{resize:vertical;min-height:90px;}
 const synth = window.speechSynthesis;
 let currentMicBtn = null;
 let recognition = null;
-let wakeRecognition = null;
-let isWakeListening = false;
 
-// ── WAKE WORD ──────────────────────────────────────────
+// ── HI SURIA BUTTON ───────────────────────────────────
 function toggleWake() {
-  if (isWakeListening) {
-    stopWake();
-  } else {
-    startWake();
-  }
-}
-
-function startWake() {
-  if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
-    alert('Voice not supported. Please use Chrome.');
-    return;
-  }
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  wakeRecognition = new SR();
-  wakeRecognition.lang = 'ms-MY';
-  wakeRecognition.continuous = true;
-  wakeRecognition.interimResults = true;
-
-  isWakeListening = true;
-  const btn = document.getElementById('wake-btn');
-  btn.classList.add('listening');
-  document.getElementById('wake-label').textContent = 'Listening... say "Hi SURIA"';
-  document.getElementById('voice-bar').classList.add('active');
-  document.getElementById('voice-status').textContent = 'Waiting for "Hi SURIA"...';
-
-  wakeRecognition.onresult = (e) => {
-    for (let i = e.resultIndex; i < e.results.length; i++) {
-      const transcript = e.results[i][0].transcript.toLowerCase().trim();
-      if (transcript.includes('hi suria') || transcript.includes('hey suria') ||
-          transcript.includes('hai suria') || transcript.includes('hi surya')) {
-        stopWake();
-        triggerBriefing();
-        return;
-      }
-    }
-  };
-
-  wakeRecognition.onend = () => {
-    if (isWakeListening) wakeRecognition.start(); // keep listening
-  };
-
-  wakeRecognition.onerror = (e) => {
-    if (e.error !== 'aborted') {
-      if (isWakeListening) setTimeout(() => wakeRecognition.start(), 1000);
-    }
-  };
-
-  wakeRecognition.start();
-}
-
-function stopWake() {
-  isWakeListening = false;
-  if (wakeRecognition) { wakeRecognition.abort(); wakeRecognition = null; }
-  const btn = document.getElementById('wake-btn');
-  btn.classList.remove('listening');
-  btn.classList.remove('thinking');
-  document.getElementById('wake-label').textContent = 'Hi SURIA — tap to wake';
-  document.getElementById('voice-bar').classList.remove('active');
+  // Simple tap to trigger — no continuous listening
+  triggerBriefing();
 }
 
 async function triggerBriefing() {
-  // Show briefing card
   const card = document.getElementById('briefing-card');
   card.style.display = 'block';
   document.getElementById('briefing-loading').style.display = 'block';
   document.getElementById('briefing-content').textContent = '';
   document.getElementById('briefing-actions').style.display = 'none';
 
-  // Set time
   const now = new Date();
   const timeStr = now.toLocaleDateString('en-MY', {weekday:'long',year:'numeric',month:'long',day:'numeric'}) +
     ' • ' + now.toLocaleTimeString('en-MY', {hour:'2-digit',minute:'2-digit'});
   document.getElementById('briefing-time').textContent = timeStr;
 
-  // Update wake button
   const btn = document.getElementById('wake-btn');
   btn.classList.add('thinking');
   document.getElementById('wake-label').textContent = 'SURIA is preparing your briefing...';
 
-  // Get hour for greeting
   const hour = now.getHours();
-  const greeting = hour < 12 ? 'Selamat pagi' : hour < 15 ? 'Selamat tengah hari' : hour < 19 ? 'Selamat petang' : 'Selamat malam';
+  const greeting = hour < 12 ? 'Good morning' : hour < 15 ? 'Good afternoon' : hour < 19 ? 'Good evening' : 'Good evening';
 
-  // Fetch marketing logs to check listings needing attention
   let marketingInfo = '';
   try {
     const logsRes = await fetch('/marketing/logs');
@@ -608,39 +545,25 @@ async function triggerBriefing() {
         const entries = logs[id];
         if (!entries.length) return true;
         const last = new Date(entries[entries.length-1].date);
-        const daysSince = Math.floor((now - last) / 86400000);
-        return daysSince > 7;
+        return Math.floor((now - last) / 86400000) > 7;
       });
-      if (staleLists.length > 0) {
-        marketingInfo = `There are ${staleLists.length} listing(s) that have not been marketed in over 7 days and need attention.`;
-      } else {
-        marketingInfo = 'All listings have recent marketing activity. Good job!';
-      }
+      marketingInfo = staleLists.length > 0
+        ? `There are ${staleLists.length} listing(s) that have not been marketed in over 7 days and need attention.`
+        : 'All listings have recent marketing activity. Great work!';
     } else {
       marketingInfo = 'No marketing logs recorded yet for your listings.';
     }
-  } catch(e) {
-    marketingInfo = 'Could not retrieve marketing data.';
-  }
+  } catch(e) { marketingInfo = 'Could not retrieve marketing data.'; }
 
-  // Generate briefing via SURIA
   try {
     const res = await fetch('/pa', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        feature: 'briefing',
-        greeting,
-        time: timeStr,
-        marketing_info: marketingInfo
-      })
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({feature:'briefing', greeting, time:timeStr, marketing_info:marketingInfo})
     });
     const json = await res.json();
     document.getElementById('briefing-loading').style.display = 'none';
     document.getElementById('briefing-content').textContent = json.result;
     document.getElementById('briefing-actions').style.display = 'flex';
-
-    // Auto speak
     speakBriefing();
   } catch(e) {
     document.getElementById('briefing-loading').style.display = 'none';
@@ -648,43 +571,38 @@ async function triggerBriefing() {
     document.getElementById('briefing-actions').style.display = 'flex';
   }
 
-  // Reset wake button
   btn.classList.remove('thinking');
-  document.getElementById('wake-label').textContent = 'Hi SURIA — tap to wake';
+  document.getElementById('wake-label').textContent = 'Hi SURIA — tap for daily briefing';
 }
 
 function cleanForSpeech(text) {
   return text
-    .replace(/#{1,6}\s*/g, '')         // remove markdown headers
-    .replace(/\*\*/g, '')               // remove bold **
-    .replace(/\*/g, '')                 // remove italic *
-    .replace(/_{1,2}/g, '')             // remove underscores
-    .replace(/`/g, '')                  // remove code ticks
-    .replace(/[-–—]{2,}/g, '.')         // long dashes to pause
-    .replace(/•/g, '')                  // remove bullet dots
-    .replace(/✅|❌|⚠️|🔴|🟡|🟢|📋|🏠|👤|✉️|🌅|🧮|✍️|🏡|👑|🏢|🧑‍💼|👤|📍|🛏|🚿|📐|📜|👁/g, '') // remove emojis
-    .replace(/(\d+)\./g, '$1')          // "1." just say "1"
-    .replace(/RM\s*/g, 'Ringgit Malaysia ') // say RM properly
-    .replace(/\n{2,}/g, '. ')           // double newlines to pause
-    .replace(/\n/g, ', ')               // single newlines to comma pause
-    .replace(/[^\w\s.,!?;:()\-']/g, '') // remove remaining special chars
-    .replace(/\s{2,}/g, ' ')            // clean extra spaces
+    .replace(/#{1,6}\s*/g, '')
+    .replace(/\*\*/g, '').replace(/\*/g, '').replace(/_{1,2}/g, '').replace(/`/g, '')
+    .replace(/[-–—]{2,}/g, ',')
+    .replace(/•/g, '')
+    .replace(/[^\x00-\x7F]/g, '')        // strip all non-ASCII (emojis, etc)
+    .replace(/RM\s*/g, 'RM ')
+    .replace(/\n{2,}/g, '. ')
+    .replace(/\n/g, ', ')
+    .replace(/\s{2,}/g, ' ')
     .trim();
 }
 
 function getSuriaVoice() {
   const voices = synth.getVoices();
-  // Try Malay female voice first
-  return voices.find(v => v.lang.includes('ms') && v.name.toLowerCase().includes('female'))
-    || voices.find(v => v.lang === 'ms-MY')
-    || voices.find(v => v.lang.includes('ms'))
-    // Fallback to friendly English female
-    || voices.find(v => v.name.includes('Samantha'))
-    || voices.find(v => v.name.includes('Karen'))
-    || voices.find(v => v.name.includes('Moira'))
-    || voices.find(v => v.lang.includes('en') && v.name.toLowerCase().includes('female'))
-    || voices.find(v => v.lang.includes('en-GB'))
-    || voices.find(v => v.lang.includes('en'));
+  // Priority: natural young English female voices
+  return voices.find(v => v.name === 'Samantha')                        // iOS/Mac — warm, natural American
+    || voices.find(v => v.name === 'Google US English')                  // Android — clear American
+    || voices.find(v => v.name.includes('Google US English Female'))     // Android female variant
+    || voices.find(v => v.name === 'Karen')                              // iOS Australian — young friendly
+    || voices.find(v => v.name === 'Tessa')                              // iOS South African — clear
+    || voices.find(v => v.name.includes('Microsoft Aria'))               // Windows — young natural
+    || voices.find(v => v.name.includes('Microsoft Zira'))               // Windows — friendly
+    || voices.find(v => v.lang === 'en-US' && !v.name.toLowerCase().includes('male'))
+    || voices.find(v => v.lang === 'en-GB' && !v.name.toLowerCase().includes('male'))
+    || voices.find(v => v.lang === 'en-AU' && !v.name.toLowerCase().includes('male'))
+    || voices.find(v => v.lang.startsWith('en'));
 }
 
 function speakBriefing() {
@@ -693,9 +611,9 @@ function speakBriefing() {
   if (!raw) return;
   const text = cleanForSpeech(raw);
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = 'ms-MY';
-  utterance.rate = 0.88;
-  utterance.pitch = 1.15;
+  utterance.lang = 'en-US';
+  utterance.rate = 0.92;
+  utterance.pitch = 1.1;
   utterance.volume = 1;
   const voice = getSuriaVoice();
   if (voice) utterance.voice = voice;
@@ -733,43 +651,73 @@ function switchTab(name, el) {
 }
 
 // ── VOICE INPUT ────────────────────────────────────────
+let isRecognizing = false;
+
 function startVoice(fieldId) {
   if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
     alert('Voice input not supported. Please use Chrome.');
     return;
   }
-  if (recognition) { recognition.stop(); }
+  const btn = event.currentTarget;
+
+  // If already listening on THIS button — stop it
+  if (isRecognizing && currentMicBtn === btn) {
+    recognition.abort();
+    return;
+  }
+
+  // Stop any existing recognition cleanly
+  if (recognition && isRecognizing) {
+    recognition.abort();
+    recognition = null;
+    isRecognizing = false;
+    if (currentMicBtn) {
+      currentMicBtn.classList.remove('listening');
+      currentMicBtn.textContent = '🎤';
+    }
+  }
+
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new SR();
   recognition.lang = 'ms-MY';
   recognition.interimResults = false;
   recognition.maxAlternatives = 1;
-  const btn = event.currentTarget;
+
   if (currentMicBtn && currentMicBtn !== btn) currentMicBtn.classList.remove('listening');
   currentMicBtn = btn;
   btn.classList.add('listening');
   btn.textContent = '⏹';
   document.getElementById('voice-bar').classList.add('active');
   document.getElementById('voice-status').textContent = 'Listening... speak now';
+
+  recognition.onstart = () => { isRecognizing = true; };
+
   recognition.onresult = (e) => {
     const text = e.results[0][0].transcript;
     const field = document.getElementById(fieldId);
     field.value = (field.value ? field.value + ' ' : '') + text;
     field.focus();
   };
+
   recognition.onend = () => {
+    isRecognizing = false;
     btn.classList.remove('listening');
     btn.textContent = '🎤';
     document.getElementById('voice-bar').classList.remove('active');
     currentMicBtn = null;
   };
+
   recognition.onerror = (e) => {
+    isRecognizing = false;
     btn.classList.remove('listening');
     btn.textContent = '🎤';
     document.getElementById('voice-bar').classList.remove('active');
-    if (e.error !== 'aborted') alert('Voice error: ' + e.error);
     currentMicBtn = null;
+    if (e.error !== 'aborted' && e.error !== 'no-speech') {
+      alert('Voice error: ' + e.error + '. Please try again.');
+    }
   };
+
   recognition.start();
 }
 
@@ -780,9 +728,9 @@ function speakResult() {
   if (!raw) return;
   const text = cleanForSpeech(raw);
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = 'ms-MY';
-  utterance.rate = 0.88;
-  utterance.pitch = 1.15;
+  utterance.lang = 'en-US';
+  utterance.rate = 0.92;
+  utterance.pitch = 1.1;
   utterance.volume = 1;
   const voice = getSuriaVoice();
   if (voice) utterance.voice = voice;

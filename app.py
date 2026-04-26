@@ -23,8 +23,12 @@ Phone: 013-342 6242
 Email: mkhairul@ziyad.my
 """
 
-MARKETING_LOG_FILE = "/app/marketing_logs.json"
-PROJECTS_FILE      = "/app/projects.json"
+DATA_DIR           = "/app/data"
+MARKETING_LOG_FILE = os.path.join(DATA_DIR, "marketing_logs.json")
+PROJECTS_FILE      = os.path.join(DATA_DIR, "projects.json")
+
+# Ensure data directory exists
+os.makedirs(DATA_DIR, exist_ok=True)
 
 def load_logs():
     if os.path.exists(MARKETING_LOG_FILE):

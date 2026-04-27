@@ -186,6 +186,28 @@ Sign off with:{SIGNATURE}
 Phone: 013-342 6242"""
 }
 
+TASKS_FILE = "/app/tasks.json"
+
+def load_tasks():
+    if os.path.exists(TASKS_FILE):
+        with open(TASKS_FILE) as f:
+            return json.load(f)
+    return {"tasks": []}
+
+def save_tasks(data):
+    with open(TASKS_FILE, "w") as f:
+        json.dump(data, f, indent=2)
+
+@app.route("/tasks", methods=["GET"])
+def get_tasks():
+    return jsonify(load_tasks())
+
+@app.route("/tasks/save", methods=["POST"])
+def save_tasks_route():
+    data = request.json
+    save_tasks({"tasks": data.get("tasks", [])})
+    return jsonify({"success": True})
+
 # ── Auth ───────────────────────────────────────────────
 
 @app.route("/auth/login", methods=["POST"])

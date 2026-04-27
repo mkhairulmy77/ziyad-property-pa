@@ -84,7 +84,29 @@ textarea{resize:vertical;min-height:90px;}
 .voice-indicator span:nth-child(4){height:14px;animation-delay:0.3s;}
 .voice-indicator span:nth-child(5){height:8px;animation-delay:0.4s;}
 @keyframes wave{0%,100%{transform:scaleY(0.5);}50%{transform:scaleY(1.2);}}
-.calc-result{background:#f8f8f8;border-radius:10px;padding:14px;margin-top:8px;display:none;}
+.todo-filter{padding:6px 12px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;border:1.5px solid #e0e0e0;background:white;color:#888;white-space:nowrap;}
+.todo-filter.active{background:#1a1a1a;color:#a3e635;border-color:#1a1a1a;}
+.todo-card{background:white;border-radius:12px;border:0.5px solid #e0e0e0;padding:12px 14px;margin-bottom:8px;border-left:4px solid #e0e0e0;}
+.todo-card.priority-high{border-left-color:#dc2626;}
+.todo-card.priority-medium{border-left-color:#d97706;}
+.todo-card.priority-low{border-left-color:#16a34a;}
+.todo-card.status-done{opacity:0.6;}
+.todo-card.pinned{border-left-color:#a3e635;background:#fafff0;}
+.todo-title-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
+.todo-task-title{font-size:13px;font-weight:500;color:#1a1a1a;flex:1;margin-right:8px;}
+.todo-task-title.done{text-decoration:line-through;color:#888;}
+.todo-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
+.todo-tag{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500;}
+.tag-listing{background:#dcfce7;color:#16a34a;}
+.tag-valuation{background:#dbeafe;color:#2563eb;}
+.tag-client{background:#e9d5ff;color:#6b21a8;}
+.tag-meeting{background:#fef3c7;color:#92400e;}
+.tag-admin{background:#f1f5f9;color:#475569;}
+.tag-personal{background:#fce7f3;color:#be185d;}
+.todo-actions{display:flex;gap:6px;flex-wrap:wrap;}
+.todo-act-btn{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;border:none;}
+.empty-todo{text-align:center;padding:30px 20px;color:#888;font-size:13px;}
+
 .calc-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid #e8e8e8;}
 .calc-row:last-child{border-bottom:none;}
 .calc-label{font-size:13px;color:#666;}
@@ -276,19 +298,131 @@ textarea{resize:vertical;min-height:90px;}
     </div>
   </div>
 
-  <!-- Tasks -->
+  <!-- Tasks / To Do List -->
   <div class="panel" id="panel-tasks">
-    <div class="card">
-      <div class="card-header"><span>📋</span><p>My Tasks</p></div>
-      <div class="card-body">
-        <div>
-          <label>Enter today's tasks</label>
-          <div class="input-wrap">
-            <textarea id="t-tasks" placeholder="e.g.&#10;- Call Ahmad re: JB apartment&#10;- Submit valuation report&#10;- Site visit at 2pm" style="min-height:150px;"></textarea>
-            <button class="mic-btn" onclick="startVoice('t-tasks')" style="align-self:flex-start;margin-top:4px;">🎤</button>
-          </div>
+
+    <!-- Progress bar -->
+    <div class="card" id="todo-progress-card">
+      <div class="card-body" style="padding:12px 14px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span style="font-size:13px;font-weight:500;color:#1a1a1a;">Today's Progress</span>
+          <span id="todo-progress-text" style="font-size:12px;color:#888;">0 / 0 done</span>
         </div>
-        <button class="btn" onclick="generate('tasks')">Organise My Day</button>
+        <div style="background:#f0f0f0;border-radius:6px;height:8px;overflow:hidden;">
+          <div id="todo-progress-bar" style="height:8px;background:#a3e635;border-radius:6px;width:0%;transition:width 0.4s;"></div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;">
+          <span id="todo-count-pending" style="font-size:11px;padding:3px 10px;background:#fee2e2;color:#dc2626;border-radius:20px;">0 Pending</span>
+          <span id="todo-count-inprog" style="font-size:11px;padding:3px 10px;background:#dbeafe;color:#2563eb;border-radius:20px;">0 In Progress</span>
+          <span id="todo-count-done" style="font-size:11px;padding:3px 10px;background:#dcfce7;color:#16a34a;border-radius:20px;">0 Done</span>
+          <span id="todo-count-overdue" style="font-size:11px;padding:3px 10px;background:#fef3c7;color:#92400e;border-radius:20px;display:none;">0 Overdue</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter + Add bar -->
+    <div style="display:flex;gap:8px;margin-bottom:10px;align-items:center;">
+      <div style="display:flex;gap:6px;overflow-x:auto;flex:1;padding-bottom:2px;">
+        <button class="todo-filter active" onclick="filterTodo('all',this)">All</button>
+        <button class="todo-filter" onclick="filterTodo('pending',this)">Pending</button>
+        <button class="todo-filter" onclick="filterTodo('inprogress',this)">In Progress</button>
+        <button class="todo-filter" onclick="filterTodo('done',this)">Done</button>
+        <button class="todo-filter" onclick="filterTodo('pinned',this)">📌 Pinned</button>
+      </div>
+      <button onclick="openAddTodo()" style="background:#a3e635;color:#1a1a1a;border:none;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;">+ Task</button>
+    </div>
+
+    <!-- Task list -->
+    <div id="todo-list"></div>
+
+    <!-- Action buttons -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">
+      <button class="btn" style="margin-top:0;background:#1a1a1a;color:#a3e635;" onclick="suriaoOrganise()">✨ SURIA Organise</button>
+      <button class="btn" style="margin-top:0;background:#fee2e2;color:#dc2626;" onclick="clearDoneTasks()">🗑 Clear Done</button>
+    </div>
+
+  </div>
+
+  <!-- Add/Edit Task Modal -->
+  <div id="todo-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:200;align-items:flex-end;justify-content:center;">
+    <div style="background:white;border-radius:20px 20px 0 0;padding:20px;width:100%;max-height:90vh;overflow-y:auto;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <span id="todo-modal-title" style="font-size:15px;font-weight:500;">Add Task</span>
+        <button onclick="closeTodoModal()" style="font-size:20px;background:none;border:none;cursor:pointer;color:#888;">✕</button>
+      </div>
+      <input type="hidden" id="todo-edit-id"/>
+
+      <div style="margin-bottom:12px;">
+        <label style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Task Title *</label>
+        <div style="display:flex;gap:6px;">
+          <input id="todo-title" style="flex:1;padding:11px;border:1px solid #e0e0e0;border-radius:8px;font-size:14px;" placeholder="e.g. Call Ahmad re: JB apartment"/>
+          <button class="mic-btn" onclick="startVoice('todo-title')">🎤</button>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+        <div>
+          <label style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Category</label>
+          <select id="todo-cat" style="width:100%;padding:10px;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;">
+            <option value="listing">🏠 Listing</option>
+            <option value="valuation">📋 Valuation</option>
+            <option value="client">👤 Client</option>
+            <option value="meeting">📅 Meeting</option>
+            <option value="admin">🏢 Admin</option>
+            <option value="personal">🙋 Personal</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Priority</label>
+          <select id="todo-priority" style="width:100%;padding:10px;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;">
+            <option value="high">🔴 High</option>
+            <option value="medium" selected>🟡 Medium</option>
+            <option value="low">🟢 Low</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+        <div>
+          <label style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Due Date</label>
+          <input id="todo-date" type="date" style="width:100%;padding:10px;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;"/>
+        </div>
+        <div>
+          <label style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Due Time</label>
+          <input id="todo-time" type="time" style="width:100%;padding:10px;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;"/>
+        </div>
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Status</label>
+        <select id="todo-status" style="width:100%;padding:10px;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;">
+          <option value="pending">⏳ Pending</option>
+          <option value="inprogress">🔄 In Progress</option>
+          <option value="done">✅ Done</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Recurring</label>
+        <select id="todo-recurring" style="width:100%;padding:10px;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;">
+          <option value="none">No repeat</option>
+          <option value="daily">🔁 Daily</option>
+          <option value="weekly">📅 Weekly</option>
+          <option value="monthly">📆 Monthly</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <label style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Notes <span style="font-size:10px;color:#bbb;font-style:italic;">(optional)</span></label>
+        <div style="display:flex;gap:6px;">
+          <input id="todo-notes" style="flex:1;padding:11px;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;" placeholder="e.g. Bring valuation report, call before visit"/>
+          <button class="mic-btn" onclick="startVoice('todo-notes')">🎤</button>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;">
+        <button onclick="saveTodo()" style="flex:1;padding:13px;background:#a3e635;color:#1a1a1a;border:none;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;">Save Task</button>
+        <button id="todo-pin-btn" onclick="togglePinFromModal()" style="padding:13px 16px;background:#2a2a2a;color:#a3e635;border:none;border-radius:10px;font-size:18px;cursor:pointer;" title="Pin task">📌</button>
       </div>
     </div>
   </div>
@@ -890,6 +1024,302 @@ function copy() {
   navigator.clipboard.writeText(document.getElementById('output').textContent);
   alert('Copied to clipboard!');
 }
+
+
+// ── TO DO LIST ─────────────────────────────────────────
+let todos = [];
+let todoFilter = 'all';
+let editingTodoId = null;
+let pinnedInModal = false;
+const todayStr = new Date().toISOString().split('T')[0];
+
+async function loadTodos() {
+  // Load from server first
+  try {
+    const res = await fetch('/tasks');
+    const data = await res.json();
+    todos = data.tasks || [];
+  } catch(e) {
+    // Fall back to local storage
+    const local = localStorage.getItem('suria_todos');
+    if (local) todos = JSON.parse(local);
+  }
+  // Auto-generate recurring tasks
+  generateRecurring();
+  renderTodos();
+}
+
+function saveTodosLocal() {
+  localStorage.setItem('suria_todos', JSON.stringify(todos));
+}
+
+async function saveTodosServer() {
+  try {
+    await fetch('/tasks/save', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({tasks: todos})
+    });
+  } catch(e) {}
+  saveTodosLocal();
+}
+
+function generateRecurring() {
+  const now = new Date();
+  const todayDate = now.toISOString().split('T')[0];
+  todos.forEach(t => {
+    if (!t.recurring || t.recurring === 'none') return;
+    if (t.last_generated === todayDate) return;
+    // Check if we need to generate a new instance
+    const shouldGenerate = (
+      (t.recurring === 'daily') ||
+      (t.recurring === 'weekly' && isThisWeek(t.due_date)) ||
+      (t.recurring === 'monthly' && isThisMonth(t.due_date))
+    );
+    if (shouldGenerate && t.status === 'done') {
+      // Reset the task for today
+      t.status = 'pending';
+      t.due_date = todayDate;
+      t.last_generated = todayDate;
+    }
+  });
+}
+
+function isThisWeek(dateStr) {
+  if (!dateStr) return true;
+  const d = new Date(dateStr);
+  const now = new Date();
+  const diff = Math.floor((now - d) / 86400000);
+  return diff >= 7;
+}
+
+function isThisMonth(dateStr) {
+  if (!dateStr) return true;
+  const d = new Date(dateStr);
+  const now = new Date();
+  return d.getMonth() !== now.getMonth() || d.getFullYear() !== now.getFullYear();
+}
+
+function filterTodo(f, el) {
+  todoFilter = f;
+  document.querySelectorAll('.todo-filter').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderTodos();
+}
+
+function renderTodos() {
+  updateProgress();
+  let list = [...todos];
+
+  // Sort: pinned first, then by priority, then by due date
+  list.sort((a, b) => {
+    if (a.pinned && !b.pinned) return -1;
+    if (!a.pinned && b.pinned) return 1;
+    const pOrder = {high:0, medium:1, low:2};
+    if (pOrder[a.priority] !== pOrder[b.priority]) return pOrder[a.priority] - pOrder[b.priority];
+    if (a.due_date && b.due_date) return a.due_date.localeCompare(b.due_date);
+    return 0;
+  });
+
+  // Filter
+  if (todoFilter !== 'all') {
+    if (todoFilter === 'pinned') list = list.filter(t => t.pinned);
+    else list = list.filter(t => t.status === todoFilter);
+  }
+
+  const container = document.getElementById('todo-list');
+  if (!list.length) {
+    container.innerHTML = '<div class="empty-todo">📋 No tasks found.<br/>Tap + Task to add one!</div>';
+    return;
+  }
+
+  container.innerHTML = list.map(t => renderTodoCard(t)).join('');
+}
+
+function renderTodoCard(t) {
+  const isOverdue = t.due_date && t.due_date < todayStr && t.status !== 'done';
+  const catLabels = {listing:'🏠 Listing', valuation:'📋 Valuation', client:'👤 Client', meeting:'📅 Meeting', admin:'🏢 Admin', personal:'🙋 Personal'};
+  const statusLabels = {pending:'⏳ Pending', inprogress:'🔄 In Progress', done:'✅ Done'};
+  const recurLabels = {daily:'🔁 Daily', weekly:'📅 Weekly', monthly:'📆 Monthly'};
+
+  return `<div class="todo-card priority-${t.priority} status-${t.status} ${t.pinned?'pinned':''}">
+    <div class="todo-title-row">
+      <span class="todo-task-title ${t.status==='done'?'done':''}">${t.pinned?'📌 ':''}${t.title}</span>
+      <div style="display:flex;gap:4px;">
+        <button class="todo-act-btn" style="background:#f0f0f0;color:#555;" onclick="editTodo('${t.id}')">✏️</button>
+        <button class="todo-act-btn" style="background:#fee2e2;color:#dc2626;" onclick="deleteTodo('${t.id}')">✕</button>
+      </div>
+    </div>
+    <div class="todo-meta">
+      <span class="todo-tag tag-${t.category}">${catLabels[t.category]||t.category}</span>
+      ${t.due_date?`<span class="todo-tag" style="background:${isOverdue?'#fee2e2':'#f0f0f0'};color:${isOverdue?'#dc2626':'#555'};">📅 ${t.due_date}${t.due_time?' '+t.due_time:''}</span>`:''}
+      ${t.recurring&&t.recurring!=='none'?`<span class="todo-tag" style="background:#dbeafe;color:#2563eb;">${recurLabels[t.recurring]}</span>`:''}
+      ${isOverdue?'<span class="todo-tag" style="background:#fee2e2;color:#dc2626;">⚠️ Overdue</span>':''}
+    </div>
+    ${t.notes?`<div style="font-size:11px;color:#888;margin-bottom:8px;">💬 ${t.notes}</div>`:''}
+    <div class="todo-actions">
+      ${t.status!=='done'?`<button class="todo-act-btn" style="background:#dcfce7;color:#16a34a;" onclick="setTodoStatus('${t.id}','done')">✅ Done</button>`:''}
+      ${t.status==='pending'?`<button class="todo-act-btn" style="background:#dbeafe;color:#2563eb;" onclick="setTodoStatus('${t.id}','inprogress')">🔄 Start</button>`:''}
+      ${t.status==='done'?`<button class="todo-act-btn" style="background:#f0f0f0;color:#555;" onclick="setTodoStatus('${t.id}','pending')">↩️ Reopen</button>`:''}
+      <button class="todo-act-btn" style="background:${t.pinned?'#a3e635':'#2a2a2a'};color:${t.pinned?'#1a1a1a':'#a3e635'};" onclick="togglePin('${t.id}')">${t.pinned?'📌 Unpin':'📌 Pin'}</button>
+    </div>
+  </div>`;
+}
+
+function updateProgress() {
+  const total = todos.length;
+  const done = todos.filter(t => t.status === 'done').length;
+  const pending = todos.filter(t => t.status === 'pending').length;
+  const inprog = todos.filter(t => t.status === 'inprogress').length;
+  const overdue = todos.filter(t => t.due_date && t.due_date < todayStr && t.status !== 'done').length;
+  const pct = total > 0 ? Math.round(done / total * 100) : 0;
+
+  document.getElementById('todo-progress-bar').style.width = pct + '%';
+  document.getElementById('todo-progress-text').textContent = `${done} / ${total} done`;
+  document.getElementById('todo-count-pending').textContent = `${pending} Pending`;
+  document.getElementById('todo-count-inprog').textContent = `${inprog} In Progress`;
+  document.getElementById('todo-count-done').textContent = `${done} Done`;
+  const overdueEl = document.getElementById('todo-count-overdue');
+  overdueEl.textContent = `${overdue} Overdue`;
+  overdueEl.style.display = overdue > 0 ? 'inline-block' : 'none';
+}
+
+function openAddTodo() {
+  editingTodoId = null;
+  pinnedInModal = false;
+  document.getElementById('todo-modal-title').textContent = 'Add Task';
+  document.getElementById('todo-edit-id').value = '';
+  document.getElementById('todo-title').value = '';
+  document.getElementById('todo-cat').value = 'listing';
+  document.getElementById('todo-priority').value = 'medium';
+  document.getElementById('todo-date').value = todayStr;
+  document.getElementById('todo-time').value = '';
+  document.getElementById('todo-status').value = 'pending';
+  document.getElementById('todo-recurring').value = 'none';
+  document.getElementById('todo-notes').value = '';
+  document.getElementById('todo-pin-btn').style.background = '#2a2a2a';
+  document.getElementById('todo-modal').style.display = 'flex';
+}
+
+function editTodo(id) {
+  const t = todos.find(x => x.id === id);
+  if (!t) return;
+  editingTodoId = id;
+  pinnedInModal = t.pinned || false;
+  document.getElementById('todo-modal-title').textContent = 'Edit Task';
+  document.getElementById('todo-edit-id').value = id;
+  document.getElementById('todo-title').value = t.title;
+  document.getElementById('todo-cat').value = t.category;
+  document.getElementById('todo-priority').value = t.priority;
+  document.getElementById('todo-date').value = t.due_date || '';
+  document.getElementById('todo-time').value = t.due_time || '';
+  document.getElementById('todo-status').value = t.status;
+  document.getElementById('todo-recurring').value = t.recurring || 'none';
+  document.getElementById('todo-notes').value = t.notes || '';
+  document.getElementById('todo-pin-btn').style.background = pinnedInModal ? '#a3e635' : '#2a2a2a';
+  document.getElementById('todo-modal').style.display = 'flex';
+}
+
+function togglePinFromModal() {
+  pinnedInModal = !pinnedInModal;
+  document.getElementById('todo-pin-btn').style.background = pinnedInModal ? '#a3e635' : '#2a2a2a';
+  document.getElementById('todo-pin-btn').style.color = pinnedInModal ? '#1a1a1a' : '#a3e635';
+}
+
+function closeTodoModal() {
+  document.getElementById('todo-modal').style.display = 'none';
+}
+
+async function saveTodo() {
+  const title = document.getElementById('todo-title').value.trim();
+  if (!title) { alert('Please enter a task title.'); return; }
+
+  const task = {
+    id: editingTodoId || String(Date.now()),
+    title,
+    category: document.getElementById('todo-cat').value,
+    priority: document.getElementById('todo-priority').value,
+    due_date: document.getElementById('todo-date').value,
+    due_time: document.getElementById('todo-time').value,
+    status: document.getElementById('todo-status').value,
+    recurring: document.getElementById('todo-recurring').value,
+    notes: document.getElementById('todo-notes').value,
+    pinned: pinnedInModal,
+    created: editingTodoId ? (todos.find(t=>t.id===editingTodoId)?.created||todayStr) : todayStr
+  };
+
+  if (editingTodoId) {
+    todos = todos.map(t => t.id === editingTodoId ? task : t);
+  } else {
+    todos.push(task);
+  }
+
+  closeTodoModal();
+  await saveTodosServer();
+  renderTodos();
+}
+
+async function setTodoStatus(id, status) {
+  todos = todos.map(t => t.id === id ? {...t, status} : t);
+  await saveTodosServer();
+  renderTodos();
+}
+
+async function togglePin(id) {
+  todos = todos.map(t => t.id === id ? {...t, pinned: !t.pinned} : t);
+  await saveTodosServer();
+  renderTodos();
+}
+
+async function deleteTodo(id) {
+  if (!confirm('Delete this task?')) return;
+  todos = todos.filter(t => t.id !== id);
+  await saveTodosServer();
+  renderTodos();
+}
+
+async function clearDoneTasks() {
+  const doneCount = todos.filter(t => t.status === 'done').length;
+  if (!doneCount) { alert('No completed tasks to clear.'); return; }
+  if (!confirm(`Clear ${doneCount} completed task(s)?`)) return;
+  todos = todos.filter(t => t.status !== 'done');
+  await saveTodosServer();
+  renderTodos();
+}
+
+async function suriaoOrganise() {
+  if (!todos.length) { alert('No tasks to organise. Add some tasks first!'); return; }
+  const taskList = todos.map(t =>
+    `- [${t.priority.toUpperCase()}] ${t.title} | ${t.category} | ${t.status} | Due: ${t.due_date||'No date'} ${t.due_time||''}`
+  ).join('\n');
+
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('result').style.display = 'none';
+
+  try {
+    const res = await fetch('/pa', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({feature: 'tasks', tasks: taskList})
+    });
+    const json = await res.json();
+    document.getElementById('output').textContent = json.result;
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('result').style.display = 'block';
+    document.getElementById('result').scrollIntoView({behavior:'smooth'});
+  } catch(e) {
+    document.getElementById('loading').style.display = 'none';
+    alert('Something went wrong. Please try again.');
+  }
+}
+
+// Load todos when tasks tab is opened
+document.querySelector('.feat[onclick*="tasks"]').addEventListener('click', () => {
+  if (!todos.length) loadTodos();
+});
+
+// Initial load if tasks panel is active
+loadTodos();
 
 window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
 </script>
